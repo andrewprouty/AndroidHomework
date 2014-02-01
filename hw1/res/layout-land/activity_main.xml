@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center|top"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="resetCounts"
+        android:text="@string/resetButtonLabel" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp" >
+
+        <TableRow
+            android:id="@+id/headerRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/methodText"
+                android:layout_width="0dp"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/columnHeaderMethod"
+                android:textSize="18sp" >
+
+                <requestFocus />
+            </TextView>
+
+            <TextView
+                android:id="@+id/timesCalledText"
+                android:layout_width="0dp"
+                android:layout_weight=".6"
+                android:ems="10"
+                android:text="@string/columnHeaderTimesCalled"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/onCreateRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onCreateLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/labelCreate"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/onCreateCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/onRestartRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onRestartLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/labelRestart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/onRestartCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/onStartRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onStartLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/labelStart"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/onStartCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+            </TableRow>
+
+        <TableRow
+            android:id="@+id/onResumeRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onResumeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/labelResume"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/onResumeCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+            </TableRow>
+
+        <TableRow
+            android:id="@+id/onPauseRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onPauseLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:ems="10"
+                android:text="@string/labelPause"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/onPauseCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+            </TableRow>
+    </TableLayout>
+
+</LinearLayout>
