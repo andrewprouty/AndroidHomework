@@ -15,19 +15,22 @@
             android:id="@+id/param_textUri"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:ems="10"
             android:hint="@string/URL_editText_hint"
             android:inputType="textUri" />
 
         <Button
             android:id="@+id/browse_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:drawablePadding="4dp"
             android:drawableRight="@drawable/arrow_right"
             android:hint="@string/browse_button"
-            android:text="@string/browse_button" />
+            android:text="@string/browse_button"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
     <WebView

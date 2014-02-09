@@ -29,33 +29,42 @@ public final class R {
         public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f090007;
-        public static final int activity_spinner=0x7f090001;
-        public static final int browse_button=0x7f090005;
-        public static final int des_viewText=0x7f090000;
-        public static final int go_button=0x7f090002;
-        public static final int my_webView=0x7f090006;
-        public static final int param_editText=0x7f090003;
-        public static final int param_textUri=0x7f090004;
+        public static final int RelativeLayout1=0x7f090000;
+        public static final int action_settings=0x7f09000c;
+        public static final int activity_spinner=0x7f090007;
+        public static final int back_button=0x7f090003;
+        public static final int bottom_editText=0x7f090001;
+        public static final int browse_button=0x7f09000a;
+        public static final int des_viewText=0x7f090006;
+        public static final int go_button=0x7f090008;
+        public static final int hide_button=0x7f090005;
+        public static final int middle_editText=0x7f090002;
+        public static final int my_webView=0x7f09000b;
+        public static final int param_editText=0x7f090004;
+        public static final int param_textUri=0x7f090009;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_web=0x7f030001;
+        public static final int activity_keyboard=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int activity_web=0x7f030002;
     }
     public static final class menu {
         public static final int menu=0x7f080000;
     }
     public static final class string {
-        public static final int URL_editText_hint=0x7f050007;
+        public static final int URL_editText_hint=0x7f05000a;
         public static final int action_settings=0x7f050001;
         public static final int activity_spinner_prompt=0x7f050003;
         public static final int app_name=0x7f050000;
-        public static final int browse_button=0x7f050008;
-        public static final int browse_button_hint=0x7f050009;
-        public static final int go_button=0x7f050004;
-        public static final int go_button_hint=0x7f050005;
+        public static final int back_button=0x7f050004;
+        public static final int browse_button=0x7f05000b;
+        public static final int browse_button_hint=0x7f05000c;
+        public static final int editText_hint=0x7f050006;
+        public static final int go_button=0x7f050007;
+        public static final int go_button_hint=0x7f050008;
+        public static final int hide_button=0x7f050005;
         public static final int menu_settings=0x7f050002;
-        public static final int param_editText_hint=0x7f050006;
+        public static final int param_editText_hint=0x7f050009;
     }
     public static final class style {
         /** 

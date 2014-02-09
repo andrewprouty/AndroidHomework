@@ -12,9 +12,6 @@ import android.widget.EditText;
 
 public class WebActivity extends Activity {
 
-	public static final String EXTRA_PARAM_TEXT   = "edu.prouty.hw2.widgets.param_text";
-	public static final String EXTRA_PARAM_RETURN =	"edu.prouty.hw2.widgets.param_text";
-
 	private static final String TAG = "hw2-Web";
 
 	private EditText mParamTextUri;
@@ -34,12 +31,12 @@ public class WebActivity extends Activity {
 		setContentView(R.layout.activity_web);
 
 		mParamTextUri = (EditText)findViewById(R.id.param_textUri);
-		mParamTextUri.setText(getIntent().getStringExtra(EXTRA_PARAM_TEXT));
-		
+		mParamTextUri.setText(getIntent().getStringExtra(MainActivity.EXTRA_PARAM_TEXT));
+
 		mWebView = (WebView)findViewById(R.id.my_webView);
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		loadWeb();
-		
+
 		mBrowseButton = (Button)findViewById(R.id.browse_button);
 		mBrowseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -49,14 +46,14 @@ public class WebActivity extends Activity {
 				loadWeb();
 			}
 		});
-		}
+	}
 
 	private void exitActivity() {
 		Log.i(TAG, "exitActivity() called");
 		Intent i = new Intent();
 		mParamTextUri = (EditText)findViewById(R.id.param_textUri);
 		Log.d(TAG, "RESULT: "+RESULT_OK +" " + mParamTextUri.getText().toString());
-		i.putExtra(EXTRA_PARAM_RETURN, mParamTextUri.getText().toString());
+		i.putExtra(MainActivity.EXTRA_PARAM_RETURN, mParamTextUri.getText().toString());
 		setResult(RESULT_OK, i);
 		finish();
 		Log.i(TAG, "exitActivity() end");

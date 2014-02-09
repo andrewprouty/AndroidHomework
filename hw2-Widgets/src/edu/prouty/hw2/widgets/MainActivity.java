@@ -19,6 +19,10 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	private static final String TAG = "hw2-Main";
+	
+	public static final String EXTRA_PARAM_TEXT   = "edu.prouty.hw2.widgets.param_text";
+	public static final String EXTRA_PARAM_RETURN =	"edu.prouty.hw2.widgets.param_text";
+	
 	private static final int ACTIVITY_KEYBOARD = 0;
 	private static final int ACTIVITY_WEB = 1;
 	private static final int ACTIVITY_LIST = 2;
@@ -34,9 +38,9 @@ public class MainActivity extends Activity {
 			Log.d(TAG,"intent=null");
 			return;
 		}
-		String tmp = i.getStringExtra(WebActivity.EXTRA_PARAM_RETURN);
+		String tmp = i.getStringExtra(EXTRA_PARAM_RETURN);
 		Log.d(TAG,"Returned value: "+tmp);
-		mParamEditText.setText(i.getStringExtra(WebActivity.EXTRA_PARAM_RETURN));
+		mParamEditText.setText(i.getStringExtra(EXTRA_PARAM_RETURN));
 	}
 
 	@TargetApi(11)
@@ -72,15 +76,16 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-
+				Log.d(TAG, "GoButton.onClick Activity: "+ mActivitySelection + " Param: " + mParamEditText.getText().toString());
 				if (ACTIVITY_WEB == mActivitySelection) {
 					Intent i = new Intent (MainActivity.this, WebActivity.class);
-					Log.d(TAG, "ParamText: " + mParamEditText.getText().toString());
-					i.putExtra(WebActivity.EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
 					startActivityForResult(i, 0);
 				}
 				else if (ACTIVITY_KEYBOARD == mActivitySelection) {
-					Toast.makeText(getApplicationContext(), "Pending Keyboard " + mActivitySelection, Toast.LENGTH_SHORT).show();
+					Intent i = new Intent (MainActivity.this, KeyboardActivity.class);
+					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+					startActivityForResult(i, 0);
 				}
 				else if (ACTIVITY_LIST == mActivitySelection) {
 					Toast.makeText(getApplicationContext(), "Pending List " + mActivitySelection, Toast.LENGTH_SHORT).show();

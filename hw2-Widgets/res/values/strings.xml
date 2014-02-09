@@ -12,6 +12,10 @@
         <item>Android List</item>
     </string-array>
 
+    <string name="back_button">Back</string>
+    <string name="hide_button">Hide</string>
+    <string name="editText_hint">Enter text here</string>
+    
     <string name="go_button">Go!</string>
     <string name="go_button_hint">To launch activity</string>
     <string name="param_editText_hint">Information to pass</string>
