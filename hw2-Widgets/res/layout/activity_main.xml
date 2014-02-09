@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center|top"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/des_viewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="20dp"
+        android:text="@string/activity_spinner_prompt"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/activity_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:entries="@array/activity_array"
+            android:prompt="@string/activity_spinner_prompt" />
+
+        <Button
+            android:id="@+id/go_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/arrow_right"
+            android:hint="@string/go_button"
+            android:text="@string/go_button" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/param_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/param_editText_hint" >
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>

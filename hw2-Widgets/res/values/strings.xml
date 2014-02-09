@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Widget Activities</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_settings">Settings</string>
+
+    <string name="activity_spinner_prompt">Choose an Activity</string>
+    <string-array name="activity_array">
+        <item>Use the Keyboard</item>
+        <item>Browse the Web</item>
+        <item>Android List</item>
+    </string-array>
+
+    <string name="go_button">Go!</string>
+    <string name="go_button_hint">To launch activity</string>
+    <string name="param_editText_hint">Information to pass</string>
+    <string name="URL_editText_hint">Enter website</string>
+    <string name="browse_button">Web!</string>
+    <string name="browse_button_hint">To launch browser</string>
+
+</resources>
