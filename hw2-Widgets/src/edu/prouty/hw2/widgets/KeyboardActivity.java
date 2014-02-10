@@ -1,0 +1,59 @@
+package edu.prouty.hw2.widgets;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class KeyboardActivity extends Activity{
+
+	private static final String TAG = "hw2-Key";
+	private Button mKeyBackButton;
+	private Button mHideButton;
+	private EditText mKeyParamEditText;
+	@SuppressWarnings("unused")
+	private EditText mMiddleEditText;
+	@SuppressWarnings("unused")
+	private EditText mBottomEditText;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_keyboard);
+
+		mKeyBackButton = (Button)findViewById(R.id.key_back_button);
+		mKeyBackButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.i(TAG, "mKeyBackButton.onClick() called");
+				Intent i = new Intent();
+				mKeyParamEditText = (EditText)findViewById(R.id.key_param_editText);
+				i.putExtra(MainActivity.EXTRA_PARAM_RETURN, mKeyParamEditText.getText().toString());
+				setResult(RESULT_OK, i);
+				finish();
+				Log.i(TAG, "mKeyBackButton.onClick() end");
+			}
+		});
+		
+		mKeyParamEditText = (EditText)findViewById(R.id.key_param_editText);
+		mKeyParamEditText.setText(getIntent().getStringExtra(MainActivity.EXTRA_PARAM_TEXT));
+		mMiddleEditText = (EditText)findViewById(R.id.middle_editText);
+		mBottomEditText = (EditText)findViewById(R.id.bottom_editText);
+	
+		mHideButton = (Button)findViewById(R.id.hide_button);
+		mHideButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.i(TAG, "mHideButton.onClick() called");
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mKeyParamEditText.getWindowToken(), 0);
+			}
+		});
+	}
+}

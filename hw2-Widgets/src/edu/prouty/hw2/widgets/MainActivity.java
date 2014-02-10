@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 			public void onNothingSelected(AdapterView<?> parentView) { }
 		});
 
-		mParamEditText = (EditText)findViewById(R.id.param_editText);
+		mParamEditText = (EditText)findViewById(R.id.key_param_editText);
 
 		mGoButton = (Button)findViewById(R.id.go_button);
 		mGoButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,10 @@ public class MainActivity extends Activity {
 					startActivityForResult(i, 0);
 				}
 				else if (ACTIVITY_LIST == mActivitySelection) {
-					Toast.makeText(getApplicationContext(), "Pending List " + mActivitySelection, Toast.LENGTH_SHORT).show();
+					//Toast.makeText(getApplicationContext(), "Pending List " + mActivitySelection, Toast.LENGTH_SHORT).show();
+					Intent i = new Intent (MainActivity.this, ListActivity.class);
+					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+					startActivityForResult(i, 0);
 				}
 			}
 		});

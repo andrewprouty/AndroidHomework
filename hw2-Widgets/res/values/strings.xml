@@ -23,4 +23,6 @@
     <string name="browse_button">Web!</string>
     <string name="browse_button_hint">To launch browser</string>
 
+    <string name="list_textView_hint">Select a version below</string>
+    
 </resources>

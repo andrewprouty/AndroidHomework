@@ -33,6 +33,10 @@
             android:windowSoftInputMode="adjustPan"
             android:label="@string/app_name" >
         </activity>
-    </application>
+        <activity
+            android:name=".ListActivity"
+            android:label="@string/app_name" >
+        </activity>
+        </application>
 
 </manifest>
