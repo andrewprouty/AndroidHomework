@@ -1,6 +1,5 @@
 package edu.prouty.hw2.widgets;
 
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class ListFrag extends ListFragment{
 
@@ -19,8 +17,7 @@ public class ListFrag extends ListFragment{
 			"4.2 Jelly Bean", "4.3 Jelly Bean",	"4.4 KitKat"};
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Toast.makeText(getActivity(), " " + mAndroidOS[position], Toast.LENGTH_SHORT).show();
-
+		Log.i(TAG, "onListItemClick passing: "+position);
 		((ListActivity)getActivity()).setOS(mAndroidOS[position]);
 	}
 

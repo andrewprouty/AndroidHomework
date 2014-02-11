@@ -1,28 +1,26 @@
 package edu.prouty.hw2.widgets;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "hw2-Main";
-	
+
 	public static final String EXTRA_PARAM_TEXT   = "edu.prouty.hw2.widgets.param_text";
 	public static final String EXTRA_PARAM_RETURN =	"edu.prouty.hw2.widgets.param_text";
-	
+
 	private static final int ACTIVITY_KEYBOARD = 0;
 	private static final int ACTIVITY_WEB = 1;
 	private static final int ACTIVITY_LIST = 2;
@@ -43,28 +41,37 @@ public class MainActivity extends Activity {
 		mParamEditText.setText(i.getStringExtra(EXTRA_PARAM_RETURN));
 	}
 
+	private void launchActivity(int act) {
+		if (ACTIVITY_WEB == act) {
+			Intent i = new Intent (MainActivity.this, WebActivity.class);
+			i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+			startActivityForResult(i, 0);
+		}
+		else if (ACTIVITY_KEYBOARD == act) {
+			Intent i = new Intent (MainActivity.this, KeyboardActivity.class);
+			i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+			startActivityForResult(i, 0);
+		}
+		else if (ACTIVITY_LIST == act) {
+			Intent i = new Intent (MainActivity.this, ListActivity.class);
+			i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
+			startActivityForResult(i, 0);
+		}
+	}
+
 	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate(Bundle) called");
 		setContentView(R.layout.activity_main);
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			ActionBar actionBar = getActionBar();
-			actionBar.setSubtitle("**Andy use/remove this**");
-		}
-
+		
 		mActivitySpinner = (Spinner) findViewById(R.id.activity_spinner);
 		mActivitySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-				Toast.makeText(parentView.getContext(), "Selected Activity: "
-						+ position + " "
-						+ parentView.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
 				mActivitySelection = position;
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> parentView) { }
 		});
@@ -77,22 +84,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "GoButton.onClick Activity: "+ mActivitySelection + " Param: " + mParamEditText.getText().toString());
-				if (ACTIVITY_WEB == mActivitySelection) {
-					Intent i = new Intent (MainActivity.this, WebActivity.class);
-					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
-					startActivityForResult(i, 0);
-				}
-				else if (ACTIVITY_KEYBOARD == mActivitySelection) {
-					Intent i = new Intent (MainActivity.this, KeyboardActivity.class);
-					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
-					startActivityForResult(i, 0);
-				}
-				else if (ACTIVITY_LIST == mActivitySelection) {
-					//Toast.makeText(getApplicationContext(), "Pending List " + mActivitySelection, Toast.LENGTH_SHORT).show();
-					Intent i = new Intent (MainActivity.this, ListActivity.class);
-					i.putExtra(EXTRA_PARAM_TEXT, mParamEditText.getText().toString());
-					startActivityForResult(i, 0);
-				}
+				launchActivity(mActivitySelection);
 			}
 		});
 	} // End onCreate()
@@ -102,7 +94,6 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(savedInstanceState);
 		Log.i(TAG, "onSaveInstanceState");
 	}
-
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -128,11 +119,27 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy() called");
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// http://www.androidhive.info/2013/11/android-working-with-action-bar
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu, menu);
+		getMenuInflater().inflate(R.menu.act_main_actions, menu);
 		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_key:
+			launchActivity(ACTIVITY_KEYBOARD);
+			return true;
+		case R.id.action_web:
+			launchActivity(ACTIVITY_WEB);
+			return true;
+		case R.id.action_list:
+			launchActivity(ACTIVITY_LIST);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

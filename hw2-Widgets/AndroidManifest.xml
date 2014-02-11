@@ -17,10 +17,14 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="edu.prouty.hw2.widgets.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:uiOptions="splitActionBarWhenNarrow" >
+			<!-- To support below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,13 +34,13 @@
         </activity>
         <activity
             android:name=".KeyboardActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name=".ListActivity"
             android:label="@string/app_name" >
         </activity>
-        </application>
+    </application>
 
 </manifest>

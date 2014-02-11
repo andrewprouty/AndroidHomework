@@ -5,6 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="menu_settings">Settings</string>
 
+    <string name="action_keyboard">Keyboard</string>
+    <string name="action_web">Keyboard</string>
+    <string name="action_list">Keyboard</string>
+    
     <string name="activity_spinner_prompt">Choose an Activity</string>
     <string-array name="activity_array">
         <item>Use the Keyboard</item>
