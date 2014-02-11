@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Search / will display always -->
+    <item
+        android:id="@+id/action_key"
+        android:icon="@drawable/ic_action_keyboard"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_keyboard"/>
+    <item
+        android:id="@+id/action_web"
+        android:icon="@drawable/ic_action_web_site"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_web"/>
+    <item
+        android:id="@+id/action_list"
+        android:icon="@drawable/ic_action_phone"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_list"/>
+
+</menu>
