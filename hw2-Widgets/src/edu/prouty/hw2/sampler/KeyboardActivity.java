@@ -1,4 +1,4 @@
-package edu.prouty.hw2.widgets;
+package edu.prouty.hw2.sampler;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import edu.prouty.hw2.sampler.R;
 
 public class KeyboardActivity extends Activity{
 
@@ -49,10 +50,10 @@ public class KeyboardActivity extends Activity{
 		
 		mKeyParamEditText = (EditText)findViewById(R.id.key_param_editText);
 		mKeyParamEditText.setText(getIntent().getStringExtra(MainActivity.EXTRA_PARAM_TEXT));
-		mMiddleEditText = (EditText)findViewById(R.id.middle_editText);
-		mBottomEditText = (EditText)findViewById(R.id.bottom_editText);
+		mMiddleEditText = (EditText)findViewById(R.id.key_middle_editText);
+		mBottomEditText = (EditText)findViewById(R.id.key_bottom_editText);
 	
-		mHideButton = (Button)findViewById(R.id.hide_button);
+		mHideButton = (Button)findViewById(R.id.key_hide_button);
 		mHideButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -1,4 +1,4 @@
-package edu.prouty.hw2.widgets;
+package edu.prouty.hw2.sampler;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import edu.prouty.hw2.sampler.R;
 
 public class WebActivity extends Activity {
 

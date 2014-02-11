@@ -1,4 +1,4 @@
-package edu.prouty.hw2.widgets;
+package edu.prouty.hw2.sampler;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,13 +13,14 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import edu.prouty.hw2.sampler.R;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "hw2-Main";
 
-	public static final String EXTRA_PARAM_TEXT   = "edu.prouty.hw2.widgets.param_text";
-	public static final String EXTRA_PARAM_RETURN =	"edu.prouty.hw2.widgets.param_text";
+	public static final String EXTRA_PARAM_TEXT   = "edu.prouty.hw2.sampler.param_text";
+	public static final String EXTRA_PARAM_RETURN =	"edu.prouty.hw2.sampler.param_text";
 
 	private static final int ACTIVITY_KEYBOARD = 0;
 	private static final int ACTIVITY_WEB = 1;
@@ -76,7 +77,7 @@ public class MainActivity extends Activity {
 			public void onNothingSelected(AdapterView<?> parentView) { }
 		});
 
-		mParamEditText = (EditText)findViewById(R.id.key_param_editText);
+		mParamEditText = (EditText)findViewById(R.id.main_param_editText);
 
 		mGoButton = (Button)findViewById(R.id.go_button);
 		mGoButton.setOnClickListener(new View.OnClickListener() {

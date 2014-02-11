@@ -1,4 +1,4 @@
-package edu.prouty.hw2.widgets;
+package edu.prouty.hw2.sampler;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;

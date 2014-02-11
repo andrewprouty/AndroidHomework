@@ -1,39 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true" >
 
-    <EditText
-        android:id="@+id/bottom_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:ems="10"
-        android:gravity="bottom"
-        android:hint="@string/editText_hint" />
-
-    <EditText
-        android:id="@+id/middle_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:gravity="center_vertical"
-        android:hint="@string/editText_hint" >
-
-        <requestFocus />
-    </EditText>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:orientation="horizontal" >
 
         <Button
@@ -53,7 +27,7 @@
             android:hint="@string/param_editText_hint" />
 
         <Button
-            android:id="@+id/hide_button"
+            android:id="@+id/key_hide_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -61,5 +35,25 @@
             android:text="@string/hide_button"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/key_middle_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:gravity="center_vertical"
+        android:hint="@string/editText_hint" />
+
+    <EditText
+        android:id="@+id/key_bottom_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:gravity="bottom"
+        android:hint="@string/editText_hint" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package edu.prouty.hw2.widgets;
+package edu.prouty.hw2.sampler;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.prouty.hw2.sampler.R;
 
 public class ListActivity extends FragmentActivity {
 

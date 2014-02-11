@@ -37,7 +37,7 @@
 
         <fragment
             android:id="@+id/os_listFragment"
-            android:name="edu.prouty.hw2.widgets.ListFrag"
+            android:name="edu.prouty.hw2.sampler.ListFrag"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
