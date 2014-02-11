@@ -31,7 +31,7 @@ public class ListActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate() called");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.act_list);
+		setContentView(R.layout.activity_list);
 		//getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 		
