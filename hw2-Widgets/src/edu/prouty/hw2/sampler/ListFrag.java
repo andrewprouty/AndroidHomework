@@ -18,9 +18,9 @@ public class ListFrag extends ListFragment{
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.i(TAG, "onListItemClick passing: "+position);
-		((ListActivity)getActivity()).setOS(mAndroidOS[position]);
+		((ListActivity)getActivity()).setOS(mAndroidOS[position]); //found a way to pass the value!!
 	}
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

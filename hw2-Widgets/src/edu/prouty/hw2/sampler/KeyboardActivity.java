@@ -47,7 +47,7 @@ public class KeyboardActivity extends Activity{
 				Log.i(TAG, "mKeyBackButton.onClick() end");
 			}
 		});
-		
+	
 		mKeyParamEditText = (EditText)findViewById(R.id.key_param_editText);
 		mKeyParamEditText.setText(getIntent().getStringExtra(MainActivity.EXTRA_PARAM_TEXT));
 		mMiddleEditText = (EditText)findViewById(R.id.key_middle_editText);
@@ -73,7 +73,6 @@ public class KeyboardActivity extends Activity{
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 		getMenuInflater().inflate(R.menu.menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}

@@ -24,7 +24,7 @@ public class ListActivity extends FragmentActivity {
 
 	public void setOS(String OS) {
 		mListParamTextView.setText(OS);
-		setOS = true; //prevent default (i.e. nothing selected) 
+		setOS = true; //prevent default (i.e. nothing selected)
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

@@ -26,6 +26,8 @@
             android:ems="10"
             android:hint="@string/param_editText_hint" />
 
+        <requestFocus />
+
         <Button
             android:id="@+id/key_hide_button"
             android:layout_width="0dp"
