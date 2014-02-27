@@ -49,7 +49,7 @@ public class WebActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "mBrowseButton.onClick() called");
-				//mParamTextUri.setText("http://www.google.com"); //Andy remove before turning in
+				mParamTextUri.setText("http://www.google.com"); //Andy remove before turning in... faster than typing it
 				loadWeb();
 			}
 		});
