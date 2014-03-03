@@ -1,9 +1,13 @@
 package edu.prouty.hw3.photogallery;
 
 public class GalleryItem {
+    private String mPhotoName;
+    private String mPhotoId;
+    private String mUserId;
+    private String mUrl;
+    /// Andy: to obsolete/delete
     private String mCaption;
     private String mId;
-    private String mUrl;
 
     public String getCaption() {
         return mCaption;
@@ -18,6 +22,26 @@ public class GalleryItem {
         mId = id;
     }
     
+    public String getPhotoName() {
+        return mPhotoName;
+    }
+    public void setPhotoName(String photoName) {
+        mPhotoName = photoName;
+    }
+    
+    public String getPhotoId() {
+        return mPhotoId;
+    }
+    public void setPhotoId(String PhotoId) {
+        mPhotoId = PhotoId;
+    }
+    
+    public String getUserId() {
+        return mUserId;
+    }
+    public void setUserId(String userId) {
+        mUserId = userId;
+    }
     public String getUrl() {
         return mUrl;
     }

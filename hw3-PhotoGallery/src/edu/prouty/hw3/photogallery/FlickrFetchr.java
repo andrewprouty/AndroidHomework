@@ -16,8 +16,8 @@ import android.net.Uri;
 import android.util.Log;
 
 public class FlickrFetchr {
-    public static final String TAG = "PhotoFetcher";
-
+    public static final String TAG = "FlickrFetcher";
+    // http://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=7e10f00e9d15ff663512b4f811cdcd58&extras=url_s
     private static final String ENDPOINT = "http://api.flickr.com/services/rest/";
     private static final String API_KEY = "7e10f00e9d15ff663512b4f811cdcd58";
     private static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
@@ -65,16 +65,17 @@ public class FlickrFetchr {
                     .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
                     .build().toString();
             String xmlString = getUrl(url);
-            Log.i(TAG, "Received xml: " + xmlString);
+            Log.i(TAG, "fetchItems() URL: " + url);
+            Log.i(TAG, "fetchItems() Received xml: " + xmlString);
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = factory.newPullParser();
             parser.setInput(new StringReader(xmlString));
             
             parseItems(items, parser);
         } catch (IOException ioe) {
-            Log.e(TAG, "Failed to fetch items", ioe);
+            Log.e(TAG, "fetchItems() Failed to fetch items", ioe);
         } catch (XmlPullParserException xppe) {
-            Log.e(TAG, "Failed to parse items", xppe);
+            Log.e(TAG, "fetchItems() Failed to parse items", xppe);
         }
         return items;
     }
@@ -95,7 +96,6 @@ public class FlickrFetchr {
                 item.setUrl(smallUrl);
                 items.add(item);
             }
-
             eventType = parser.next();
         }
     }
