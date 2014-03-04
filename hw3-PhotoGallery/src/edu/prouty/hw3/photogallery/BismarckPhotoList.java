@@ -1,6 +1,8 @@
 package edu.prouty.hw3.photogallery;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -11,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -48,63 +51,88 @@ public class BismarckPhotoList {
 		return new String(getUrlBytes(urlSpec));
 	}
 
-	public ArrayList<GalleryItem> fetchItems() {
+	public ArrayList<GalleryItem> fetchItems(Context appContext) {
 		ArrayList<GalleryItem> items = new ArrayList<GalleryItem>();
 
-		try {
-			String url = Uri.parse(ENDPOINT).toString() + USER_KEY;
-			String jsonString = getUrl(url);
-			Log.i(TAG, "fetchItems() URL: " + url);
-			Log.i(TAG, "fetchItems() Received json: " + jsonString);
+		String jsonString = GETPhotoList();
+		if (jsonString == null || jsonString.length() == 0) {
+			jsonString = readPhotoList(appContext); // exists in cache?
+		}
+		else {
+			cachePhotoList(appContext, jsonString);
+		}
 
+		if (jsonString == null || jsonString.length() == 0) {
+			Log.i(TAG, "fetchItems() Failed to fetch items");
+		}
+		else {
 			parsePhotoList(items, jsonString);
-		} catch (IOException ioe) {
-			Log.e(TAG, "fetchItems() Failed to fetch items", ioe);
 		}
 		return items;
 	}
+	private String GETPhotoList() {
+		String jsonString = "";
+		try {
+			String url = Uri.parse(ENDPOINT).toString() + USER_KEY;
+			jsonString = getUrl(url);
+			Log.i(TAG, "GETPhotoList() URL: " + url);
+			Log.i(TAG, "GETPhotoList() Received json: " + jsonString);
+		} catch (IOException ioe) {
+			Log.e(TAG, "GETPhotoList() Failed to fetch items", ioe);
+		}
+		return jsonString;
+	}
 
-	void parsePhotoList(ArrayList<GalleryItem> items, String stringPhotoList) {
+	private void cachePhotoList(Context appContext, String jsonString) {
+		String fName = "PhotoList-"+USER_KEY;
+		FileOutputStream outFile;
+		try {
+			outFile = appContext.openFileOutput(fName, Context.MODE_PRIVATE);
+			outFile.write(jsonString.getBytes());
+			outFile.close();
+		} catch (Exception e) {
+			Log.e(TAG, "cachePhotoList() Error writing to file", e);
+		}
+		Log.i(TAG, "cachePhotoList() end " +appContext.getFileStreamPath(fName));
+	}
+
+	private String readPhotoList(Context appContext) {
+		String fName = "PhotoList-"+USER_KEY;
+		String fileContents;
+		FileInputStream inFile;
+		try {
+			inFile = appContext.openFileInput(fName);
+			byte[] data = new byte[inFile.available()];
+			inFile.read(data, 0, inFile.available());
+			fileContents = new String (data);
+			inFile.close();
+		} catch (Exception e) {
+			Log.e(TAG, "readPhotoList() Error reading file", e);
+			fileContents = "";
+		}
+		Log.i(TAG, "readPhotoList() end " +appContext.getFileStreamPath(fName));
+		return fileContents;
+	}
+	private void parsePhotoList(ArrayList<GalleryItem> items, String stringPhotoList) {
 		try {
 			JSONArray jsonPhotoList = new JSONArray (stringPhotoList);  
 			// {"name":"dog","id":"23"},...
 			Log.i(TAG, "parsePhotoList() count of photos: "+jsonPhotoList.length());
-		    for (int i = 0; i < jsonPhotoList.length(); i++) {
-		        JSONObject jsonNode = jsonPhotoList.getJSONObject(i);
-		        String photo_name   = jsonNode.optString("name").toString();
-		        String photo_id     = jsonNode.optString("id").toString();
-		        Log.i(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
-		        
+			for (int i = 0; i < jsonPhotoList.length(); i++) {
+				JSONObject jsonNode = jsonPhotoList.getJSONObject(i);
+				String photo_name   = jsonNode.optString("name").toString();
+				String photo_id     = jsonNode.optString("id").toString();
+				Log.i(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
+
 				GalleryItem item = new GalleryItem();
 				item.setUserId(USER_KEY); // Andy USER ID=2 for now
 				item.setPhotoName(photo_name);
 				item.setPhotoId(photo_id);
 				items.add(item);
-		    }
-		    
+			}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-
-/*	void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser) throws XmlPullParserException, IOException {
-		int eventType = parser.next();
-
-		while (eventType != XmlPullParser.END_DOCUMENT) {
-			if (eventType == XmlPullParser.START_TAG &&
-					XML_PHOTO.equals(parser.getName())) {
-				String id = parser.getAttributeValue(null, "id");
-				String caption = parser.getAttributeValue(null, "title");
-				String smallUrl = parser.getAttributeValue(null, EXTRA_SMALL_URL);
-
-				GalleryItem item = new GalleryItem();
-				item.setId(id);
-				item.setCaption(caption);
-				item.setUrl(smallUrl);
-				items.add(item);
-			}
-
-			eventType = parser.next();
-		}
-	}*/
 }

@@ -46,7 +46,7 @@ public class PhotoGalleryFragment extends Fragment {
         mGridView = (GridView)v.findViewById(R.id.gridView);
         
         setupAdapter();
-        
+
         return v;
     }
     
@@ -75,7 +75,7 @@ public class PhotoGalleryFragment extends Fragment {
     private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<GalleryItem>> {
         @Override
         protected ArrayList<GalleryItem> doInBackground(Void... params) {
-        	new BismarckPhotoList().fetchItems();
+        	new BismarckPhotoList().fetchItems(getActivity().getApplicationContext());
         	return new FlickrFetchr().fetchItems();
         }
 
