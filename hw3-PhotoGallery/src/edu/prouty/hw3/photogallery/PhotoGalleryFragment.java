@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 public class PhotoGalleryFragment extends Fragment {
     GridView mGridView;
-    ArrayList<GalleryItem> mItems;
+    ArrayList<PhotoItem> mItems;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
     @Override
@@ -72,22 +72,23 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<GalleryItem>> {
+    private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<PhotoItem>> {
         @Override
-        protected ArrayList<GalleryItem> doInBackground(Void... params) {
+        protected ArrayList<PhotoItem> doInBackground(Void... params) {
+        	new BismarckUserList().fetchItems(getActivity().getApplicationContext());
         	new BismarckPhotoList().fetchItems(getActivity().getApplicationContext());
         	return new FlickrFetchr().fetchItems();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<GalleryItem> items) {
+        protected void onPostExecute(ArrayList<PhotoItem> items) {
             mItems = items;
             setupAdapter();
         }
     }
     
-    private class GalleryItemAdapter extends ArrayAdapter<GalleryItem> {
-        public GalleryItemAdapter(ArrayList<GalleryItem> items) {
+    private class GalleryItemAdapter extends ArrayAdapter<PhotoItem> {
+        public GalleryItemAdapter(ArrayList<PhotoItem> items) {
             super(getActivity(), 0, items);
         }
 
@@ -98,7 +99,7 @@ public class PhotoGalleryFragment extends Fragment {
                         .inflate(R.layout.gallery_item, parent, false);
             }
             
-            GalleryItem item = getItem(position);
+            PhotoItem item = getItem(position);
             ImageView imageView = (ImageView)convertView
                     .findViewById(R.id.gallery_item_imageView);
             imageView.setImageResource(R.drawable.brian_up_close);

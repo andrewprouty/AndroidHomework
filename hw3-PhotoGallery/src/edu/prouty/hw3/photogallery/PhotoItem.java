@@ -1,6 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
-public class GalleryItem {
+public class PhotoItem {
     private String mPhotoName;
     private String mPhotoId;
     private String mUserId;

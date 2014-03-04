@@ -55,8 +55,8 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
     
-    public ArrayList<GalleryItem> fetchItems() {
-        ArrayList<GalleryItem> items = new ArrayList<GalleryItem>();
+    public ArrayList<PhotoItem> fetchItems() {
+        ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
         
         try {
             String url = Uri.parse(ENDPOINT).buildUpon()
@@ -80,7 +80,7 @@ public class FlickrFetchr {
         return items;
     }
 
-    void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser) throws XmlPullParserException, IOException {
+    void parseItems(ArrayList<PhotoItem> items, XmlPullParser parser) throws XmlPullParserException, IOException {
         int eventType = parser.next();
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -90,7 +90,7 @@ public class FlickrFetchr {
                 String caption = parser.getAttributeValue(null, "title");
                 String smallUrl = parser.getAttributeValue(null, EXTRA_SMALL_URL);
 
-                GalleryItem item = new GalleryItem();
+                PhotoItem item = new PhotoItem();
                 item.setId(id);
                 item.setCaption(caption);
                 item.setUrl(smallUrl);

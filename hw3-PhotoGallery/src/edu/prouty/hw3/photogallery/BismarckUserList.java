@@ -17,11 +17,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-public class BismarckPhotoList {
-	public static final String TAG = "BismarckPhotoList";
-	// http://bismarck.sdsu.edu/photoserver/userphotos/2
-	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userphotos/";
-	private static final String USER_KEY = "2";
+public class BismarckUserList {
+	public static final String TAG = "BismarckUserList";
+	// http://bismarck.sdsu.edu/photoserver/userlist
+	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userlist/";
 
 	public byte[] getUrlBytes(String urlSpec) throws IOException {
 		URL url = new URL(urlSpec);
@@ -51,53 +50,53 @@ public class BismarckPhotoList {
 		return new String(getUrlBytes(urlSpec));
 	}
 
-	public ArrayList<PhotoItem> fetchItems(Context appContext) {
-		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
+	public ArrayList<UserItem> fetchItems(Context appContext) {
+		ArrayList<UserItem> items = new ArrayList<UserItem>();
 
-		String jsonString = GETPhotoList();
+		String jsonString = GETUserList();
 		if (jsonString == null || jsonString.length() == 0) {
-			jsonString = readPhotoList(appContext); // exists in cache?
+			jsonString = readUserList(appContext); // exists in cache?
 		}
 		else {
-			cachePhotoList(appContext, jsonString);
+			cacheUserList(appContext, jsonString);
 		}
 
 		if (jsonString == null || jsonString.length() == 0) {
 			Log.i(TAG, "fetchItems() Failed to fetch items");
 		}
 		else {
-			parsePhotoList(items, jsonString);
+			parseUserList(items, jsonString);
 		}
 		return items;
 	}
-	private String GETPhotoList() {
+	private String GETUserList() {
 		String jsonString = "";
 		try {
-			String url = Uri.parse(ENDPOINT).toString() + USER_KEY;
+			String url = Uri.parse(ENDPOINT).toString();
 			jsonString = getUrl(url);
-			Log.i(TAG, "GETPhotoList() URL: " + url);
-			Log.i(TAG, "GETPhotoList() Received json: " + jsonString);
+			Log.i(TAG, "GETUserList() URL: " + url);
+			Log.i(TAG, "GETUserList() Received json: " + jsonString);
 		} catch (IOException ioe) {
-			Log.e(TAG, "GETPhotoList() Failed to fetch items", ioe);
+			Log.e(TAG, "GETUserList() Failed to fetch items", ioe);
 		}
 		return jsonString;
 	}
 
-	private void cachePhotoList(Context appContext, String jsonString) {
-		String fName = "PhotoList-"+USER_KEY;
+	private void cacheUserList(Context appContext, String jsonString) {
+		String fName = "UserList";
 		FileOutputStream outFile;
 		try {
 			outFile = appContext.openFileOutput(fName, Context.MODE_PRIVATE);
 			outFile.write(jsonString.getBytes());
 			outFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "cachePhotoList() Error writing to file", e);
+			Log.e(TAG, "cacheUserList() Error writing to file", e);
 		}
-		Log.i(TAG, "cachePhotoList() end " +appContext.getFileStreamPath(fName));
+		Log.i(TAG, "cacheUserList() end " +appContext.getFileStreamPath(fName));
 	}
 
-	private String readPhotoList(Context appContext) {
-		String fName = "PhotoList-"+USER_KEY;
+	private String readUserList(Context appContext) {
+		String fName = "UserList";
 		String fileContents;
 		FileInputStream inFile;
 		try {
@@ -107,27 +106,27 @@ public class BismarckPhotoList {
 			fileContents = new String (data);
 			inFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "readPhotoList() Error reading file", e);
+			Log.e(TAG, "readUserList() Error reading file", e);
 			fileContents = "";
 		}
-		Log.i(TAG, "readPhotoList() end " +appContext.getFileStreamPath(fName));
+		Log.i(TAG, "readUserList() end " +appContext.getFileStreamPath(fName));
 		return fileContents;
 	}
-	private void parsePhotoList(ArrayList<PhotoItem> items, String stringPhotoList) {
+	private void parseUserList(ArrayList<UserItem> items, String stringUserList) {
 		try {
-			JSONArray jsonPhotoList = new JSONArray (stringPhotoList);  
-			// {"name":"dog","id":"23"},...
-			Log.i(TAG, "parsePhotoList() count of photos: "+jsonPhotoList.length());
-			for (int i = 0; i < jsonPhotoList.length(); i++) {
-				JSONObject jsonNode = jsonPhotoList.getJSONObject(i);
-				String photo_name   = jsonNode.optString("name").toString();
-				String photo_id     = jsonNode.optString("id").toString();
-				Log.i(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
+			JSONArray jsonUserList = new JSONArray (stringUserList);  
+			// {"name":"Roger Whitney","id":"1"},...
+			
+			Log.i(TAG, "parseUserList() count of photos: "+jsonUserList.length());
+			for (int i = 0; i < jsonUserList.length(); i++) {
+				JSONObject jsonNode = jsonUserList.getJSONObject(i);
+				String user_name   = jsonNode.optString("name").toString();
+				String user_id     = jsonNode.optString("id").toString();
+				Log.i(TAG, "parseUserList(): "+ i + ": "+user_name+"-"+user_id);
 
-				PhotoItem item = new PhotoItem();
-				item.setUserId(USER_KEY); // Andy USER ID=2 for now
-				item.setPhotoName(photo_name);
-				item.setPhotoId(photo_id);
+				UserItem item = new UserItem();
+				item.setUserName(user_name);
+				item.setUserId(user_id);
 				items.add(item);
 			}
 
