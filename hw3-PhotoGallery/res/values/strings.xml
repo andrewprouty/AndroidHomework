@@ -7,5 +7,6 @@
     <string name="gallery_description">Photo Image</string>
     <string name="user_description">User Icon</string>
     <string name="user_list_textView_hint">Please select a User</string>
-    
+    <string name="photo_list_user_name_hint">WHAT USER??</string>
+    <string name="photo_list_photo_name_hint">Please select a Photo</string>
 </resources>

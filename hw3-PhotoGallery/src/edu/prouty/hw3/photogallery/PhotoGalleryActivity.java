@@ -12,9 +12,15 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
 				+ mUserItem.getUserId() + " "
 				+ mUserItem.getUserName());
 	}
+	
+	public UserItem getUserItem () {
+		return mUserItem;
+	}
+	
 	@Override
 	public Fragment createFragment() {
-		return new UserListFragment();
+		return new PhotoListFragment();
+		// return new UserListFragment();
 		// return new PhotoGalleryFragment();
 	}
 }

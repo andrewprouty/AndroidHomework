@@ -19,8 +19,10 @@ public class UserListFragment extends Fragment{
 	public static final String TAG = "UserListFragment";
 	ArrayList<UserItem> mUserItems;
 	UserItem mUserItem;
-	ListView mListView;
+
+	View view;
 	TextView mUserTextView;
+	ListView mListView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,14 +34,14 @@ public class UserListFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
-		View view = inflater.inflate(R.layout.fragment_user_list, container,false);
+		view = inflater.inflate(R.layout.fragment_user_list, container,false);
         mUserTextView = (TextView)view.findViewById(R.id.user_list_textView);
 		mListView = (ListView)view.findViewById(R.id.user_list_view);
 		setupAdapter();
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView textViewItem = ((TextView) view.findViewById(R.id.user_name_textView));
+				TextView textViewItem = ((TextView) view.findViewById(R.id.row_user_name_textView));
 				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
 				Log.i(TAG, "().onItemClick() User ["+position+"]= "+listItemText);
@@ -64,9 +66,10 @@ public class UserListFragment extends Fragment{
 	
     private void returnSelection(int position) {
 		Log.i(TAG, "returnSelection() position= ["+position+"]");
-		
 		mUserItem = mUserItems.get(position);
+		mUserTextView.setText(mUserItem.getUserName());
 		((PhotoGalleryActivity) getActivity()).setUserItem(mUserItem);
+		// TODO Exit
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override
@@ -93,7 +96,7 @@ public class UserListFragment extends Fragment{
             }
             
             UserItem item = getItem(position);
-            TextView userTextView = (TextView)convertView.findViewById(R.id.user_name_textView);
+            TextView userTextView = (TextView)convertView.findViewById(R.id.row_user_name_textView);
 			//Log.i(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
             userTextView.setText(item.getUserName());
             
