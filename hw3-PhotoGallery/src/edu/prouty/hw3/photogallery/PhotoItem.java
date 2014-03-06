@@ -5,7 +5,7 @@ public class PhotoItem {
     private String mPhotoId;
     private String mUserId;
     private String mUrl;
-    /// Andy: to obsolete/delete
+    /// TODO: obsolete/delete extra data elements
     private String mCaption;
     private String mId;
 

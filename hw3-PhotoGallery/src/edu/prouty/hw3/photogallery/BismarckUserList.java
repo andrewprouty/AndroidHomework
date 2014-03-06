@@ -92,7 +92,7 @@ public class BismarckUserList {
 		} catch (Exception e) {
 			Log.e(TAG, "cacheUserList() Error writing to file", e);
 		}
-		Log.i(TAG, "cacheUserList() end " +appContext.getFileStreamPath(fName));
+		Log.i(TAG, "cacheUserList() file created: " +appContext.getFileStreamPath(fName));
 	}
 
 	private String readUserList(Context appContext) {
@@ -109,7 +109,7 @@ public class BismarckUserList {
 			Log.e(TAG, "readUserList() Error reading file", e);
 			fileContents = "";
 		}
-		Log.i(TAG, "readUserList() end " +appContext.getFileStreamPath(fName));
+		Log.i(TAG, "readUserList() read file: " +appContext.getFileStreamPath(fName));
 		return fileContents;
 	}
 	private void parseUserList(ArrayList<UserItem> items, String stringUserList) {
@@ -117,7 +117,6 @@ public class BismarckUserList {
 			JSONArray jsonUserList = new JSONArray (stringUserList);  
 			// {"name":"Roger Whitney","id":"1"},...
 			
-			Log.i(TAG, "parseUserList() count of photos: "+jsonUserList.length());
 			for (int i = 0; i < jsonUserList.length(); i++) {
 				JSONObject jsonNode = jsonUserList.getJSONObject(i);
 				String user_name   = jsonNode.optString("name").toString();
@@ -129,7 +128,7 @@ public class BismarckUserList {
 				item.setUserId(user_id);
 				items.add(item);
 			}
-
+			Log.i(TAG, "parseUserList() UserItem added: "+jsonUserList.length());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
