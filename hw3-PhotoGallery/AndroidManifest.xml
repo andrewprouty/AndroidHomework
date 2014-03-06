@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.prouty.hw3.photogallery.PhotoGalleryActivity"
+            android:name="edu.prouty.hw3.photogallery.UserListActivity"
             android:label="@string/title_activity_photo_gallery" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

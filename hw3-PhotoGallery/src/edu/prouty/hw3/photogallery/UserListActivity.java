@@ -3,8 +3,8 @@ package edu.prouty.hw3.photogallery;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-public class PhotoGalleryActivity extends SingleFragmentActivity {
-	public static final String TAG = "PhotoGalleryActivity";
+public class UserListActivity extends SingleFragmentActivity {
+	public static final String TAG = "UserListActivity";
 	UserItem mUserItem;
 	public void setUserItem (UserItem userItem) {
 		mUserItem = userItem;

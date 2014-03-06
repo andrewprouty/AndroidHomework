@@ -68,7 +68,7 @@ public class UserListFragment extends Fragment{
 		Log.i(TAG, "returnSelection() position= ["+position+"]");
 		mUserItem = mUserItems.get(position);
 		mUserTextView.setText(mUserItem.getUserName());
-		((PhotoGalleryActivity) getActivity()).setUserItem(mUserItem);
+		((UserListActivity) getActivity()).setUserItem(mUserItem);
 		// TODO Exit
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
