@@ -86,9 +86,8 @@ public class FlickrFetchr {
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG &&
                 XML_PHOTO.equals(parser.getName())) {
-                String id = parser.getAttributeValue(null, "id");
-                @SuppressWarnings("unused")
-				String caption = parser.getAttributeValue(null, "title");
+                //TODO String id = parser.getAttributeValue(null, "id");
+                //TODO String caption = parser.getAttributeValue(null, "title");
                 String smallUrl = parser.getAttributeValue(null, EXTRA_SMALL_URL);
 
                 PhotoItem item = new PhotoItem();

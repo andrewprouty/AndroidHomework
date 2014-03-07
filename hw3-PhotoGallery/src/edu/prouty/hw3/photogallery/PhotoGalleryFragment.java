@@ -75,8 +75,8 @@ public class PhotoGalleryFragment extends Fragment {
     private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<PhotoItem>> {
         @Override
         protected ArrayList<PhotoItem> doInBackground(Void... params) {
-        	new BismarckUserList().fetchItems(getActivity().getApplicationContext());
-        	new BismarckPhotoList().fetchItems(getActivity().getApplicationContext());
+        	new UserListBismarck().fetchItems(getActivity().getApplicationContext());
+        	//new PhotoListBismarck().fetchItems(getActivity().getApplicationContext());
         	return new FlickrFetchr().fetchItems();
         }
 

@@ -16,9 +16,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class PhotoListFragment extends Fragment{
-	public static final String TAG = "PhotoListFragment";
-	ArrayList<PhotoItem> mPhotoItems;
-	PhotoItem mPhotoItem;
+	private static final String TAG = "PhotoListFragment";
+	private ArrayList<PhotoItem> mPhotoItems;
+//	UserItem mUserItem;
+	private UserItem mUserItem;
+	private PhotoItem mPhotoItem;
 	
 	View view;
 	TextView mUserTextView;
@@ -29,17 +31,20 @@ public class PhotoListFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-		new FetchPhotoItemsTask().execute();
+		new FetchPhotoItemsTask().execute(mUserItem);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
-		View view = inflater.inflate(R.layout.fragment_photo_list, container,false);
+		view = inflater.inflate(R.layout.fragment_photo_list, container,false);
 		mUserTextView = (TextView)view.findViewById(R.id.photo_list_user_name);
-		mUserTextView.setText("2 (hardcoded)");
 		mPhotoTextView = (TextView)view.findViewById(R.id.photo_list_photo_name);
 		mListView = (ListView)view.findViewById(R.id.photo_list_view);
+
+		mUserItem=((PhotoListActivity) getActivity()).getUserItem();
+		mUserTextView.setText(mUserItem.getUserName());
+
 		setupAdapter();
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
@@ -71,13 +76,14 @@ public class PhotoListFragment extends Fragment{
 		Log.i(TAG, "returnSelection() position= ["+position+"]");
 		mPhotoItem = mPhotoItems.get(position);
 		mPhotoTextView.setText(mPhotoItem.getPhotoName());
-		// ADD HERE **** ((UserListActivity) getActivity()).setUserItem(mUserItem);
+		// RETURN PHOTO NAME HERE **** ((UserListActivity) getActivity()).setUserItem(mUserItem);
 		// TODO Exit
 	}
-	private class FetchPhotoItemsTask extends AsyncTask<Void,Void,ArrayList<PhotoItem>> {
+	private class FetchPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {
 		@Override
-		protected ArrayList<PhotoItem> doInBackground(Void... params) {
-			return new BismarckPhotoList().fetchItems(getActivity().getApplicationContext());
+		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
+			return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
+			// Context so can write a file
 		}
 
 		@Override
@@ -85,6 +91,8 @@ public class PhotoListFragment extends Fragment{
 			mPhotoItems = photoItems;
 			//mUserTextView.setText("I'm back");
 			setupAdapter();
+            cancel(true); // done !
+        	Log.i(TAG, "FetchPhotoTask onPostExecute-cancel");
 		}
 	}
 	private class PhotoListAdapter extends ArrayAdapter<PhotoItem> {

@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class UserListFragment extends Fragment{
-	public static final String TAG = "UserListFragment";
-	ArrayList<UserItem> mUserItems;
-	UserItem mUserItem;
+	private static final String TAG = "UserListFragment";
+	private ArrayList<UserItem> mUserItems;
+	private UserItem mUserItem;
 
 	View view;
 	TextView mUserTextView;
@@ -65,23 +65,31 @@ public class UserListFragment extends Fragment{
     }
 	
     private void returnSelection(int position) {
-		Log.i(TAG, "returnSelection() position= ["+position+"]");
+    	Log.i(TAG, "returnSelection() position= ["+position+"]");
 		mUserItem = mUserItems.get(position);
 		mUserTextView.setText(mUserItem.getUserName());
 		((UserListActivity) getActivity()).setUserItem(mUserItem);
+		((UserListActivity) getActivity()).launchPhotoListActivity();
 		// TODO Exit
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override
         protected ArrayList<UserItem> doInBackground(Void... params) {
-        	return new BismarckUserList().fetchItems(getActivity().getApplicationContext());
+        	return new UserListBismarck().fetchItems(getActivity().getApplicationContext());
         }
 
         @Override
         protected void onPostExecute(ArrayList<UserItem> userItems) {
             mUserItems = userItems;
+        	Log.i(TAG, "FetchUserTask onPostExecute");
             //mUserTextView.setText("I'm back");
             setupAdapter();
+            cancel(true); // done !
+        	Log.i(TAG, "FetchUserTask onPostExecute-cancel");
+        }
+        @Override
+        protected void onCancelled() {
+        	Log.i(TAG, "FetchUserTask onCancelled");
         }
     }
     private class UserListAdapter extends ArrayAdapter<UserItem> {
