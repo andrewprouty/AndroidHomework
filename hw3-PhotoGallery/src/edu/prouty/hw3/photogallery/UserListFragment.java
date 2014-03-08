@@ -19,21 +19,24 @@ public class UserListFragment extends Fragment{
 	private static final String TAG = "UserListFragment";
 	private ArrayList<UserItem> mUserItems;
 	private UserItem mUserItem;
+	FetchUserItemsTask mFetchUserItemsTask = new FetchUserItemsTask();
 
 	View view;
 	TextView mUserTextView;
 	ListView mListView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-        
         setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-        new FetchUserItemsTask().execute();
+        mFetchUserItemsTask.execute();
+        //new FetchUserItemsTask().execute();
     }
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
+		Log.d(TAG, "onCreateView()");
 		view = inflater.inflate(R.layout.fragment_user_list, container,false);
         mUserTextView = (TextView)view.findViewById(R.id.user_list_textView);
 		mListView = (ListView)view.findViewById(R.id.user_list_view);
@@ -65,7 +68,8 @@ public class UserListFragment extends Fragment{
     }
 	
     private void returnSelection(int position) {
-		mUserItem = mUserItems.get(position);
+		mFetchUserItemsTask.cancel(true);
+    	mUserItem = mUserItems.get(position);
     	Log.i(TAG, "returnSelection()=["+position+"] "+mUserItem.getUserId()+": "+mUserItem.getUserName());
 		mUserTextView.setText(mUserItem.getUserName());
 		((UserListActivity) getActivity()).setUserItem(mUserItem);
@@ -75,9 +79,16 @@ public class UserListFragment extends Fragment{
         @Override
         protected ArrayList<UserItem> doInBackground(Void... params) {
 			// pass context to know app dir so can write the cache file
-        	return new UserListBismarck().fetchItems(getActivity().getApplicationContext());
+        	Log.d(TAG, "FetchUserTask doInBackground()");
+    		ArrayList<UserItem> items = null;
+    		try {
+        		items = new UserListBismarck().fetchItems(getActivity().getApplicationContext());
+    		} catch (Exception e) {
+    			Log.e(TAG, "doInBackground() Exception.", e);
+    		}
+        	return items;
+        	//return new UserListBismarck().fetchItems(getActivity().getApplicationContext());
         }
-
         @Override
         protected void onPostExecute(ArrayList<UserItem> userItems) {
             mUserItems = userItems;
@@ -85,11 +96,11 @@ public class UserListFragment extends Fragment{
             //mUserTextView.setText("I'm back");
             setupAdapter();
             cancel(true); // done !
-        	Log.d(TAG, "FetchUserTask onPostExecute-cancel");
+        	Log.d(TAG, "FetchUserTask onPostExecute()-cancel");
         }
         @Override
         protected void onCancelled() {
-        	Log.d(TAG, "FetchUserTask onCancelled");
+        	Log.d(TAG, "FetchUserTask onCancelled()");
         }
     }
     private class UserListAdapter extends ArrayAdapter<UserItem> {

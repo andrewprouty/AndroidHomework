@@ -1,5 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,7 +12,6 @@ public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	//UserItem mUsrItem;
 	private UserItem mUserItem = new UserItem();
-	// TODO rename back to mUsrItem.  get rid of new
 	private PhotoItem mPhotoItem;
 
 	protected void launchPhotoDisplayActivity() {

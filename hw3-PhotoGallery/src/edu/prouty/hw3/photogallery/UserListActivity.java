@@ -3,12 +3,17 @@ package edu.prouty.hw3.photogallery;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 public class UserListActivity extends SingleFragmentActivity {
 	private static final String TAG = "UserListActivity";
 	private UserItem mUserItem;
 	
 	protected void launchPhotoListActivity() {
+		
+		Toast.makeText(this,mUserItem.getUserId() + "-"
+				  + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
+		
 		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
 		i.putExtra("UserId", mUserItem.getUserId().toString());
 		i.putExtra("UserName", mUserItem.getUserName().toString());

@@ -84,15 +84,19 @@ public class PhotoListFragment extends Fragment{
 			// pass context to know app dir so can write the cache file
 			return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
 		}
-
 		@Override
 		protected void onPostExecute(ArrayList<PhotoItem> photoItems) {
 			mPhotoItems = photoItems;
 			//mUserTextView.setText("I'm back");
 			setupAdapter();
             cancel(true); // done !
-        	Log.d(TAG, "FetchPhotoTask onPostExecute-cancel");
+        	Log.d(TAG, "FetchPhotoTask onPostExecute()-cancel");
 		}
+        @Override
+        protected void onCancelled() {
+        	Log.d(TAG, "FetchPhotoTask onCancelled()");
+        }
+
 	}
 	private class PhotoListAdapter extends ArrayAdapter<PhotoItem> {
 		public PhotoListAdapter(ArrayList<PhotoItem> photoItems) {
