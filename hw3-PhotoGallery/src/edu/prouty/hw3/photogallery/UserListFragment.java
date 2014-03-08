@@ -44,7 +44,7 @@ public class UserListFragment extends Fragment{
 				TextView textViewItem = ((TextView) view.findViewById(R.id.row_user_name_textView));
 				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
-				Log.i(TAG, "().onItemClick() User ["+position+"]= "+listItemText);
+				Log.d(TAG, "().onItemClick() User ["+position+"]= "+listItemText);
 				returnSelection(position);
 			}
 		});
@@ -65,31 +65,31 @@ public class UserListFragment extends Fragment{
     }
 	
     private void returnSelection(int position) {
-    	Log.i(TAG, "returnSelection() position= ["+position+"]");
 		mUserItem = mUserItems.get(position);
+    	Log.i(TAG, "returnSelection()=["+position+"] "+mUserItem.getUserId()+": "+mUserItem.getUserName());
 		mUserTextView.setText(mUserItem.getUserName());
 		((UserListActivity) getActivity()).setUserItem(mUserItem);
 		((UserListActivity) getActivity()).launchPhotoListActivity();
-		// TODO Exit
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override
         protected ArrayList<UserItem> doInBackground(Void... params) {
+			// pass context to know app dir so can write the cache file
         	return new UserListBismarck().fetchItems(getActivity().getApplicationContext());
         }
 
         @Override
         protected void onPostExecute(ArrayList<UserItem> userItems) {
             mUserItems = userItems;
-        	Log.i(TAG, "FetchUserTask onPostExecute");
+        	Log.d(TAG, "FetchUserTask onPostExecute");
             //mUserTextView.setText("I'm back");
             setupAdapter();
             cancel(true); // done !
-        	Log.i(TAG, "FetchUserTask onPostExecute-cancel");
+        	Log.d(TAG, "FetchUserTask onPostExecute-cancel");
         }
         @Override
         protected void onCancelled() {
-        	Log.i(TAG, "FetchUserTask onCancelled");
+        	Log.d(TAG, "FetchUserTask onCancelled");
         }
     }
     private class UserListAdapter extends ArrayAdapter<UserItem> {
@@ -105,7 +105,7 @@ public class UserListFragment extends Fragment{
             
             UserItem item = getItem(position);
             TextView userTextView = (TextView)convertView.findViewById(R.id.row_user_name_textView);
-			//Log.i(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
+			//Log.d(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
             userTextView.setText(item.getUserName());
             
             return convertView;

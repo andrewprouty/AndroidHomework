@@ -6,24 +6,13 @@ import android.util.Log;
 
 public class UserListActivity extends SingleFragmentActivity {
 	private static final String TAG = "UserListActivity";
-	private UserItem mulaUserItem;
-	
-	protected void setUserItem (UserItem userItem) {
-		mulaUserItem = userItem;
-		Log.i(TAG, "setUserItem() user: "
-				+ mulaUserItem.getUserId() + "-"
-				+ mulaUserItem.getUserName());
-	}
+	private UserItem mUserItem;
 	
 	protected void launchPhotoListActivity() {
 		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
-		i.putExtra("UserId", mulaUserItem.getUserId().toString());
-		i.putExtra("UserName", mulaUserItem.getUserName().toString());
+		i.putExtra("UserId", mUserItem.getUserId().toString());
+		i.putExtra("UserName", mUserItem.getUserName().toString());
 		startActivity(i);
-	}
-	
-	public UserItem getUserItem () {
-		return mulaUserItem;
 	}
 	
 	@Override
@@ -31,5 +20,15 @@ public class UserListActivity extends SingleFragmentActivity {
 		//return new PhotoListFragment();
 		 return new UserListFragment();
 		// return new PhotoGalleryFragment();
+	}
+
+	public UserItem getUserItem () {
+		return mUserItem;
+	}
+	protected void setUserItem (UserItem userItem) {
+		mUserItem = userItem;
+		Log.d(TAG, "setUserItem() user: "
+				+ mUserItem.getUserId() + "-"
+				+ mUserItem.getUserName());
 	}
 }

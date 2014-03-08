@@ -18,7 +18,6 @@ import android.widget.TextView;
 public class PhotoListFragment extends Fragment{
 	private static final String TAG = "PhotoListFragment";
 	private ArrayList<PhotoItem> mPhotoItems;
-//	UserItem mUserItem;
 	private UserItem mUserItem;
 	private PhotoItem mPhotoItem;
 	
@@ -52,7 +51,7 @@ public class PhotoListFragment extends Fragment{
 				TextView textViewItem = ((TextView) view.findViewById(R.id.row_photo_name_textView));
 				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
-				Log.i(TAG, "().onItemClick() Photo ["+position+"]= "+listItemText);
+				Log.d(TAG, "().onItemClick() Photo ["+position+"]= "+listItemText);
 				returnSelection(position);
 			}
 		});
@@ -73,17 +72,17 @@ public class PhotoListFragment extends Fragment{
 	}
 
 	private void returnSelection(int position) {
-		Log.i(TAG, "returnSelection() position= ["+position+"]");
 		mPhotoItem = mPhotoItems.get(position);
+		Log.i(TAG, "returnSelection()=["+position+"] "+mPhotoItem.getPhotoId()+": "+mPhotoItem.getPhotoName());
 		mPhotoTextView.setText(mPhotoItem.getPhotoName());
-		// RETURN PHOTO NAME HERE **** ((UserListActivity) getActivity()).setUserItem(mUserItem);
-		// TODO Exit
+		((PhotoListActivity) getActivity()).setPhotoItem(mPhotoItem);
+		((PhotoListActivity) getActivity()).launchPhotoDisplayActivity();
 	}
 	private class FetchPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {
 		@Override
 		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
+			// pass context to know app dir so can write the cache file
 			return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
-			// Context so can write a file
 		}
 
 		@Override
@@ -92,7 +91,7 @@ public class PhotoListFragment extends Fragment{
 			//mUserTextView.setText("I'm back");
 			setupAdapter();
             cancel(true); // done !
-        	Log.i(TAG, "FetchPhotoTask onPostExecute-cancel");
+        	Log.d(TAG, "FetchPhotoTask onPostExecute-cancel");
 		}
 	}
 	private class PhotoListAdapter extends ArrayAdapter<PhotoItem> {
@@ -108,7 +107,7 @@ public class PhotoListFragment extends Fragment{
 
 			PhotoItem item = getItem(position);
 			TextView photoTextView = (TextView)convertView.findViewById(R.id.row_photo_name_textView);
-			//Log.i(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
+			//Log.d(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
 			photoTextView.setText(item.getPhotoName());
 
 			return convertView;

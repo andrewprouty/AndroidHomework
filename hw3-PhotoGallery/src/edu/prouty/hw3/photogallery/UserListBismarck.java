@@ -18,7 +18,7 @@ import android.net.Uri;
 import android.util.Log;
 
 public class UserListBismarck {
-	public static final String TAG = "UserListBismarck";
+	private static final String TAG = "UserListBismarck";
 	// http://bismarck.sdsu.edu/photoserver/userlist
 	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userlist/";
 
@@ -63,6 +63,7 @@ public class UserListBismarck {
 
 		if (jsonString == null || jsonString.length() == 0) {
 			Log.i(TAG, "fetchItems() Failed to fetch items");
+			//TODO More graceful handling?
 		}
 		else {
 			parseUserList(items, jsonString);
@@ -70,15 +71,16 @@ public class UserListBismarck {
 		return items;
 	}
 	private String GETUserList() {
+		String url = "";
 		String jsonString = "";
 		try {
-			String url = Uri.parse(ENDPOINT).toString();
+			url = Uri.parse(ENDPOINT).toString();
 			jsonString = getUrl(url);
-			Log.i(TAG, "GETUserList() URL: " + url);
-			Log.i(TAG, "GETUserList() Received json: " + jsonString);
+			Log.d(TAG, "GETUserList() Received json: " + jsonString);
 		} catch (IOException ioe) {
 			Log.e(TAG, "GETUserList() Failed to fetch items", ioe);
 		}
+		Log.i(TAG, "GETUserList():" + url);
 		return jsonString;
 	}
 
@@ -92,7 +94,7 @@ public class UserListBismarck {
 		} catch (Exception e) {
 			Log.e(TAG, "cacheUserList() Error writing to file", e);
 		}
-		Log.i(TAG, "cacheUserList() file created: " +appContext.getFileStreamPath(fName));
+		Log.d(TAG, "cacheUserList() file created: " +appContext.getFileStreamPath(fName));
 	}
 
 	private String readUserList(Context appContext) {
@@ -109,7 +111,7 @@ public class UserListBismarck {
 			Log.e(TAG, "readUserList() Error reading file", e);
 			fileContents = "";
 		}
-		Log.i(TAG, "readUserList() read file: " +appContext.getFileStreamPath(fName));
+		Log.i(TAG, "readUserList() from: " +appContext.getFileStreamPath(fName));
 		return fileContents;
 	}
 	private void parseUserList(ArrayList<UserItem> items, String stringUserList) {
@@ -121,14 +123,14 @@ public class UserListBismarck {
 				JSONObject jsonNode = jsonUserList.getJSONObject(i);
 				String user_name   = jsonNode.optString("name").toString();
 				String user_id     = jsonNode.optString("id").toString();
-				Log.i(TAG, "parseUserList(): "+ i + ": "+user_name+"-"+user_id);
+				Log.d(TAG, "parseUserList(): "+ i + ": "+user_name+"-"+user_id);
 
 				UserItem item = new UserItem();
 				item.setUserName(user_name);
 				item.setUserId(user_id);
 				items.add(item);
 			}
-			Log.i(TAG, "parseUserList() UserItem added: "+jsonUserList.length());
+			Log.d(TAG, "parseUserList() UserItem added: "+jsonUserList.length());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

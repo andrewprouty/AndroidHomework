@@ -18,10 +18,9 @@ import android.net.Uri;
 import android.util.Log;
 
 public class PhotoListBismarck {
-	public static final String TAG = "PhotoListBismarck";
+	private static final String TAG = "PhotoListBismarck";
 	// http://bismarck.sdsu.edu/photoserver/userphotos/2
 	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userphotos/";
-//	private static final String USER_KEY = "2";
 	private UserItem mUserItem;
 
 	public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -65,6 +64,7 @@ public class PhotoListBismarck {
 
 		if (jsonString == null || jsonString.length() == 0) {
 			Log.i(TAG, "fetchItems() Failed to fetch items");
+			//TODO More graceful handling?
 		}
 		else {
 			parsePhotoList(items, jsonString);
@@ -76,8 +76,8 @@ public class PhotoListBismarck {
 		try {
 			String url = Uri.parse(ENDPOINT).toString() + mUserItem.getUserId();
 			jsonString = getUrl(url);
-			Log.i(TAG, "GETPhotoList() URL: " + url);
-			Log.i(TAG, "GETPhotoList() Received json: " + jsonString);
+			Log.d(TAG, "GETPhotoList() URL: " + url);
+			Log.d(TAG, "GETPhotoList() Received json: " + jsonString);
 		} catch (IOException ioe) {
 			Log.e(TAG, "GETPhotoList() Failed to fetch items", ioe);
 		}
@@ -94,7 +94,7 @@ public class PhotoListBismarck {
 		} catch (Exception e) {
 			Log.e(TAG, "cachePhotoList() Error writing to file", e);
 		}
-		Log.i(TAG, "cachePhotoList() " +appContext.getFileStreamPath(fName));
+		Log.d(TAG, "cachePhotoList() " +appContext.getFileStreamPath(fName));
 	}
 
 	private String readPhotoList(Context appContext) {
@@ -111,19 +111,19 @@ public class PhotoListBismarck {
 			Log.e(TAG, "readPhotoList() Error reading file", e);
 			fileContents = "";
 		}
-		Log.i(TAG, "readPhotoList() " +appContext.getFileStreamPath(fName));
+		Log.d(TAG, "readPhotoList() " +appContext.getFileStreamPath(fName));
 		return fileContents;
 	}
 	private void parsePhotoList(ArrayList<PhotoItem> items, String stringPhotoList) {
 		try {
 			JSONArray jsonPhotoList = new JSONArray (stringPhotoList);  
 			// {"name":"dog","id":"23"},...
-			Log.i(TAG, "parsePhotoList() count of photos: "+jsonPhotoList.length());
+			Log.d(TAG, "parsePhotoList() count of photos: "+jsonPhotoList.length());
 			for (int i = 0; i < jsonPhotoList.length(); i++) {
 				JSONObject jsonNode = jsonPhotoList.getJSONObject(i);
 				String photo_name   = jsonNode.optString("name").toString();
 				String photo_id     = jsonNode.optString("id").toString();
-				Log.i(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
+				Log.d(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
 
 				PhotoItem item = new PhotoItem();
 				item.setUserId(mUserItem.getUserId());
