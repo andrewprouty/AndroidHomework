@@ -30,6 +30,7 @@ public class PhotoListFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
+		mUserItem=((PhotoListActivity) getActivity()).getUserItem();
 		new FetchPhotoItemsTask().execute(mUserItem);
 	}
 
@@ -41,7 +42,6 @@ public class PhotoListFragment extends Fragment{
 		mPhotoTextView = (TextView)view.findViewById(R.id.photo_list_photo_name);
 		mListView = (ListView)view.findViewById(R.id.photo_list_view);
 
-		mUserItem=((PhotoListActivity) getActivity()).getUserItem();
 		mUserTextView.setText(mUserItem.getUserName());
 
 		setupAdapter();
@@ -81,8 +81,16 @@ public class PhotoListFragment extends Fragment{
 	private class FetchPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {
 		@Override
 		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
+        	Log.d(TAG, "FetchPhotoTask doInBackground()");
+    		ArrayList<PhotoItem> items = null;
+    		try {
+        		items = new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
+    		} catch (Exception e) {
+    			Log.e(TAG, "doInBackground() Exception.", e);
+    		}
+        	return items;
 			// pass context to know app dir so can write the cache file
-			return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
+			//return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
 		}
 		@Override
 		protected void onPostExecute(ArrayList<PhotoItem> photoItems) {

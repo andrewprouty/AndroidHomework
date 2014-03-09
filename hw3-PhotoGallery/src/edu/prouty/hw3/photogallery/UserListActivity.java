@@ -11,7 +11,7 @@ public class UserListActivity extends SingleFragmentActivity {
 	
 	protected void launchPhotoListActivity() {
 		
-		Toast.makeText(this,mUserItem.getUserId() + "-"
+		Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-"
 				  + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
 		
 		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);

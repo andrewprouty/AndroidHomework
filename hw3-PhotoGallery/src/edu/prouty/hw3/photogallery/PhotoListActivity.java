@@ -1,6 +1,5 @@
 package edu.prouty.hw3.photogallery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,8 +29,11 @@ public class PhotoListActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment);
 		Log.d(TAG, "onCreate()");
-		mUserItem.setUserId(getIntent().getStringExtra("UserId"));
-		mUserItem.setUserName(getIntent().getStringExtra("UserName"));
+
+		String id = getIntent().getStringExtra("UserId");
+		String name = getIntent().getStringExtra("UserName");
+		initUserItem(id, name);
+
 		FragmentManager manager = getSupportFragmentManager();
 		Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
 
@@ -50,9 +52,10 @@ public class PhotoListActivity extends FragmentActivity {
 	public UserItem getUserItem () {
 		return mUserItem;
 	}
-	public void setUserItem (UserItem userItem) {
-		mUserItem = userItem;
-		Log.d(TAG, "setUserItem() user: "
+	public void initUserItem (String id, String name) {
+		mUserItem.setUserId(id);
+		mUserItem.setUserName(name);
+		Log.d(TAG, "initUserItem() user: "
 				+ mUserItem.getUserId() + "-"
 				+ mUserItem.getUserName());
 	}

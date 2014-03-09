@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -52,34 +51,43 @@ public class PhotoListBismarck {
 	}
 
 	public ArrayList<PhotoItem> fetchItems(UserItem userItem, Context appContext) {
+		Log.d(TAG, "fetchItems()");
 		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
-		mUserItem = userItem;
-		String jsonString = GETPhotoList();
-		if (jsonString == null || jsonString.length() == 0) {
-			jsonString = readPhotoList(appContext); // exists in cache?
-		}
-		else {
-			cachePhotoList(appContext, jsonString);
+		mUserItem = userItem; // Sets class variable
+		try {
+			String jsonString = GETPhotoList();
+			if (jsonString == null || jsonString.length() == 0) {
+				jsonString = readPhotoList(appContext); // exists in cache?
+			}
+			else {
+				cachePhotoList(appContext, jsonString);
+			}
+
+			if (jsonString == null || jsonString.length() == 0) {
+				Log.i(TAG, "fetchItems() Failed to fetch items");
+				//Will return empty list
+			}
+			else {
+				parsePhotoList(items, jsonString);
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "fetchItems() Exc:"+e.getMessage(),e);
 		}
 
-		if (jsonString == null || jsonString.length() == 0) {
-			Log.i(TAG, "fetchItems() Failed to fetch items");
-			//TODO More graceful handling?
-		}
-		else {
-			parsePhotoList(items, jsonString);
-		}
 		return items;
 	}
 	private String GETPhotoList() {
 		String jsonString = "";
 		try {
 			String url = Uri.parse(ENDPOINT).toString() + mUserItem.getUserId();
+			Log.d(TAG, "GETPhotoList():" + url);
 			jsonString = getUrl(url);
-			Log.d(TAG, "GETPhotoList() URL: " + url);
 			Log.d(TAG, "GETPhotoList() Received json: " + jsonString);
 		} catch (IOException ioe) {
-			Log.e(TAG, "GETPhotoList() Failed to fetch items", ioe);
+			Log.e(TAG, "GETPhotoList() IOException.", ioe);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "GETPhotoList() Exc:"+e.getMessage(),e);
 		}
 		return jsonString;
 	}
@@ -92,9 +100,9 @@ public class PhotoListBismarck {
 			outFile.write(jsonString.getBytes());
 			outFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "cachePhotoList() Error writing to file", e);
+			Log.e(TAG, "cachePhotoList() Exc:"+e.getMessage(),e);
 		}
-		Log.d(TAG, "cachePhotoList() " +appContext.getFileStreamPath(fName));
+		Log.d(TAG, "cachePhotoList():" +appContext.getFileStreamPath(fName));
 	}
 
 	private String readPhotoList(Context appContext) {
@@ -108,7 +116,7 @@ public class PhotoListBismarck {
 			fileContents = new String (data);
 			inFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "readPhotoList() Error reading file", e);
+			Log.e(TAG, "readPhotoList() Exc:"+e.getMessage(),e);
 			fileContents = "";
 		}
 		Log.d(TAG, "readPhotoList() " +appContext.getFileStreamPath(fName));
@@ -132,8 +140,8 @@ public class PhotoListBismarck {
 				items.add(item);
 			}
 
-		} catch (JSONException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			Log.e(TAG, "parsePhotoList() Exc:"+e.getMessage(),e);
 		}
 	}
 }

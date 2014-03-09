@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.util.Log;
 
 public class UserListBismarck {
 	private static final String TAG = "UserListBismarck";
-	// http://bismarck.sdsu.edu/photoserver/userlist
 	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userlist/";
 
 	public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -63,13 +61,13 @@ public class UserListBismarck {
 
 			if (jsonString == null || jsonString.length() == 0) {
 				Log.i(TAG, "fetchItems() Failed to fetch items");
-				//TODO More graceful handling?
+				//Not online/cache - will show an empty list
 			}
 			else {
 				parseUserList(items, jsonString);
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "fetchItems() Exception.", e);
+			Log.e(TAG, "fetchItems() Exc:"+e.getMessage(),e);
 		}
 		return items;
 	}
@@ -78,12 +76,15 @@ public class UserListBismarck {
 		String jsonString = "";
 		try {
 			url = Uri.parse(ENDPOINT).toString();
+			Log.d(TAG, "GETUserList():" + url);
 			jsonString = getUrl(url);
 			Log.d(TAG, "GETUserList() Received json: " + jsonString);
 		} catch (IOException ioe) {
 			Log.e(TAG, "GETUserList() IOException.", ioe);
 		}
-		Log.i(TAG, "GETUserList():" + url);
+		catch (Exception e) {
+			Log.e(TAG, "GETUserList() Exc:"+e.getMessage(),e);
+		}
 		return jsonString;
 	}
 
@@ -95,9 +96,9 @@ public class UserListBismarck {
 			outFile.write(jsonString.getBytes());
 			outFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "cacheUserList() Exception.", e);
+			Log.e(TAG, "cacheUserList() Exc:"+e.getMessage(),e);
 		}
-		Log.d(TAG, "cacheUserList() file created: " +appContext.getFileStreamPath(fName));
+		Log.d(TAG, "cacheUserList():" +appContext.getFileStreamPath(fName));
 	}
 
 	private String readUserList(Context appContext) {
@@ -111,7 +112,7 @@ public class UserListBismarck {
 			fileContents = new String (data);
 			inFile.close();
 		} catch (Exception e) {
-			Log.e(TAG, "readUserList() Exception.", e);
+			Log.e(TAG, "readUserList() Exc:"+e.getMessage(),e);
 			fileContents = "";
 		}
 		Log.i(TAG, "readUserList() from: " +appContext.getFileStreamPath(fName));
@@ -134,9 +135,8 @@ public class UserListBismarck {
 				items.add(item);
 			}
 			Log.d(TAG, "parseUserList() UserItem added: "+jsonUserList.length());
-		} catch (JSONException e) {
-			Log.e(TAG, "parseUserList() JSONException.", e);
-			e.printStackTrace();
+		} catch (Exception e) {
+			Log.e(TAG, "parseUserList() Exc:"+e.getMessage(),e);
 		}
 	}
 }

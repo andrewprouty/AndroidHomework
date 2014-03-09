@@ -78,10 +78,10 @@ public class UserListFragment extends Fragment{
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override
         protected ArrayList<UserItem> doInBackground(Void... params) {
-			// pass context to know app dir so can write the cache file
         	Log.d(TAG, "FetchUserTask doInBackground()");
     		ArrayList<UserItem> items = null;
     		try {
+    			// pass context to know app dir so can write the cache file
         		items = new UserListBismarck().fetchItems(getActivity().getApplicationContext());
     		} catch (Exception e) {
     			Log.e(TAG, "doInBackground() Exception.", e);
