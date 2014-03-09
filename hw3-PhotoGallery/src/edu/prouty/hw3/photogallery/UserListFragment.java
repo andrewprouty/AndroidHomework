@@ -30,10 +30,9 @@ public class UserListFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
         mFetchUserItemsTask.execute();
-        //new FetchUserItemsTask().execute();
     }
 	
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
 		Log.d(TAG, "onCreateView()");
@@ -81,7 +80,7 @@ public class UserListFragment extends Fragment{
         	Log.d(TAG, "FetchUserTask doInBackground()");
     		ArrayList<UserItem> items = null;
     		try {
-    			// pass context to know app dir so can write the cache file
+    			// pass context for app dir to cache file
         		items = new UserListBismarck().fetchItems(getActivity().getApplicationContext());
     		} catch (Exception e) {
     			Log.e(TAG, "doInBackground() Exception.", e);

@@ -3,8 +3,8 @@ package edu.prouty.hw3.photogallery;
 public class PhotoItem {
     private String mPhotoName;
     private String mPhotoId;
+    private String mUserName;
     private String mUserId;
-    //TODO remove mUrl
     private String mUrl;
     
     public String getPhotoName() {
@@ -28,6 +28,13 @@ public class PhotoItem {
         mUserId = userId;
     }
     
+    public String getUserName() {
+        return mUserName;
+    }
+    public void setUserName(String userName) {
+        mUserName = userName;
+    }
+
     public String getUrl() {
         return mUrl;
     }

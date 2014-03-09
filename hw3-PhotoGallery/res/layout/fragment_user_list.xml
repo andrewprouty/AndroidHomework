@@ -9,7 +9,15 @@
         android:id="@+id/user_list_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="24sp" />
+    
+    <TextView
+        android:id="@+id/user_spacer_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
         android:text="@string/user_list_textView_hint"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:textSize="18sp" />
 
     <ListView

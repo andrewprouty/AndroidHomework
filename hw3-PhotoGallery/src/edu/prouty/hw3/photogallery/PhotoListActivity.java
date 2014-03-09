@@ -1,5 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,19 +10,21 @@ import android.widget.Toast;
 
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
-	//UserItem mUsrItem;
 	private UserItem mUserItem = new UserItem();
 	private PhotoItem mPhotoItem;
 
 	protected void launchPhotoDisplayActivity() {
 		Toast.makeText(this,mPhotoItem.getUserId() + "-"
+						  + mPhotoItem.getUserName() + "; "
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
 				,Toast.LENGTH_SHORT).show();
-		//Intent i = new Intent (PhotoListActivity.this, DisplayActivity.class);
-		//i.putExtra("UserId", mUserItem.getUserId().toString());
-		//i.putExtra("UserName", mUserItem.getUserName().toString());
-		//startActivity(i);
+		Intent i = new Intent (PhotoListActivity.this, ImageActivity.class);
+		i.putExtra("UserId",   mPhotoItem.getUserId().toString());
+		i.putExtra("UserName", mPhotoItem.getUserName().toString());
+		i.putExtra("PhotoId",  mPhotoItem.getPhotoId().toString());
+		i.putExtra("PhotoName",mPhotoItem.getPhotoName().toString());
+		startActivity(i);
 	}
 
 	@Override
@@ -49,9 +52,6 @@ public class PhotoListActivity extends FragmentActivity {
 		return new PhotoListFragment();
 	}
 
-	public UserItem getUserItem () {
-		return mUserItem;
-	}
 	public void initUserItem (String id, String name) {
 		mUserItem.setUserId(id);
 		mUserItem.setUserName(name);
@@ -59,11 +59,14 @@ public class PhotoListActivity extends FragmentActivity {
 				+ mUserItem.getUserId() + "-"
 				+ mUserItem.getUserName());
 	}
-
+	public UserItem getUserItem () {
+		return mUserItem;
+	}
 	public void setPhotoItem (PhotoItem photoItem) {
 		mPhotoItem = photoItem;
 		Log.d(TAG, "setPhotoItem() photo: "
 				+ mPhotoItem.getUserId() + "-"
+				+ mPhotoItem.getUserName() + "; "
 				+ mPhotoItem.getPhotoId() + "-"
 				+ mPhotoItem.getPhotoName());
 	}

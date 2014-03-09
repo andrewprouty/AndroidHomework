@@ -10,13 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/photo_list_user_name_hint"
-        android:textSize="18sp" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/photo_list_photo_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/black"
         android:text="@string/photo_list_photo_name_hint"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:textSize="18sp" />
     
     <ListView

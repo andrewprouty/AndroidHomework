@@ -96,13 +96,13 @@ public class PhotoGalleryFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.gallery_item, parent, false);
+                        .inflate(R.layout.fragment_image, parent, false);
             }
             
             PhotoItem item = getItem(position);
             ImageView imageView = (ImageView)convertView
-                    .findViewById(R.id.gallery_item_imageView);
-            imageView.setImageResource(R.drawable.brian_up_close);
+                    .findViewById(R.id.image_imageView);
+            imageView.setImageResource(R.drawable.image_pending);
             mThumbnailThread.queueThumbnail(imageView, item.getUrl());
             
             return convertView;

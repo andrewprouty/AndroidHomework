@@ -22,9 +22,7 @@ public class UserListActivity extends SingleFragmentActivity {
 	
 	@Override
 	public Fragment createFragment() {
-		//return new PhotoListFragment();
 		 return new UserListFragment();
-		// return new PhotoGalleryFragment();
 	}
 
 	public UserItem getUserItem () {

@@ -84,13 +84,12 @@ public class PhotoListFragment extends Fragment{
         	Log.d(TAG, "FetchPhotoTask doInBackground()");
     		ArrayList<PhotoItem> items = null;
     		try {
+    			// pass context for app dir to cache file
         		items = new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
     		} catch (Exception e) {
     			Log.e(TAG, "doInBackground() Exception.", e);
     		}
         	return items;
-			// pass context to know app dir so can write the cache file
-			//return new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
 		}
 		@Override
 		protected void onPostExecute(ArrayList<PhotoItem> photoItems) {
@@ -104,7 +103,6 @@ public class PhotoListFragment extends Fragment{
         protected void onCancelled() {
         	Log.d(TAG, "FetchPhotoTask onCancelled()");
         }
-
 	}
 	private class PhotoListAdapter extends ArrayAdapter<PhotoItem> {
 		public PhotoListAdapter(ArrayList<PhotoItem> photoItems) {

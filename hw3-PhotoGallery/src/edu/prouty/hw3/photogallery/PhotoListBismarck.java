@@ -135,6 +135,7 @@ public class PhotoListBismarck {
 
 				PhotoItem item = new PhotoItem();
 				item.setUserId(mUserItem.getUserId());
+				item.setUserName(mUserItem.getUserName());
 				item.setPhotoName(photo_name);
 				item.setPhotoId(photo_id);
 				items.add(item);
