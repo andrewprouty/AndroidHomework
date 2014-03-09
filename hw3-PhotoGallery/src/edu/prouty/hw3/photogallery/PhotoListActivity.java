@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.Toast;
 
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
@@ -14,11 +13,11 @@ public class PhotoListActivity extends FragmentActivity {
 	private PhotoItem mPhotoItem;
 
 	protected void launchPhotoDisplayActivity() {
-		Toast.makeText(this,mPhotoItem.getUserId() + "-"
+		/*Toast.makeText(this,mPhotoItem.getUserId() + "-"
 						  + mPhotoItem.getUserName() + "; "
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
-				,Toast.LENGTH_SHORT).show();
+				,Toast.LENGTH_SHORT).show();*/
 		Intent i = new Intent (PhotoListActivity.this, ImageActivity.class);
 		i.putExtra("UserId",   mPhotoItem.getUserId().toString());
 		i.putExtra("UserName", mPhotoItem.getUserName().toString());
