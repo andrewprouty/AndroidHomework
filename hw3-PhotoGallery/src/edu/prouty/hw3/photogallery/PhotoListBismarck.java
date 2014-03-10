@@ -93,7 +93,7 @@ public class PhotoListBismarck {
 	}
 
 	private void cachePhotoList(Context appContext, String jsonString) {
-		String fName = "PhotoList-"+mUserItem.getUserId();
+		String fName = "UserPhotos-"+mUserItem.getUserId();
 		FileOutputStream outFile;
 		try {
 			outFile = appContext.openFileOutput(fName, Context.MODE_PRIVATE);
@@ -106,7 +106,7 @@ public class PhotoListBismarck {
 	}
 
 	private String readPhotoList(Context appContext) {
-		String fName = "PhotoList-"+mUserItem.getUserId();
+		String fName = "UserPhotos-"+mUserItem.getUserId();
 		String fileContents;
 		FileInputStream inFile;
 		try {

@@ -14,7 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageFragment extends Fragment{
-	private static final String TAG = "ImageFragment";
+    public static final String EXTRA_PHOTO_ID = "photogallery.PHOTO_ID";
+    private static final String TAG = "ImageFragment";
 	private String mImageFileName;
 	private PhotoItem mPhotoItem;
 
@@ -24,6 +25,17 @@ public class ImageFragment extends Fragment{
 	TextView mUserTextView;
 	TextView mPhotoTextView;
 	ImageView mImageView;
+	
+    public static ImageFragment newInstance(String photoId) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_PHOTO_ID, photoId);
+
+        ImageFragment fragment = new ImageFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate()");
