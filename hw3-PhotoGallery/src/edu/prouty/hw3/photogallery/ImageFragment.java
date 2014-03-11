@@ -27,11 +27,11 @@ public class ImageFragment extends Fragment{
 	ImageView mImageView;
 	
     public static ImageFragment newInstance(String photoId) {
-        Bundle args = new Bundle();
-        args.putSerializable(EXTRA_PHOTO_ID, photoId);
+        Bundle b = new Bundle();
+        b.putSerializable(EXTRA_PHOTO_ID, photoId);
 
         ImageFragment fragment = new ImageFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(b);
 
         return fragment;
     }
@@ -42,10 +42,11 @@ public class ImageFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-		mPhotoItem=((ImageActivity) getActivity()).getPhotoItem();
+		//mPhotoItem=((ImageActivity) getActivity()).getPhotoItem();
+		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem();
 
-		 mFetchImageTask = new FetchImageTask(mPhotoItem);
-		 mFetchImageTask.execute();
+		mFetchImageTask = new FetchImageTask(mPhotoItem);
+		mFetchImageTask.execute();
 	}
 
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)

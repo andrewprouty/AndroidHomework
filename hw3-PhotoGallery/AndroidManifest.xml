@@ -28,6 +28,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="edu.prouty.hw3.photogallery.ImagePagerActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="edu.prouty.hw3.photogallery.ImageActivity"
             android:label="@string/app_name" >
         </activity>

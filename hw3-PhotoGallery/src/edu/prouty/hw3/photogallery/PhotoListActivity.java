@@ -1,5 +1,7 @@
 package edu.prouty.hw3.photogallery;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +12,9 @@ import android.util.Log;
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
+	private ArrayList<PhotoItem> mPhotoItems;
 	private PhotoItem mPhotoItem;
+
 
 	protected void launchPhotoDisplayActivity() {
 		/*Toast.makeText(this,mPhotoItem.getUserId() + "-"
@@ -18,11 +22,13 @@ public class PhotoListActivity extends FragmentActivity {
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
 				,Toast.LENGTH_SHORT).show();*/
-		Intent i = new Intent (PhotoListActivity.this, ImageActivity.class);
+		//Intent i = new Intent (PhotoListActivity.this, ImageActivity.class);
+		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
 		i.putExtra("UserId",   mPhotoItem.getUserId().toString());
 		i.putExtra("UserName", mPhotoItem.getUserName().toString());
 		i.putExtra("PhotoId",  mPhotoItem.getPhotoId().toString());
 		i.putExtra("PhotoName",mPhotoItem.getPhotoName().toString());
+		i.putExtra("PhotosCount",mPhotoItems.size());
 		startActivity(i);
 	}
 
@@ -71,5 +77,8 @@ public class PhotoListActivity extends FragmentActivity {
 	}
 	public PhotoItem getPhotoItem () {
 		return mPhotoItem;
+	}
+	public void setPhotoItems (ArrayList<PhotoItem> items) {
+		mPhotoItems = items;
 	}
 }
