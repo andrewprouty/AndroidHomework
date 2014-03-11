@@ -20,7 +20,7 @@ public class UserListFragment extends Fragment{
 	private ArrayList<UserItem> mUserItems;
 	private UserItem mUserItem;
 	FetchUserItemsTask mFetchUserItemsTask = new FetchUserItemsTask();
-
+	
 	View view;
 	TextView mUserTextView;
 	ListView mListView;
@@ -58,7 +58,12 @@ public class UserListFragment extends Fragment{
     		return;
     	}
 		if (mUserItems != null) {
-	    	setupOffline(); // insert to DB
+	    	insertIntoDB(); // GET list into DB
+		}
+		else {
+			fetchFromDB(); // none, if in DB - populate
+		}
+		if (mUserItems != null) {
 			UserListAdapter adapter = new UserListAdapter(mUserItems);
 			mListView.setAdapter(adapter);
 		}
@@ -66,11 +71,12 @@ public class UserListFragment extends Fragment{
 			mListView.setAdapter(null);
 		}
     }
-    
-    private void setupOffline() {
-    	//if did GET a list - save to DB
-    	//if did NOT - retrieve from DB
+
+    private void insertIntoDB() {
     	((UserListActivity) getActivity()).insertUserItems(mUserItems);
+    }
+    private void fetchFromDB() {
+    	mUserItems=((UserListActivity) getActivity()).queryUserItems();
     }
 	
     private void returnSelection(int position) {

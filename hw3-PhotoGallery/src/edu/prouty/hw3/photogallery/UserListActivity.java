@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.UserCursor;
 
 public class UserListActivity extends FragmentActivity {
 	private static final String TAG = "UserListActivity";
@@ -30,7 +31,11 @@ public class UserListActivity extends FragmentActivity {
         }
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
     }
-    
+
+    public void onDestroy() {
+		super.onDestroy();
+    }
+
 	protected void launchPhotoListActivity() {
 		//Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-" + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
 		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
@@ -67,5 +72,25 @@ public class UserListActivity extends FragmentActivity {
         }
         return;
     }
-
+    protected ArrayList<UserItem> queryUserItems() {
+    	UserCursor cursor;
+    	ArrayList<UserItem> items = new ArrayList<UserItem>();
+    	cursor = mHelper.queryUsers();
+    	cursor.moveToFirst();
+    	while(!cursor.isAfterLast()) {
+    		UserItem item = cursorToUserItem(cursor);
+    		items.add(item);
+    		cursor.moveToNext();
+    		Log.d(TAG, "queryUserItem() user: "
+    				+ item.getUserId() + "-"
+    				+ item.getUserName());
+    	}
+    	return items;
+    }
+    private UserItem cursorToUserItem(UserCursor cursor) {
+    	UserItem item = new UserItem();
+    	item.setUserId(cursor.getString(0));   // TODO cursor.getInt
+    	item.setUserName(cursor.getString(1));
+		return item;
+    }
 }
