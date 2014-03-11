@@ -58,12 +58,19 @@ public class UserListFragment extends Fragment{
     		return;
     	}
 		if (mUserItems != null) {
+	    	setupOffline(); // insert to DB
 			UserListAdapter adapter = new UserListAdapter(mUserItems);
 			mListView.setAdapter(adapter);
 		}
 		else {
 			mListView.setAdapter(null);
 		}
+    }
+    
+    private void setupOffline() {
+    	//if did GET a list - save to DB
+    	//if did NOT - retrieve from DB
+    	((UserListActivity) getActivity()).insertUserItems(mUserItems);
     }
 	
     private void returnSelection(int position) {
