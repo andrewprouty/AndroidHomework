@@ -57,11 +57,15 @@ public class UserListFragment extends Fragment{
     	if (getActivity() == null || mListView == null) {
     		return;
     	}
-		if (mUserItems != null) {
-	    	insertIntoDB(); // GET list into DB
+    	Log.d(TAG, "setupAdapter()");
+
+		if (mUserItems != null && mUserItems.size()>0) {
+			// GET list into DB
+			((UserListActivity) getActivity()).insertUserItems(mUserItems);
 		}
 		else {
-			fetchFromDB(); // none, if in DB - populate
+			// none. If in DB - populate from there
+			mUserItems=((UserListActivity) getActivity()).fetchUserItems();
 		}
 		if (mUserItems != null) {
 			UserListAdapter adapter = new UserListAdapter(mUserItems);
@@ -72,12 +76,15 @@ public class UserListFragment extends Fragment{
 		}
     }
 
+    /*  TODO remove later
     private void insertIntoDB() {
+     
     	((UserListActivity) getActivity()).insertUserItems(mUserItems);
     }
     private void fetchFromDB() {
-    	mUserItems=((UserListActivity) getActivity()).queryUserItems();
+    	mUserItems=((UserListActivity) getActivity()).fetchUserItems();
     }
+    */
 	
     private void returnSelection(int position) {
 		mFetchUserItemsTask.cancel(true);

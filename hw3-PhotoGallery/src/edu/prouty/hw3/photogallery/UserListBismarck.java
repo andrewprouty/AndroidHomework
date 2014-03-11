@@ -1,8 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -18,7 +16,7 @@ import android.util.Log;
 
 public class UserListBismarck {
 	private static final String TAG = "UserListBismarck";
-	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userlist/";
+	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserverX/userlist/";
 
 	public byte[] getUrlBytes(String urlSpec) throws IOException {
 		URL url = new URL(urlSpec);
@@ -53,6 +51,8 @@ public class UserListBismarck {
 		try {
 			String jsonString = GETUserList();
 			if (jsonString == null || jsonString.length() == 0) {
+				Log.i(TAG, "fetchItems() Failed to fetch items");
+			/*  TODO remove when ready
 				jsonString = readUserList(appContext); // exists in cache?
 			}
 			else {
@@ -61,6 +61,7 @@ public class UserListBismarck {
 
 			if (jsonString == null || jsonString.length() == 0) {
 				Log.i(TAG, "fetchItems() Failed to fetch items");
+			*/
 				//Not online/cache - will show an empty list
 			}
 			else {
@@ -80,14 +81,14 @@ public class UserListBismarck {
 			jsonString = getUrl(url);
 			Log.d(TAG, "GETUserList() Received json: " + jsonString);
 		} catch (IOException ioe) {
-			Log.e(TAG, "GETUserList() IOException.", ioe);
-		}
-		catch (Exception e) {
+			Log.e(TAG, "GETUserList() IOException: "+ioe.getMessage()); // skip stack
+		} catch (Exception e) {
 			Log.e(TAG, "GETUserList() Exc:"+e.getMessage(),e);
 		}
 		return jsonString;
 	}
 
+	/* TODO remove User file cache
 	private void cacheUserList(Context appContext, String jsonString) {
 		String fName = "UserList";
 		FileOutputStream outFile;
@@ -117,7 +118,7 @@ public class UserListBismarck {
 		}
 		Log.i(TAG, "readUserList() from: " +appContext.getFileStreamPath(fName));
 		return fileContents;
-	}
+	}*/
 	private void parseUserList(ArrayList<UserItem> items, String stringUserList) {
 		try {
 			JSONArray jsonUserList = new JSONArray (stringUserList);  

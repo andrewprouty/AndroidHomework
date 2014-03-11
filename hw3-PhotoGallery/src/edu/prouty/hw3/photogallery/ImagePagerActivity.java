@@ -1,5 +1,8 @@
 package edu.prouty.hw3.photogallery;
 
+import java.util.ArrayList;
+
+import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.UserCursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +16,8 @@ public class ImagePagerActivity extends FragmentActivity {
 	private static final String TAG = "ImagePagerActivity";
 	private PhotoItem mPhotoItem = new PhotoItem();
 	private ViewPager mViewPager;
+
+	private GalleryDatabaseHelper mHelper;
 
 	//	private ArrayList<PhotoItem> mPhotoItems;
 
@@ -49,7 +54,8 @@ public class ImagePagerActivity extends FragmentActivity {
 				//return ImageFragment.newInstance(photoItem.getPhotoId());
 				return new ImageFragment();
 			}
-		}); 
+		});
+        mHelper = new GalleryDatabaseHelper(getApplicationContext());
 	}
 	public void initPhotoItem (String uId, String uName, String pId, String pName) {
 		mPhotoItem.setUserId(uId);
@@ -66,4 +72,27 @@ public class ImagePagerActivity extends FragmentActivity {
 	public PhotoItem getPhotoItem () {
 		return mPhotoItem;
 	}
+	////  SWITCH TO PHOTO LIST !!
+    protected ArrayList<UserItem> fetchUserItems() {
+    	UserCursor cursor;
+    	ArrayList<UserItem> items = new ArrayList<UserItem>();
+    	cursor = mHelper.queryUsers();
+    	cursor.moveToFirst();
+    	while(!cursor.isAfterLast()) {
+    		UserItem item = cursorToUserItem(cursor);
+    		items.add(item);
+    		cursor.moveToNext();
+    		Log.d(TAG, "fetchUserItem() user: "
+    				+ item.getUserId() + "-"
+    				+ item.getUserName());
+    	}
+    	return items;
+    }
+    private UserItem cursorToUserItem(UserCursor cursor) {
+    	UserItem item = new UserItem();
+    	item.setUserId(cursor.getString(0));   // TODO cursor.getInt
+    	item.setUserName(cursor.getString(1));
+		return item;
+    }
+
 }

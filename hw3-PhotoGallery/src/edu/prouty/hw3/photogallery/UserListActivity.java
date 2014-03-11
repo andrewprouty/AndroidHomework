@@ -60,9 +60,7 @@ public class UserListActivity extends FragmentActivity {
     protected void insertUserItems(ArrayList<UserItem> users) {
         UserItem user;
         Log.d(TAG, "insertUserItem()");
-		Log.d(TAG, "insertUserItem() newer");
 		mHelper.deleteUsers();
-		Log.d(TAG, "insertUserItem() removed old");
         for (int i=0; i<users.size(); i++) {
     		user=users.get(i);
     		Log.d(TAG, "insertUserItem() user: "
@@ -72,7 +70,7 @@ public class UserListActivity extends FragmentActivity {
         }
         return;
     }
-    protected ArrayList<UserItem> queryUserItems() {
+    protected ArrayList<UserItem> fetchUserItems() {
     	UserCursor cursor;
     	ArrayList<UserItem> items = new ArrayList<UserItem>();
     	cursor = mHelper.queryUsers();
@@ -81,7 +79,7 @@ public class UserListActivity extends FragmentActivity {
     		UserItem item = cursorToUserItem(cursor);
     		items.add(item);
     		cursor.moveToNext();
-    		Log.d(TAG, "queryUserItem() user: "
+    		Log.d(TAG, "fetchUserItem() user: "
     				+ item.getUserId() + "-"
     				+ item.getUserName());
     	}

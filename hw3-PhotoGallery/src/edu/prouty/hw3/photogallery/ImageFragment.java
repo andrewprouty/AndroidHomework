@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class ImageFragment extends Fragment{
     public static final String EXTRA_PHOTO_ID = "photogallery.PHOTO_ID";
     private static final String TAG = "ImageFragment";
+	//private ArrayList<UserItem> mUserItems; // TODO part of test
 	private String mImageFileName;
 	private PhotoItem mPhotoItem;
 
@@ -43,6 +44,9 @@ public class ImageFragment extends Fragment{
 
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
 		//mPhotoItem=((ImageActivity) getActivity()).getPhotoItem();
+
+		//mUserItems=((ImagePagerActivity) getActivity()).fetchUserItems();// TODO JUST A TEST
+
 		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem();
 
 		mFetchImageTask = new FetchImageTask(mPhotoItem);
