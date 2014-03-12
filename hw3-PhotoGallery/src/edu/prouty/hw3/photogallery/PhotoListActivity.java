@@ -17,8 +17,8 @@ public class PhotoListActivity extends FragmentActivity {
 	private PhotoItem mPhotoItem;
 	private GalleryDatabaseHelper mHelper;
 
-	protected void launchPhotoDisplayActivity() {
-		/*Toast.makeText(this,mPhotoItem.getUserId() + "-"
+	protected void launchPhotoDisplayActivity(int position) {
+		/* TODO remove Toast.makeText(this,mPhotoItem.getUserId() + "-"
 						  + mPhotoItem.getUserName() + "; "
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
@@ -28,7 +28,8 @@ public class PhotoListActivity extends FragmentActivity {
 		i.putExtra("UserName", mPhotoItem.getUserName().toString());
 		i.putExtra("PhotoId",  mPhotoItem.getPhotoId().toString());
 		i.putExtra("PhotoName",mPhotoItem.getPhotoName().toString());
-		i.putExtra("PhotosCount",mPhotoItems.size());
+		i.putExtra("position", position);
+		//i.putExtra("PhotosCount",mPhotoItems.size());
 		startActivity(i);
 	}
 
@@ -85,11 +86,7 @@ public class PhotoListActivity extends FragmentActivity {
 
 	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
 	        PhotoItem item;
-	        Log.d(TAG, "insertPhotoItems() a");
-	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserId());
-	        Log.d(TAG, "insertPhotoItems() b");
-	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserName());
-	        Log.d(TAG, "insertPhotoItems() c");
+	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
 			mHelper.deletePhotosforUserId(user.getUserId()); // 
 	        for (int i=0; i<items.size(); i++) {
 	    		item=items.get(i);
@@ -106,7 +103,7 @@ public class PhotoListActivity extends FragmentActivity {
 	protected ArrayList<PhotoItem> fetchPhotoItemsforUser(UserItem user) {
 		PhotoCursor cursor;
 		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
-		cursor = mHelper.queryPhotosForUser(user.getUserId());
+		cursor = mHelper.queryPhotosForUserId(user.getUserId());
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			PhotoItem item = cursorToPhotoItem(cursor);
@@ -123,9 +120,9 @@ public class PhotoListActivity extends FragmentActivity {
 	}
 	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
 		PhotoItem item = new PhotoItem();
-		item.setPhotoId(cursor.getString(0));  // TODO cursor.getInt?
+		item.setPhotoId(cursor.getString(0));
 		item.setPhotoName(cursor.getString(1));
-		item.setUserId(cursor.getString(2));   // TODO cursor.getInt?
+		item.setUserId(cursor.getString(2));
 		item.setUserName(cursor.getString(3));
 		return item;
 	}

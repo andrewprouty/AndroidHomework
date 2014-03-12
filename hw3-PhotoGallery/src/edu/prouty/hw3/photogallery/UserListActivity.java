@@ -12,14 +12,17 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.UserCursor;
 
 public class UserListActivity extends FragmentActivity {
 	private static final String TAG = "UserListActivity";
-	private UserItem mUserItem;
+	//private UserItem mUserItem;
 	private GalleryDatabaseHelper mHelper;
 	
-	protected void launchPhotoListActivity() {
+	protected void launchPhotoListActivity(UserItem user) {
 		//Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-" + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
 		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
-		i.putExtra("UserId", mUserItem.getUserId().toString());
-		i.putExtra("UserName", mUserItem.getUserName().toString());
+		i.putExtra("UserId", user.getUserId().toString());
+		i.putExtra("UserName", user.getUserName().toString());
+		Log.d(TAG, "launchPhotoListActivity() user: "
+				+ user.getUserId() + "-"
+				+ user.getUserName());
 		startActivity(i);
 	}
 
@@ -44,15 +47,16 @@ public class UserListActivity extends FragmentActivity {
 		 return new UserListFragment();
 	}
 
-	public UserItem getUserItem () {
-		return mUserItem;
-	}
+//	public UserItem getUserItem () {
+	//	return mUserItem;
+	//}
+    /*
 	protected void setUserItem (UserItem userItem) {
 		mUserItem = userItem;
 		Log.d(TAG, "setUserItem() user: "
 				+ mUserItem.getUserId() + "-"
 				+ mUserItem.getUserName());
-	}
+	}*/
     protected void insertUserItems(ArrayList<UserItem> items) {
         UserItem item;
         Log.d(TAG, "insertUserItems()");

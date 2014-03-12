@@ -31,15 +31,13 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "onCreate()");
-		//db.execSQL("create table user (_id integer primary key autoincrement, start_date integer)");
 		db.execSQL("create table user (" +
 				" user_id varchar(10) primary key, user_name varchar(100))");
 		db.execSQL("create table photo (" +
-				" photo_id varchar(10) primary key, photo_name varchar(100),"+
+				" photo_id integer primary key, photo_name varchar(100),"+
 				" user_id varchar(10) references user(user_id), user_name varchar(100)," +
 				" photo_count integer)"); //TODO remove count if not needed
 		Log.d(TAG, "onCreate()ed");
-		// TODO user_id & photo_id (in the table) will probably need to be integer to sort properly
 	}
 
 	@Override
@@ -65,7 +63,6 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 		cv.put(COLUMN_PHOTO_PHOTO_NAME, photo.getPhotoName());
 		cv.put(COLUMN_PHOTO_USER_ID, photo.getUserId());
 		cv.put(COLUMN_PHOTO_USER_NAME, photo.getUserName());
-		//cv.put(COLUMN_PHOTO_PHOTO_COUNT, photo.getPhotoCount());
 		return getWritableDatabase().insert(TABLE_PHOTO, null, cv);
 	}
 
@@ -78,12 +75,14 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 
 	public UserCursor queryUsers() {
 		// equivalent to "select * from user order by user_id asc"
+		// sorting by user_id as an alpha... just copying JSON ordering
 		Cursor wrapped = getReadableDatabase().query(TABLE_USER,
 				null, null, null, null, null, COLUMN_USER_USER_ID + " asc");
 		return new UserCursor(wrapped);
 	}
 
-	public PhotoCursor queryPhotosForUser(String user) {
+	public PhotoCursor queryPhotosForUserId(String user) {
+		// this JSON is sorting by NUMERIC photo_id asc
 		Cursor wrapped = getReadableDatabase().query(TABLE_PHOTO, 
 				null, // all columns 
 				COLUMN_PHOTO_USER_ID + " = ?", // THAT User Id
@@ -135,5 +134,4 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 			return item;
 		}
 	}
-
 }

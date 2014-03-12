@@ -91,8 +91,8 @@ public class UserListFragment extends Fragment{
     	mUserItem = mUserItems.get(position);
     	Log.i(TAG, "returnSelection()=["+position+"] "+mUserItem.getUserId()+": "+mUserItem.getUserName());
 		mUserTextView.setText(mUserItem.getUserName());
-		((UserListActivity) getActivity()).setUserItem(mUserItem);
-		((UserListActivity) getActivity()).launchPhotoListActivity();
+		//((UserListActivity) getActivity()).setUserItem(mUserItem);
+		((UserListActivity) getActivity()).launchPhotoListActivity(mUserItem);
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override

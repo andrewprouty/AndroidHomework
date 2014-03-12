@@ -27,16 +27,6 @@ public class ImageFragment extends Fragment{
 	TextView mPhotoTextView;
 	ImageView mImageView;
 	
-    public static ImageFragment newInstance(String photoId) {
-        Bundle b = new Bundle();
-        b.putSerializable(EXTRA_PHOTO_ID, photoId);
-
-        ImageFragment fragment = new ImageFragment();
-        fragment.setArguments(b);
-
-        return fragment;
-    }
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate()");
