@@ -13,23 +13,29 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
-	private ArrayList<PhotoItem> mPhotoItems;
-	private PhotoItem mPhotoItem;
+	//private ArrayList<PhotoItem> mPhotoItems;
+	//private PhotoItem mPhotoItem;
 	private GalleryDatabaseHelper mHelper;
 
-	protected void launchPhotoDisplayActivity(int position) {
+	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
+		//mPhotoItem = photoItem;
 		/* TODO remove Toast.makeText(this,mPhotoItem.getUserId() + "-"
 						  + mPhotoItem.getUserName() + "; "
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
 				,Toast.LENGTH_SHORT).show();*/
 		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
-		i.putExtra("UserId",   mPhotoItem.getUserId().toString());
-		i.putExtra("UserName", mPhotoItem.getUserName().toString());
-		i.putExtra("PhotoId",  mPhotoItem.getPhotoId().toString());
-		i.putExtra("PhotoName",mPhotoItem.getPhotoName().toString());
+		i.putExtra("UserId",   photo.getUserId().toString());
+		i.putExtra("UserName", photo.getUserName().toString());
+		//i.putExtra("PhotoId",  photo.getPhotoId().toString());
+		//i.putExtra("PhotoName",photo.getPhotoName().toString());
 		i.putExtra("position", position);
 		//i.putExtra("PhotosCount",mPhotoItems.size());
+		Log.d(TAG, "launchPhotoDisplayActivity() photo ["+position+"]: "
+				+ photo.getUserId() + "-"
+				+ photo.getUserName() + "; "
+				+ photo.getPhotoId() + "-"
+				+ photo.getPhotoName());
 		startActivity(i);
 	}
 
@@ -69,20 +75,20 @@ public class PhotoListActivity extends FragmentActivity {
 	public UserItem getUserItem () {
 		return mUserItem;
 	}
-	public void setPhotoItem (PhotoItem photoItem) {
+/*	public void setPhotoItem (PhotoItem photoItem) {
 		mPhotoItem = photoItem;
 		Log.d(TAG, "setPhotoItem() photo: "
 				+ mPhotoItem.getUserId() + "-"
 				+ mPhotoItem.getUserName() + "; "
 				+ mPhotoItem.getPhotoId() + "-"
 				+ mPhotoItem.getPhotoName());
-	}
-	public PhotoItem getPhotoItem () {
-		return mPhotoItem;
-	}
-	public void setPhotoItems (ArrayList<PhotoItem> items) {
-		mPhotoItems = items;
-	}
+	}*/
+//	public PhotoItem getPhotoItem () {
+	//return mPhotoItem;
+//	}
+//	public void setPhotoItems (ArrayList<PhotoItem> items) {
+	//	mPhotoItems = items;
+//	}
 
 	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
 	        PhotoItem item;

@@ -13,6 +13,7 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.UserCursor;
 public class UserListActivity extends FragmentActivity {
 	private static final String TAG = "UserListActivity";
 	//private UserItem mUserItem;
+	private int mPosition;
 	private GalleryDatabaseHelper mHelper;
 	
 	protected void launchPhotoListActivity(UserItem user) {
@@ -45,6 +46,10 @@ public class UserListActivity extends FragmentActivity {
 
     public Fragment createFragment() {
 		 return new UserListFragment();
+	}
+
+	public int getPosition () {
+		return mPosition;
 	}
 
 //	public UserItem getUserItem () {

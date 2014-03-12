@@ -14,6 +14,7 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 public class ImagePagerActivity extends FragmentActivity {
 
 	private static final String TAG = "ImagePagerActivity";
+	private int mPosition;
 	private PhotoItem mPhotoItem = new PhotoItem();
 	private UserItem mUserItem = new UserItem();
 	private ArrayList<PhotoItem> mPhotoItems;
@@ -38,6 +39,7 @@ public class ImagePagerActivity extends FragmentActivity {
 		//String pId   = getIntent().getStringExtra("PhotoId");
 		//String pName = getIntent().getStringExtra("PhotoName");
 		int position = getIntent().getIntExtra ("position",0);
+		mPosition=position; // consolidate variables
 
 		initUserItem(uId, uName);
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
@@ -50,7 +52,6 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mPhotoItem.getUserName() + "; "
 				+ mPhotoItem.getPhotoId() + "-"
 				+ mPhotoItem.getPhotoName());
-
 
 		//final int mPhotosCount = getIntent().getIntExtra("PhotosCount",0);
 		//TODO try dynamic set mPhotoItems.size();
@@ -67,14 +68,17 @@ public class ImagePagerActivity extends FragmentActivity {
 			}
 			@Override
 			public Fragment getItem(int pos) {
-				Log.d(TAG, "setAdapter().getItem: "+pos);
 				mPhotoItem=mPhotoItems.get(pos);
+				Log.d(TAG, "setAdapter().getItem ["+pos+"] "
+						+ mPhotoItem.getPhotoId() + "-"
+						+ mPhotoItem.getPhotoName());
 				//mPhotoItem.setPhotoName(mPhotoItem.getPhotoName()+pos);
 				//PhotoItem photoItem = mPhotoItems.get(pos);
 				//return ImageFragment.newInstance(photoItem.getPhotoId());
 				return new ImageFragment();
 			}
 		});
+		mViewPager.setCurrentItem(position);
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
 	}
 	public void initPhotoItem (String uId, String uName, String pId, String pName) {
@@ -96,18 +100,18 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mUserItem.getUserName());
 	}
 
+	public int getPosition() {
+		return mPosition;
+	}
 	public PhotoItem getPhotoItem () {
 		return mPhotoItem;
 	}
 	protected ArrayList<PhotoItem> fetchPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;
-		Log.d(TAG, "fetchPhotoItemsforUser() a");
+		Log.d(TAG, "fetchPhotoItemsforUser() UserId: "+user.getUserId());
 		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
-		Log.d(TAG, "fetchPhotoItemsforUser() b userId: "+user.getUserId());
 		cursor = mHelper.queryPhotosForUserId(user.getUserId());
-		Log.d(TAG, "fetchPhotoItemsforUser() c");
 		cursor.moveToFirst();
-		Log.d(TAG, "fetchPhotoItemsforUser() d");
 		while(!cursor.isAfterLast()) {
 			PhotoItem item = cursorToPhotoItem(cursor);
 			items.add(item);
@@ -119,17 +123,14 @@ public class ImagePagerActivity extends FragmentActivity {
 					+ item.getPhotoName());
 		}
     	cursor.close();
-		Log.d(TAG, "fetchPhotoItemsforUser().");
 		return items;
 	}
 	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
-		Log.d(TAG, "cursorToPhotoItem()");
 		PhotoItem item = new PhotoItem();
 		item.setPhotoId(cursor.getString(0));
 		item.setPhotoName(cursor.getString(1));
 		item.setUserId(cursor.getString(2));
 		item.setUserName(cursor.getString(3));
-		Log.d(TAG, "cursorToPhotoItem().");
 		return item;
 	}
 	////  SWITCH TO PHOTO LIST !! TODO remove

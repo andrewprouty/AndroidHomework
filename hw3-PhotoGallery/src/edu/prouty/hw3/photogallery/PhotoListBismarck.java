@@ -133,7 +133,7 @@ public class PhotoListBismarck {
 				JSONObject jsonNode = jsonPhotoList.getJSONObject(i);
 				String photo_name   = jsonNode.optString("name").toString();
 				String photo_id     = jsonNode.optString("id").toString();
-				Log.d(TAG, "parsePhotoList(): "+ i + ": "+photo_id+"-"+photo_name);
+				Log.d(TAG, "parsePhotoList() ["+ i + "]: "+photo_id+"-"+photo_name);
 
 				PhotoItem item = new PhotoItem();
 				item.setUserId(mUserItem.getUserId());

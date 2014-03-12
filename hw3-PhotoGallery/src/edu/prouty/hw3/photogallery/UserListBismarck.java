@@ -128,7 +128,7 @@ public class UserListBismarck {
 				JSONObject jsonNode = jsonUserList.getJSONObject(i);
 				String user_name   = jsonNode.optString("name").toString();
 				String user_id     = jsonNode.optString("id").toString();
-				Log.d(TAG, "parseUserList(): "+ i + ": "+user_name+"-"+user_id);
+				Log.d(TAG, "parseUserList() ["+ i + "] : "+user_id+"-"+user_name);
 
 				UserItem item = new UserItem();
 				item.setUserName(user_name);

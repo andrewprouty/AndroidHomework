@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +34,6 @@ public class ImageFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-		//mPhotoItem=((ImageActivity) getActivity()).getPhotoItem();
-
-		//mUserItems=((ImagePagerActivity) getActivity()).fetchUserItems();// TODO JUST A TEST
 
 		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem();
 
@@ -55,6 +53,10 @@ public class ImageFragment extends Fragment{
 		mUserTextView.setText(mPhotoItem.getUserName());
 		mPhotoTextView.setText(mPhotoItem.getPhotoName());
         mImageView.setImageResource(R.drawable.image_pending);
+
+    	ViewPager pager;
+    	pager = (ViewPager)view.findViewById(R.id.viewPager);
+    	pager.setCurrentItem(((ImagePagerActivity) getActivity()).getPosition());
 
 		return view;
 	}
