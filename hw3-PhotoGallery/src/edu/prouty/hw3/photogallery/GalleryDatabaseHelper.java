@@ -35,8 +35,9 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("create table user (" +
 				" user_id varchar(10) primary key, user_name varchar(100))");
 		db.execSQL("create table photo (" +
-				" photo_id varchar(10) primary key, photo_name varchar(100), photo_count integer,"+
-				" user_id varchar(10) references user(user_id), user_name varchar(100))");
+				" photo_id varchar(10) primary key, photo_name varchar(100),"+
+				" user_id varchar(10) references user(user_id), user_name varchar(100)," +
+				" photo_count integer)"); //TODO remove count if not needed
 		Log.d(TAG, "onCreate()ed");
 		// TODO user_id & photo_id (in the table) will probably need to be integer to sort properly
 	}
@@ -68,6 +69,13 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 		return getWritableDatabase().insert(TABLE_PHOTO, null, cv);
 	}
 
+	public long deletePhotosforUserId(String user) {
+		Log.d(TAG, "deletePhotosforUserId()");
+		return getWritableDatabase().delete(TABLE_PHOTO,
+				COLUMN_PHOTO_USER_ID + " = ?", // THAT User Id
+				new String[]{ String.valueOf(user) }); // with this value
+	}
+
 	public UserCursor queryUsers() {
 		// equivalent to "select * from user order by user_id asc"
 		Cursor wrapped = getReadableDatabase().query(TABLE_USER,
@@ -81,8 +89,8 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 				COLUMN_PHOTO_USER_ID + " = ?", // THAT User Id
 				new String[]{ String.valueOf(user) }, // with this value
 				null, // group by
-				COLUMN_PHOTO_PHOTO_ID + " asc", // order by
 				null, // having
+				COLUMN_PHOTO_PHOTO_ID + " asc", // order by
 				null); // limit of rows
 		return new PhotoCursor(wrapped);
 	}

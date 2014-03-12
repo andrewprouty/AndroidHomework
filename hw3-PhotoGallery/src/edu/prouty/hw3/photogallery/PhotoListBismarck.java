@@ -1,8 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -57,6 +55,9 @@ public class PhotoListBismarck {
 		try {
 			String jsonString = GETPhotoList();
 			if (jsonString == null || jsonString.length() == 0) {
+				//Not online - will show an empty list if not in DB
+				Log.i(TAG, "fetchItems() Failed to fetch items");
+			/* TODO remove when ready
 				jsonString = readPhotoList(appContext); // exists in cache?
 			}
 			else {
@@ -64,8 +65,8 @@ public class PhotoListBismarck {
 			}
 
 			if (jsonString == null || jsonString.length() == 0) {
-				Log.i(TAG, "fetchItems() Failed to fetch items");
 				//Will return empty list
+			 */
 			}
 			else {
 				parsePhotoList(items, jsonString);
@@ -84,7 +85,7 @@ public class PhotoListBismarck {
 			jsonString = getUrl(url);
 			Log.d(TAG, "GETPhotoList() Received json: " + jsonString);
 		} catch (IOException ioe) {
-			Log.e(TAG, "GETPhotoList() IOException.", ioe);
+			Log.e(TAG, "GETUserList() IOException: "+ioe.getMessage()); // skip stack
 		}
 		catch (Exception e) {
 			Log.e(TAG, "GETPhotoList() Exc:"+e.getMessage(),e);
@@ -92,6 +93,7 @@ public class PhotoListBismarck {
 		return jsonString;
 	}
 
+	/* TODO remove Photo List file cache
 	private void cachePhotoList(Context appContext, String jsonString) {
 		String fName = "UserPhotos-"+mUserItem.getUserId();
 		FileOutputStream outFile;
@@ -121,7 +123,7 @@ public class PhotoListBismarck {
 		}
 		Log.d(TAG, "readPhotoList() " +appContext.getFileStreamPath(fName));
 		return fileContents;
-	}
+	}*/
 	private void parsePhotoList(ArrayList<PhotoItem> items, String stringPhotoList) {
 		try {
 			JSONArray jsonPhotoList = new JSONArray (stringPhotoList);  

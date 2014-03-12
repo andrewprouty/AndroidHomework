@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class UserListBismarck {
 	private static final String TAG = "UserListBismarck";
-	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserverX/userlist/";
+	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/userlist/";
 
 	public byte[] getUrlBytes(String urlSpec) throws IOException {
 		URL url = new URL(urlSpec);
@@ -51,6 +51,7 @@ public class UserListBismarck {
 		try {
 			String jsonString = GETUserList();
 			if (jsonString == null || jsonString.length() == 0) {
+				//Not online - will show an empty list if not in DB
 				Log.i(TAG, "fetchItems() Failed to fetch items");
 			/*  TODO remove when ready
 				jsonString = readUserList(appContext); // exists in cache?
@@ -62,7 +63,6 @@ public class UserListBismarck {
 			if (jsonString == null || jsonString.length() == 0) {
 				Log.i(TAG, "fetchItems() Failed to fetch items");
 			*/
-				//Not online/cache - will show an empty list
 			}
 			else {
 				parseUserList(items, jsonString);

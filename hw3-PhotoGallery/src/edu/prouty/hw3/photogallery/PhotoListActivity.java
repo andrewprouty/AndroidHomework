@@ -8,13 +8,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
 	private ArrayList<PhotoItem> mPhotoItems;
 	private PhotoItem mPhotoItem;
-
+	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity() {
 		/*Toast.makeText(this,mPhotoItem.getUserId() + "-"
@@ -22,7 +23,6 @@ public class PhotoListActivity extends FragmentActivity {
 						  + mPhotoItem.getPhotoId() + "-"
 						  + mPhotoItem.getPhotoName()
 				,Toast.LENGTH_SHORT).show();*/
-		//Intent i = new Intent (PhotoListActivity.this, ImageActivity.class);
 		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
 		i.putExtra("UserId",   mPhotoItem.getUserId().toString());
 		i.putExtra("UserName", mPhotoItem.getUserName().toString());
@@ -51,6 +51,7 @@ public class PhotoListActivity extends FragmentActivity {
 			.add(R.id.fragmentContainer, fragment)
 			.commit();
 		}
+        mHelper = new GalleryDatabaseHelper(getApplicationContext());
 	}
 
 	public Fragment createFragment() {
@@ -80,5 +81,52 @@ public class PhotoListActivity extends FragmentActivity {
 	}
 	public void setPhotoItems (ArrayList<PhotoItem> items) {
 		mPhotoItems = items;
+	}
+
+	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
+	        PhotoItem item;
+	        Log.d(TAG, "insertPhotoItems() a");
+	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserId());
+	        Log.d(TAG, "insertPhotoItems() b");
+	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserName());
+	        Log.d(TAG, "insertPhotoItems() c");
+			mHelper.deletePhotosforUserId(user.getUserId()); // 
+	        for (int i=0; i<items.size(); i++) {
+	    		item=items.get(i);
+	    		Log.d(TAG, "insertPhotoItems() user: "
+						+ item.getUserId() + "-"
+						+ item.getUserName() + "; "
+						+ item.getPhotoId() + "-"
+						+ item.getPhotoName());
+	            mHelper.insertPhoto(item);
+	        }
+	        return;
+	    }	
+	
+	protected ArrayList<PhotoItem> fetchPhotoItemsforUser(UserItem user) {
+		PhotoCursor cursor;
+		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
+		cursor = mHelper.queryPhotosForUser(user.getUserId());
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			PhotoItem item = cursorToPhotoItem(cursor);
+			items.add(item);
+			cursor.moveToNext();
+			Log.d(TAG, "fetchPhotoItemsforUser() user: "
+					+ item.getUserId() + "-"
+					+ item.getUserName() + "; "
+					+ item.getPhotoId() + "-"
+					+ item.getPhotoName());
+		}
+    	cursor.close();
+		return items;
+	}
+	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
+		PhotoItem item = new PhotoItem();
+		item.setPhotoId(cursor.getString(0));  // TODO cursor.getInt?
+		item.setPhotoName(cursor.getString(1));
+		item.setUserId(cursor.getString(2));   // TODO cursor.getInt?
+		item.setUserName(cursor.getString(3));
+		return item;
 	}
 }

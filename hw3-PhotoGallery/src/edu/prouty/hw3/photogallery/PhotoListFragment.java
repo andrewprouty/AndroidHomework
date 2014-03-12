@@ -62,7 +62,24 @@ public class PhotoListFragment extends Fragment{
 		if (getActivity() == null || mListView == null) {
 			return;
 		}
-		if (mPhotoItems != null) {
+    	Log.d(TAG, "setupAdapter()");
+    	Log.d(TAG, "setupAdapter(): "
+    			+ mUserItem.getUserId() + "-"
+    			+ mUserItem.getUserName() + ";");
+
+		if (mPhotoItems != null && mPhotoItems.size()>0) {
+			// GET list into DB
+	    	Log.d(TAG, "setupAdapter()if-insert");
+			((PhotoListActivity) getActivity()).insertPhotoItems(mPhotoItems, mUserItem);
+	    	Log.d(TAG, "setupAdapter()if-insert DONE");
+		}
+		else {
+	    	Log.d(TAG, "setupAdapter()else-fetch");
+			// none. If in DB - populate from there
+			mPhotoItems=((PhotoListActivity) getActivity()).fetchPhotoItemsforUser(mUserItem);
+		}
+    	
+    	if (mPhotoItems != null) {
 			PhotoListAdapter adapter = new PhotoListAdapter(mPhotoItems);
 			mListView.setAdapter(adapter);
 		}

@@ -15,7 +15,15 @@ public class UserListActivity extends FragmentActivity {
 	private UserItem mUserItem;
 	private GalleryDatabaseHelper mHelper;
 	
-    @Override
+	protected void launchPhotoListActivity() {
+		//Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-" + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
+		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
+		i.putExtra("UserId", mUserItem.getUserId().toString());
+		i.putExtra("UserName", mUserItem.getUserName().toString());
+		startActivity(i);
+	}
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate()");
@@ -32,19 +40,7 @@ public class UserListActivity extends FragmentActivity {
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
     }
 
-    public void onDestroy() {
-		super.onDestroy();
-    }
-
-	protected void launchPhotoListActivity() {
-		//Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-" + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
-		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
-		i.putExtra("UserId", mUserItem.getUserId().toString());
-		i.putExtra("UserName", mUserItem.getUserName().toString());
-		startActivity(i);
-	}
-	
-	public Fragment createFragment() {
+    public Fragment createFragment() {
 		 return new UserListFragment();
 	}
 
@@ -57,16 +53,16 @@ public class UserListActivity extends FragmentActivity {
 				+ mUserItem.getUserId() + "-"
 				+ mUserItem.getUserName());
 	}
-    protected void insertUserItems(ArrayList<UserItem> users) {
-        UserItem user;
-        Log.d(TAG, "insertUserItem()");
+    protected void insertUserItems(ArrayList<UserItem> items) {
+        UserItem item;
+        Log.d(TAG, "insertUserItems()");
 		mHelper.deleteUsers();
-        for (int i=0; i<users.size(); i++) {
-    		user=users.get(i);
-    		Log.d(TAG, "insertUserItem() user: "
-    				+ user.getUserId() + "-"
-    				+ user.getUserName());
-            mHelper.insertUser(user);
+        for (int i=0; i<items.size(); i++) {
+    		item=items.get(i);
+    		Log.d(TAG, "insertUserItems() user: "
+    				+ item.getUserId() + "-"
+    				+ item.getUserName());
+            mHelper.insertUser(item);
         }
         return;
     }
@@ -83,6 +79,7 @@ public class UserListActivity extends FragmentActivity {
     				+ item.getUserId() + "-"
     				+ item.getUserName());
     	}
+    	cursor.close();
     	return items;
     }
     private UserItem cursorToUserItem(UserCursor cursor) {
