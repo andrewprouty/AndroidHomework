@@ -22,7 +22,6 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 	private static final String COLUMN_PHOTO_PHOTO_NAME = "photo_name";
 	private static final String COLUMN_PHOTO_USER_ID = "user_id";
 	private static final String COLUMN_PHOTO_USER_NAME = "user_name";
-	//private static final String COLUMN_PHOTO_PHOTO_COUNT = "photo_count";
 
 	public GalleryDatabaseHelper(Context context) {
 		super(context, DB_NAME, null, VERSION);
@@ -34,9 +33,9 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("create table user (" +
 				" user_id varchar(10) primary key, user_name varchar(100))");
 		db.execSQL("create table photo (" +
-				" photo_id integer primary key, photo_name varchar(100),"+
+				" photo_id integer not null, photo_name varchar(100),"+
 				" user_id varchar(10) references user(user_id), user_name varchar(100)," +
-				" photo_count integer)"); //TODO remove count if not needed
+				" primary key (photo_id, user_id))");
 		Log.d(TAG, "onCreate()ed");
 	}
 
