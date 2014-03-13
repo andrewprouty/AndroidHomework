@@ -91,19 +91,21 @@ public class PhotoListActivity extends FragmentActivity {
 //	}
 
 	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
-	        PhotoItem item;
-	        Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
-			mHelper.deletePhotosforUserId(user.getUserId()); // 
-	        for (int i=0; i<items.size(); i++) {
-	    		item=items.get(i);
-	    		Log.d(TAG, "insertPhotoItems() user: "
-						+ item.getUserId() + "-"
-						+ item.getUserName() + "; "
-						+ item.getPhotoId() + "-"
-						+ item.getPhotoName());
-	            mHelper.insertPhoto(item);
-	        }
-	        return;
+		PhotoItem item;
+		Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
+		mHelper.deletePhotosforUserId(user.getUserId());
+		// TODO try fetching - see what is remaining
+		for (int i=0; i<items.size(); i++) {
+			item=items.get(i);
+			Log.d(TAG, "insertPhotoItems() user: "
+					+ item.getUserId() + "-"
+					+ item.getUserName() + "; "
+					+ item.getPhotoId() + "-"
+					+ item.getPhotoName());
+			mHelper.insertPhoto(item);
+		}
+		mHelper.close();
+		return;
 	    }	
 	
 	protected ArrayList<PhotoItem> fetchPhotoItemsforUser(UserItem user) {
@@ -122,6 +124,7 @@ public class PhotoListActivity extends FragmentActivity {
 					+ item.getPhotoName());
 		}
     	cursor.close();
+        mHelper.close();
 		return items;
 	}
 	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {

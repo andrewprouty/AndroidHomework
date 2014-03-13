@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class GalleryDatabaseHelper extends SQLiteOpenHelper {
-	private static final String TAG = "SQLLiteOpenHelper";
+	private static final String TAG = "GalleryDatabaseHelper";
 	private static final String DB_NAME = "gallery.sqlite";
 	private static final int VERSION = 1;
 
@@ -67,7 +67,7 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public long deletePhotosforUserId(String user) {
-		Log.d(TAG, "deletePhotosforUserId()");
+		Log.d(TAG, "deletePhotosforUserId() "+user);
 		return getWritableDatabase().delete(TABLE_PHOTO,
 				COLUMN_PHOTO_USER_ID + " = ?", // THAT User Id
 				new String[]{ String.valueOf(user) }); // with this value

@@ -12,18 +12,17 @@ import android.util.Log;
 import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 
 public class ImagePagerActivity extends FragmentActivity {
-
 	private static final String TAG = "ImagePagerActivity";
-	private int mPosition;
-	private PhotoItem mPhotoItem = new PhotoItem();
+	private static ArrayList<PhotoItem> mFetchPhotos;
+	private static ArrayList<PhotoItem> mDisplayItems = new ArrayList<PhotoItem>();
+	//private static ArrayList<PhotoItem> mDisplayItem;
+	private static PhotoItem mFetchItem = new PhotoItem();
+	private static String mAsyncLoad;
 	private UserItem mUserItem = new UserItem();
-	private ArrayList<PhotoItem> mPhotoItems;
-
+	private MyAdapter mAdapter;
 	private ViewPager mViewPager;
 
 	private GalleryDatabaseHelper mHelper;
-
-	//	private ArrayList<PhotoItem> mPhotoItems;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,61 +35,106 @@ public class ImagePagerActivity extends FragmentActivity {
 
 		String uId   = getIntent().getStringExtra("UserId");
 		String uName = getIntent().getStringExtra("UserName");
-		//String pId   = getIntent().getStringExtra("PhotoId");
-		//String pName = getIntent().getStringExtra("PhotoName");
 		int position = getIntent().getIntExtra ("position",0);
-		mPosition=position; // consolidate variables
+		Log.d(TAG, "onCreate().position: "+position);
 
 		initUserItem(uId, uName);
-        mHelper = new GalleryDatabaseHelper(getApplicationContext());
-		mPhotoItems=fetchPhotoItemsforUserId(mUserItem);
+		mHelper = new GalleryDatabaseHelper(getApplicationContext());
+		mFetchPhotos=fetchPhotoItemsforUserId(mUserItem);
+  
+		mAsyncLoad=position+":"; 
+		mFetchItem=mFetchPhotos.get(position);
+		Log.d(TAG, "onCreate() mFetchItem: "
+				+ mFetchItem.getUserId() + "-"
+				+ mFetchItem.getUserName() + "; "
+				+ mFetchItem.getPhotoId() + "-"
+				+ mFetchItem.getPhotoName());
 
-		Log.d(TAG, "onCreate().position: "+position);
-		mPhotoItem=mPhotoItems.get(position);
-		Log.d(TAG, "onCreate() mPhotoItem: "
-				+ mPhotoItem.getUserId() + "-"
-				+ mPhotoItem.getUserName() + "; "
-				+ mPhotoItem.getPhotoId() + "-"
-				+ mPhotoItem.getPhotoName());
+		mAdapter = new MyAdapter(getSupportFragmentManager());
 
-		//final int mPhotosCount = getIntent().getIntExtra("PhotosCount",0);
-		//TODO try dynamic set mPhotoItems.size();
+		mViewPager.setAdapter(mAdapter);
+		mViewPager.setCurrentItem(position);
 
-		//initPhotoItem(uId, uName, pId, pName);
-
-		//mPhotoItems = Album.get(this).getPhotoItems();
-
-		FragmentManager fm = getSupportFragmentManager();
+		//FragmentManager fm = getSupportFragmentManager();
+		/*
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount() {
-				return mPhotoItems.size();
+				return mFetchItems.size();
 			}
 			@Override
 			public Fragment getItem(int pos) {
-				mPhotoItem=mPhotoItems.get(pos);
+				mFetchItem=mFetchItems.get(pos);
 				Log.d(TAG, "setAdapter().getItem ["+pos+"] "
-						+ mPhotoItem.getPhotoId() + "-"
-						+ mPhotoItem.getPhotoName());
-				//mPhotoItem.setPhotoName(mPhotoItem.getPhotoName()+pos);
-				//PhotoItem photoItem = mPhotoItems.get(pos);
-				//return ImageFragment.newInstance(photoItem.getPhotoId());
+						+ mFetchItem.getPhotoId() + "-"
+						+ mFetchItem.getPhotoName());
 				return new ImageFragment();
 			}
-		});
-		mViewPager.setCurrentItem(position);
-        mHelper = new GalleryDatabaseHelper(getApplicationContext());
+		});*/
+
+		/*
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener () {
+			  @Override
+		        public void onPageSelected(int arg0) {
+					Log.d(TAG, "onChangeListener().Selected mFetchItem: "
+									+ mFetchItem.getUserId() + "-"
+									+ mFetchItem.getUserName() + "; "
+									+ mFetchItem.getPhotoId() + "-"
+									+ mFetchItem.getPhotoName());
+		        }
+		        @Override
+		        public void onPageScrolled(int arg0, float arg1, int arg2) {
+					Log.d(TAG, "onChangeListener().Scrolled mFetchItem: "
+							+ mFetchItem.getUserId() + "-"
+							+ mFetchItem.getUserName() + "; "
+							+ mFetchItem.getPhotoId() + "-"
+							+ mFetchItem.getPhotoName());
+		        }
+
+		        @Override
+		        public void onPageScrollStateChanged(int arg0) {
+					Log.d(TAG, "onChangeListener().State mFetchItem: "
+							+ mFetchItem.getUserId() + "-"
+							+ mFetchItem.getUserName() + "; "
+							+ mFetchItem.getPhotoId() + "-"
+							+ mFetchItem.getPhotoName());
+		        }
+		});*/
+		//duplicate mHelper = new GalleryDatabaseHelper(getApplicationContext());
 	}
+
+	public static class MyAdapter extends FragmentStatePagerAdapter {
+		public MyAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
+		}
+
+		@Override
+		public int getCount() {
+			return mFetchPhotos.size();
+		}
+
+		@Override
+		public Fragment getItem(int pos) {
+			mFetchItem=mFetchPhotos.get(pos);
+			setDisplayItem(pos, mFetchPhotos.get(pos));
+			Log.i(TAG, "setAdapter().getItem ["+pos+"] "
+					+ "("+mAsyncLoad+")"
+					+ mFetchItem.getPhotoId() + "-"
+					+ mFetchItem.getPhotoName());
+			return new ImageFragment();
+		}
+	}
+
 	public void initPhotoItem (String uId, String uName, String pId, String pName) {
-		mPhotoItem.setUserId(uId);
-		mPhotoItem.setUserName(uName);
-		mPhotoItem.setPhotoId(pId);
-		mPhotoItem.setPhotoName(pName);
+		mFetchItem.setUserId(uId);
+		mFetchItem.setUserName(uName);
+		mFetchItem.setPhotoId(pId);
+		mFetchItem.setPhotoName(pName);
 		Log.d(TAG, "initPhotoItem(): "
-				+ mPhotoItem.getUserId() + "-"
-				+ mPhotoItem.getUserName() + "; "
-				+ mPhotoItem.getPhotoId() + "-"
-				+ mPhotoItem.getPhotoName());
+				+ mFetchItem.getUserId() + "-"
+				+ mFetchItem.getUserName() + "; "
+				+ mFetchItem.getPhotoId() + "-"
+				+ mFetchItem.getPhotoName());
 	}
 	public void initUserItem (String uId, String uName) {
 		mUserItem.setUserId(uId);
@@ -100,11 +144,28 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mUserItem.getUserName());
 	}
 
-	public int getPosition() {
-		return mPosition;
+	public PhotoItem popDisplayItem() {
+		Log.d(TAG, "popDisplayItem() queue depth: "+mDisplayItems.size());
+		PhotoItem item = mDisplayItems.get(0);
+		mDisplayItems.remove(0);
+		return item;
 	}
-	public PhotoItem getPhotoItem () {
-		return mPhotoItem;
+	public static void setDisplayItem(int pos, PhotoItem item) {
+		mAsyncLoad=mAsyncLoad+","+pos;
+		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Photo: "+mAsyncLoad);
+		//PhotoItem photo = new PhotoItem();
+		//photo=item;
+		mDisplayItems.add(item);
+        for (int i=0; i<mDisplayItems.size(); i++) {
+    		item=mDisplayItems.get(i);
+    		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Photo ["+i+"]:"
+					+ item.getUserId() + "-"
+					+ item.getUserName() + "; "
+					+ item.getPhotoId() + "-"
+					+ item.getPhotoName());
+        }
+		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Size: "+mDisplayItems.size());
+		return;
 	}
 	protected ArrayList<PhotoItem> fetchPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;
@@ -122,7 +183,8 @@ public class ImagePagerActivity extends FragmentActivity {
 					+ item.getPhotoId() + "-"
 					+ item.getPhotoName());
 		}
-    	cursor.close();
+		cursor.close();
+        mHelper.close();
 		return items;
 	}
 	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
@@ -133,27 +195,4 @@ public class ImagePagerActivity extends FragmentActivity {
 		item.setUserName(cursor.getString(3));
 		return item;
 	}
-	////  SWITCH TO PHOTO LIST !! TODO remove
-/*    protected ArrayList<UserItem> fetchUserItems() {
-    	UserCursor cursor;
-    	ArrayList<UserItem> items = new ArrayList<UserItem>();
-    	cursor = mHelper.queryUsers();
-    	cursor.moveToFirst();
-    	while(!cursor.isAfterLast()) {
-    		UserItem item = cursorToUserItem(cursor);
-    		items.add(item);
-    		cursor.moveToNext();
-    		Log.d(TAG, "fetchUserItem() user: "
-    				+ item.getUserId() + "-"
-    				+ item.getUserName());
-    	}
-    	return items;
-    }
-    private UserItem cursorToUserItem(UserCursor cursor) {
-    	UserItem item = new UserItem();
-    	item.setUserId(cursor.getString(0));
-    	item.setUserName(cursor.getString(1));
-		return item;
-    }
-*/
 }

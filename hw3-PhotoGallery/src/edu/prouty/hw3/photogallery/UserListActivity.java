@@ -72,6 +72,7 @@ public class UserListActivity extends FragmentActivity {
     				+ item.getUserId() + "-"
     				+ item.getUserName());
             mHelper.insertUser(item);
+            mHelper.close();
         }
         return;
     }
@@ -89,6 +90,7 @@ public class UserListActivity extends FragmentActivity {
     				+ item.getUserName());
     	}
     	cursor.close();
+        mHelper.close();
     	return items;
     }
     private UserItem cursorToUserItem(UserCursor cursor) {

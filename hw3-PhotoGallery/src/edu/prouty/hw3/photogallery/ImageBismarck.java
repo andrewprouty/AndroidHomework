@@ -14,7 +14,7 @@ import android.net.Uri;
 import android.util.Log;
 
 public class ImageBismarck {
-	private static final String TAG = "PhotoListBismarck";
+	private static final String TAG = "ImageBismarck";
 	// http://bismarck.sdsu.edu/photoserver/userphotos/2
 	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/photo/";
 	private Context context;
@@ -42,7 +42,7 @@ public class ImageBismarck {
 		String filePath = context.getFilesDir().getPath()+"/"+fName;
 		File file = new File(filePath);
 		if(file.exists()) {
-			Log.i(TAG, "isCachedImage() YES exists in cache");
+			Log.i(TAG, "isCachedImage() YES: "+fName);
 			return true;
 		}
 		else	{
@@ -57,7 +57,7 @@ public class ImageBismarck {
 				Log.d(TAG, "GETImage null");
 			}
 			else {
-				Log.d(TAG, "GETImage NOT null");
+				Log.i(TAG, "GETImage YES: "+fName);
 			}
 			
 		} catch (IOException ioe) {
