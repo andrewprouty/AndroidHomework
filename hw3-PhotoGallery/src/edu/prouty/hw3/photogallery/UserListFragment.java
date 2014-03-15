@@ -61,11 +61,11 @@ public class UserListFragment extends Fragment{
 
 		if (mUserItems != null && mUserItems.size()>0) {
 			// GET list into DB
-			((UserListActivity) getActivity()).insertUserItems(mUserItems);
+			((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
 		}
 		else {
 			// none. If in DB - populate from there
-			mUserItems=((UserListActivity) getActivity()).fetchUserItems();
+			mUserItems=((MainUserListActivity) getActivity()).fetchUserItems();
 		}
 		if (mUserItems != null) {
 			UserListAdapter adapter = new UserListAdapter(mUserItems);
@@ -79,10 +79,10 @@ public class UserListFragment extends Fragment{
     /*  TODO remove later
     private void insertIntoDB() {
      
-    	((UserListActivity) getActivity()).insertUserItems(mUserItems);
+    	((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
     }
     private void fetchFromDB() {
-    	mUserItems=((UserListActivity) getActivity()).fetchUserItems();
+    	mUserItems=((MainUserListActivity) getActivity()).fetchUserItems();
     }
     */
 	
@@ -91,8 +91,8 @@ public class UserListFragment extends Fragment{
     	mUserItem = mUserItems.get(position);
     	Log.i(TAG, "returnSelection()=["+position+"] "+mUserItem.getUserId()+": "+mUserItem.getUserName());
 		mUserTextView.setText(mUserItem.getUserName());
-		//((UserListActivity) getActivity()).setUserItem(mUserItem);
-		((UserListActivity) getActivity()).launchPhotoListActivity(mUserItem);
+		//((MainUserListActivity) getActivity()).setUserItem(mUserItem);
+		((MainUserListActivity) getActivity()).launchPhotoListActivity(mUserItem);
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override

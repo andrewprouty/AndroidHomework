@@ -8,17 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.UserCursor;
 
-public class UserListActivity extends FragmentActivity {
-	private static final String TAG = "UserListActivity";
+public class MainUserListActivity extends FragmentActivity {
+	private static final String TAG = "MainUserListActivity";
 	//private UserItem mUserItem;
 	private int mPosition;
 	private GalleryDatabaseHelper mHelper;
 	
 	protected void launchPhotoListActivity(UserItem user) {
-		//Toast.makeText(this,"Selected "+mUserItem.getUserId() + "-" + mUserItem.getUserName(),Toast.LENGTH_SHORT).show();
-		Intent i = new Intent (UserListActivity.this, PhotoListActivity.class);
+		Intent i = new Intent (MainUserListActivity.this, PhotoListActivity.class);
 		i.putExtra("UserId", user.getUserId().toString());
 		i.putExtra("UserName", user.getUserName().toString());
 		Log.d(TAG, "launchPhotoListActivity() user: "
@@ -44,6 +46,28 @@ public class UserListActivity extends FragmentActivity {
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
     }
 
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.activity_main_actions, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_upload:
+	    		Log.d(TAG, "onOptionsItemSelected() calling UploadFileActivity");
+	    		Intent i = new Intent (MainUserListActivity.this, UploadFileActivity.class);
+	    		startActivity(i);
+	            return true;
+	        default:
+	    		Log.d(TAG, "onOptionsItemSelected() Id: "+item.getItemId());
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
     public Fragment createFragment() {
 		 return new UserListFragment();
 	}
