@@ -76,7 +76,7 @@ public class PhotoListFragment extends Fragment{
 		else {
 	    	Log.d(TAG, "setupAdapter()else-fetch");
 			// none. If in DB - populate from there
-			mPhotoItems=((PhotoListActivity) getActivity()).fetchPhotoItemsforUser(mUserItem);
+			mPhotoItems=((PhotoListActivity) getActivity()).queryPhotoItemsforUserId(mUserItem);
 		}
     	
     	if (mPhotoItems != null) {

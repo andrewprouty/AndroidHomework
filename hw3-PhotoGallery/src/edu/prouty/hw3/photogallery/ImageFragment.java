@@ -18,7 +18,6 @@ public class ImageFragment extends Fragment{
 	private String mImageFileName;
 	private PhotoItem mPhotoItem;
 
-	int fragPosition;
 	FetchImageTask mFetchImageTask;
 
 	View view;
@@ -37,11 +36,11 @@ public class ImageFragment extends Fragment{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate()");
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-		//fragPosition = getArguments() != null ? getArguments().getInt("position") : 1;
-		mPhotoItem=((ImagePagerActivity) getActivity()).popDisplayItem();
+		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
+		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem(fragPosition);
+		Log.d(TAG, "onCreate() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
 		mFetchImageTask = new FetchImageTask(mPhotoItem);
 		mFetchImageTask.execute();
 	}
@@ -78,9 +77,7 @@ public class ImageFragment extends Fragment{
 			BitmapFactory.Options options=new BitmapFactory.Options();
 			options.inSampleSize = 3;
 			Bitmap bmImage=BitmapFactory.decodeFile(mImageFileName, options);
-			Log.d(TAG, "setupImage() built");
 			mImageView.setImageBitmap(bmImage);
-			Log.d(TAG, "setupImage() displayed");
 		}
 	}
 
@@ -119,7 +116,6 @@ public class ImageFragment extends Fragment{
 			}
 			setupImage(photoItem);
 			cancel(true); // done !
-			//Log.d(TAG, "FetchImageTask onPostExecute()-cancel");
 		}
 		@Override
 		protected void onCancelled() {

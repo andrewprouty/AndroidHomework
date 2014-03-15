@@ -106,7 +106,7 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 		/**
 		 * Returns a Run object configured for the current row, or null if the current row is invalid.
 		 */
-		public UserItem getUser() {
+		public UserItem getUserItem() {
 			if (isBeforeFirst() || isAfterLast())
 				return null;
 			UserItem item = new UserItem();
@@ -122,7 +122,7 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
 			super(c);
 		}
 
-		public PhotoItem getPhoto() {
+		public PhotoItem getPhotoItem() {
 			if (isBeforeFirst() || isAfterLast())
 				return null;
 			PhotoItem item = new PhotoItem();

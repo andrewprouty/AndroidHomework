@@ -65,7 +65,7 @@ public class UserListFragment extends Fragment{
 		}
 		else {
 			// none. If in DB - populate from there
-			mUserItems=((MainUserListActivity) getActivity()).fetchUserItems();
+			mUserItems=((MainUserListActivity) getActivity()).queryUserItems();
 		}
 		if (mUserItems != null) {
 			UserListAdapter adapter = new UserListAdapter(mUserItems);

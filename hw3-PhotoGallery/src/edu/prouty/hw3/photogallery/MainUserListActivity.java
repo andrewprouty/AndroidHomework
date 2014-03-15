@@ -75,17 +75,6 @@ public class MainUserListActivity extends FragmentActivity {
 	public int getPosition () {
 		return mPosition;
 	}
-
-//	public UserItem getUserItem () {
-	//	return mUserItem;
-	//}
-    /*
-	protected void setUserItem (UserItem userItem) {
-		mUserItem = userItem;
-		Log.d(TAG, "setUserItem() user: "
-				+ mUserItem.getUserId() + "-"
-				+ mUserItem.getUserName());
-	}*/
     protected void insertUserItems(ArrayList<UserItem> items) {
         UserItem item;
         Log.d(TAG, "insertUserItems()");
@@ -100,27 +89,21 @@ public class MainUserListActivity extends FragmentActivity {
         }
         return;
     }
-    protected ArrayList<UserItem> fetchUserItems() {
+    protected ArrayList<UserItem> queryUserItems() {
     	UserCursor cursor;
     	ArrayList<UserItem> items = new ArrayList<UserItem>();
     	cursor = mHelper.queryUsers();
     	cursor.moveToFirst();
     	while(!cursor.isAfterLast()) {
-    		UserItem item = cursorToUserItem(cursor);
+			UserItem item = cursor.getUserItem();
     		items.add(item);
     		cursor.moveToNext();
-    		Log.d(TAG, "fetchUserItem() user: "
+    		Log.d(TAG, "queryUserItem() user: "
     				+ item.getUserId() + "-"
     				+ item.getUserName());
     	}
     	cursor.close();
         mHelper.close();
     	return items;
-    }
-    private UserItem cursorToUserItem(UserCursor cursor) {
-    	UserItem item = new UserItem();
-    	item.setUserId(cursor.getString(0));   // TODO cursor.getInt
-    	item.setUserName(cursor.getString(1));
-		return item;
     }
 }

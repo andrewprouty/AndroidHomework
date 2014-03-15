@@ -13,12 +13,9 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
-	//private ArrayList<PhotoItem> mPhotoItems;
-	//private PhotoItem mPhotoItem;
 	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
-		//mPhotoItem = photoItem;
 		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
 		i.putExtra("UserId",   photo.getUserId().toString());
 		i.putExtra("UserName", photo.getUserName().toString());
@@ -67,21 +64,6 @@ public class PhotoListActivity extends FragmentActivity {
 	public UserItem getUserItem () {
 		return mUserItem;
 	}
-/*	public void setPhotoItem (PhotoItem photoItem) {
-		mPhotoItem = photoItem;
-		Log.d(TAG, "setPhotoItem() photo: "
-				+ mPhotoItem.getUserId() + "-"
-				+ mPhotoItem.getUserName() + "; "
-				+ mPhotoItem.getPhotoId() + "-"
-				+ mPhotoItem.getPhotoName());
-	}*/
-//	public PhotoItem getPhotoItem () {
-	//return mPhotoItem;
-//	}
-//	public void setPhotoItems (ArrayList<PhotoItem> items) {
-	//	mPhotoItems = items;
-//	}
-
 	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
 		PhotoItem item;
 		Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
@@ -99,16 +81,16 @@ public class PhotoListActivity extends FragmentActivity {
 		return;
 	    }	
 	
-	protected ArrayList<PhotoItem> fetchPhotoItemsforUser(UserItem user) {
+	protected ArrayList<PhotoItem> queryPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;
 		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
 		cursor = mHelper.queryPhotosForUserId(user.getUserId());
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			PhotoItem item = cursorToPhotoItem(cursor);
+			PhotoItem item = cursor.getPhotoItem();
 			items.add(item);
 			cursor.moveToNext();
-			Log.d(TAG, "fetchPhotoItemsforUser() user: "
+			Log.d(TAG, "queryPhotoItemsforUserId(): "
 					+ item.getUserId() + "-"
 					+ item.getUserName() + "; "
 					+ item.getPhotoId() + "-"
@@ -117,13 +99,5 @@ public class PhotoListActivity extends FragmentActivity {
     	cursor.close();
         mHelper.close();
 		return items;
-	}
-	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
-		PhotoItem item = new PhotoItem();
-		item.setPhotoId(cursor.getString(0));
-		item.setPhotoName(cursor.getString(1));
-		item.setUserId(cursor.getString(2));
-		item.setUserName(cursor.getString(3));
-		return item;
 	}
 }

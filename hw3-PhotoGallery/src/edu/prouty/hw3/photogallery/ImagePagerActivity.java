@@ -13,13 +13,9 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 
 public class ImagePagerActivity extends FragmentActivity {
 	private static final String TAG = "ImagePagerActivity";
-	private static ArrayList<PhotoItem> mFetchPhotos;
-	private static ArrayList<PhotoItem> mDisplayItems = new ArrayList<PhotoItem>();
-	//private static ArrayList<PhotoItem> mDisplayItem;
-	private static PhotoItem mFetchItem = new PhotoItem();
-	private static String mAsyncLoad;
+	private static ArrayList<PhotoItem> mQueryPhotos;
+	private static PhotoItem mQueryPhoto = new PhotoItem();
 	private UserItem mUserItem = new UserItem();
-	private MyAdapter mAdapter;
 	private ViewPager mViewPager;
 
 	private GalleryDatabaseHelper mHelper;
@@ -40,102 +36,43 @@ public class ImagePagerActivity extends FragmentActivity {
 
 		initUserItem(uId, uName);
 		mHelper = new GalleryDatabaseHelper(getApplicationContext());
-		mFetchPhotos=fetchPhotoItemsforUserId(mUserItem);
+		mQueryPhotos=queryPhotoItemsforUserId(mUserItem);
   
-		mAsyncLoad=position+":"; 
-		mFetchItem=mFetchPhotos.get(position);
-		Log.d(TAG, "onCreate() mFetchItem: "
-				+ mFetchItem.getUserId() + "-"
-				+ mFetchItem.getUserName() + "; "
-				+ mFetchItem.getPhotoId() + "-"
-				+ mFetchItem.getPhotoName());
+		mQueryPhoto=mQueryPhotos.get(position);
+		Log.d(TAG, "onCreate() mQueryPhoto: "
+				+ mQueryPhoto.getUserId() + "-"
+				+ mQueryPhoto.getUserName() + "; "
+				+ mQueryPhoto.getPhotoId() + "-"
+				+ mQueryPhoto.getPhotoName());
 
-		mAdapter = new MyAdapter(getSupportFragmentManager());
-
-		mViewPager.setAdapter(mAdapter);
-		mViewPager.setCurrentItem(position);
-
-		//FragmentManager fm = getSupportFragmentManager();
-		/*
+		FragmentManager fm = getSupportFragmentManager();
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount() {
-				return mFetchItems.size();
+				return mQueryPhotos.size();
 			}
 			@Override
 			public Fragment getItem(int pos) {
-				mFetchItem=mFetchItems.get(pos);
-				Log.d(TAG, "setAdapter().getItem ["+pos+"] "
-						+ mFetchItem.getPhotoId() + "-"
-						+ mFetchItem.getPhotoName());
-				return new ImageFragment();
+				mQueryPhoto=mQueryPhotos.get(pos);
+				Log.d(TAG, "OnCreate().setAdapter().getItem ["+pos+"] "
+						+ mQueryPhoto.getPhotoId() + "-"
+						+ mQueryPhoto.getPhotoName());
+				return new ImageFragment().init(pos);
 			}
-		});*/
-
-		/*
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener () {
-			  @Override
-		        public void onPageSelected(int arg0) {
-					Log.d(TAG, "onChangeListener().Selected mFetchItem: "
-									+ mFetchItem.getUserId() + "-"
-									+ mFetchItem.getUserName() + "; "
-									+ mFetchItem.getPhotoId() + "-"
-									+ mFetchItem.getPhotoName());
-		        }
-		        @Override
-		        public void onPageScrolled(int arg0, float arg1, int arg2) {
-					Log.d(TAG, "onChangeListener().Scrolled mFetchItem: "
-							+ mFetchItem.getUserId() + "-"
-							+ mFetchItem.getUserName() + "; "
-							+ mFetchItem.getPhotoId() + "-"
-							+ mFetchItem.getPhotoName());
-		        }
-
-		        @Override
-		        public void onPageScrollStateChanged(int arg0) {
-					Log.d(TAG, "onChangeListener().State mFetchItem: "
-							+ mFetchItem.getUserId() + "-"
-							+ mFetchItem.getUserName() + "; "
-							+ mFetchItem.getPhotoId() + "-"
-							+ mFetchItem.getPhotoName());
-		        }
-		});*/
-		//duplicate mHelper = new GalleryDatabaseHelper(getApplicationContext());
-	}
-
-	public static class MyAdapter extends FragmentStatePagerAdapter {
-		public MyAdapter(FragmentManager fragmentManager) {
-			super(fragmentManager);
-		}
-
-		@Override
-		public int getCount() {
-			return mFetchPhotos.size();
-		}
-
-		@Override
-		public Fragment getItem(int pos) {
-			mFetchItem=mFetchPhotos.get(pos);
-			setDisplayItem(pos, mFetchPhotos.get(pos));
-			Log.i(TAG, "setAdapter().getItem ["+pos+"] "
-					+ "("+mAsyncLoad+")"
-					+ mFetchItem.getPhotoId() + "-"
-					+ mFetchItem.getPhotoName());
-			//return new ImageFragment().init(pos);
-			return new ImageFragment();
-		}
+		});
+		mViewPager.setCurrentItem(position);
 	}
 
 	public void initPhotoItem (String uId, String uName, String pId, String pName) {
-		mFetchItem.setUserId(uId);
-		mFetchItem.setUserName(uName);
-		mFetchItem.setPhotoId(pId);
-		mFetchItem.setPhotoName(pName);
+		mQueryPhoto.setUserId(uId);
+		mQueryPhoto.setUserName(uName);
+		mQueryPhoto.setPhotoId(pId);
+		mQueryPhoto.setPhotoName(pName);
 		Log.d(TAG, "initPhotoItem(): "
-				+ mFetchItem.getUserId() + "-"
-				+ mFetchItem.getUserName() + "; "
-				+ mFetchItem.getPhotoId() + "-"
-				+ mFetchItem.getPhotoName());
+				+ mQueryPhoto.getUserId() + "-"
+				+ mQueryPhoto.getUserName() + "; "
+				+ mQueryPhoto.getPhotoId() + "-"
+				+ mQueryPhoto.getPhotoName());
 	}
 	public void initUserItem (String uId, String uName) {
 		mUserItem.setUserId(uId);
@@ -145,40 +82,23 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mUserItem.getUserName());
 	}
 
-	public PhotoItem popDisplayItem() {
-		Log.d(TAG, "popDisplayItem() queue depth: "+mDisplayItems.size());
-		PhotoItem item = mDisplayItems.get(0);
-		mDisplayItems.remove(0);
+	public PhotoItem getPhotoItem(int pos) {
+		Log.d(TAG, "getDisplayItem() ["+pos+"] size:"+mQueryPhotos.size());
+		PhotoItem item = mQueryPhotos.get(pos);
 		return item;
 	}
-	public static void setDisplayItem(int pos, PhotoItem item) {
-		mAsyncLoad=mAsyncLoad+","+pos;
-		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Photo: "+mAsyncLoad);
-		//PhotoItem photo = new PhotoItem();
-		//photo=item;
-		mDisplayItems.add(item);
-        for (int i=0; i<mDisplayItems.size(); i++) {
-    		item=mDisplayItems.get(i);
-    		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Photo ["+i+"]:"
-					+ item.getUserId() + "-"
-					+ item.getUserName() + "; "
-					+ item.getPhotoId() + "-"
-					+ item.getPhotoName());
-        }
-		Log.d(TAG, "setDisplayItem() Pos["+pos+"]Size: "+mDisplayItems.size());
-		return;
-	}
-	protected ArrayList<PhotoItem> fetchPhotoItemsforUserId(UserItem user) {
+
+	protected ArrayList<PhotoItem> queryPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;
-		Log.d(TAG, "fetchPhotoItemsforUser() UserId: "+user.getUserId());
+		Log.d(TAG, "queryPhotoItemsforUser() UserId: "+user.getUserId());
 		ArrayList<PhotoItem> items = new ArrayList<PhotoItem>();
 		cursor = mHelper.queryPhotosForUserId(user.getUserId());
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			PhotoItem item = cursorToPhotoItem(cursor);
+			PhotoItem item = cursor.getPhotoItem();
 			items.add(item);
 			cursor.moveToNext();
-			Log.d(TAG, "fetchPhotoItemsforUser() user: "
+			Log.d(TAG, "fetchPhotoItemsforUserId(): "
 					+ item.getUserId() + "-"
 					+ item.getUserName() + "; "
 					+ item.getPhotoId() + "-"
@@ -187,13 +107,5 @@ public class ImagePagerActivity extends FragmentActivity {
 		cursor.close();
         mHelper.close();
 		return items;
-	}
-	private PhotoItem cursorToPhotoItem(PhotoCursor cursor) {
-		PhotoItem item = new PhotoItem();
-		item.setPhotoId(cursor.getString(0));
-		item.setPhotoName(cursor.getString(1));
-		item.setUserId(cursor.getString(2));
-		item.setUserName(cursor.getString(3));
-		return item;
 	}
 }
