@@ -13,6 +13,8 @@ import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
+	private static ArrayList<PhotoItem> mPhotoItems;
+
 	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
@@ -42,16 +44,12 @@ public class PhotoListActivity extends FragmentActivity {
 		Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
 
 		if (fragment == null) {
-			fragment = createFragment();
+			fragment = new PhotoListFragment();
 			manager.beginTransaction()
 			.add(R.id.fragmentContainer, fragment)
 			.commit();
 		}
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
-	}
-
-	public Fragment createFragment() {
-		return new PhotoListFragment();
 	}
 
 	public void initUserItem (String id, String name) {
@@ -64,6 +62,19 @@ public class PhotoListActivity extends FragmentActivity {
 	public UserItem getUserItem () {
 		return mUserItem;
 	}
+	
+	public PhotoItem getPhotoItem(int pos) {
+		Log.d(TAG, "getDisplayItem() ["+pos+"] size:"+mPhotoItems.size());
+		PhotoItem item = mPhotoItems.get(pos);
+		return item;
+	}
+	
+	public void setPhotoItems(ArrayList<PhotoItem> items) {
+		mPhotoItems = items;
+		Log.d(TAG, "setPhotoItems() in:"+items.size()+" set:"+mPhotoItems.size());
+		return;
+	}
+	
 	protected void insertPhotoItems(ArrayList<PhotoItem> items, UserItem user) {
 		PhotoItem item;
 		Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
