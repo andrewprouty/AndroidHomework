@@ -26,7 +26,7 @@ public class ImageFragment extends Fragment{
 	TextView mPhotoTextView;
 	ImageView mImageView;
 
-	public static ImageFragment init(int position) {
+	public ImageFragment init(int position) { //removed static
 		ImageFragment frag = new ImageFragment();
 		// set position input as an argument available onCreate
 		Bundle b = new Bundle();
@@ -67,30 +67,25 @@ public class ImageFragment extends Fragment{
 			return;
 		}
 		// Async downloads to [cache] file, use the file
-
-//		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem();
 		Log.d(TAG, "setupImage() request:"+photoItem.getPhotoId()+"-"+photoItem.getPhotoName()+";"
 				+" returned: "+mPhotoItem.getPhotoId()+"-"+mPhotoItem.getPhotoName());
-		if (mImageFileName == null) {
+		if (mImageFileName == null || mImageFileName.length()==0) {
 			mImageView.setImageResource(R.drawable.image_not_available);
-			Log.d(TAG, "setupImage() null filename");
+			Log.d(TAG, "setupImage() null/no filename");
 		}
 		else {
 			Log.d(TAG, "setupImage():"+mImageFileName);
-			//Bitmap bmImage = BitmapFactory.decodeFile(mImageFileName);
-			
 			BitmapFactory.Options options=new BitmapFactory.Options();
 			options.inSampleSize = 3;
 			Bitmap bmImage=BitmapFactory.decodeFile(mImageFileName, options);
 			Log.d(TAG, "setupImage() built");
 			mImageView.setImageBitmap(bmImage);
-//			bmImage.recycle();
 			Log.d(TAG, "setupImage() displayed");
 		}
 	}
 
 	private class FetchImageTask extends AsyncTask<PhotoItem,Void,String> {
-
+		//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
 		private Context c;
 		private PhotoItem photoItem;
 		//Constructor

@@ -121,6 +121,7 @@ public class ImagePagerActivity extends FragmentActivity {
 					+ "("+mAsyncLoad+")"
 					+ mFetchItem.getPhotoId() + "-"
 					+ mFetchItem.getPhotoName());
+			//return new ImageFragment().init(pos);
 			return new ImageFragment();
 		}
 	}

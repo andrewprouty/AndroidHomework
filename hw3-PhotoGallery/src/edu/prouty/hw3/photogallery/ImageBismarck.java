@@ -31,14 +31,13 @@ public class ImageBismarck {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "fetchImage() Exc:"+e.getMessage(),e);
+			Log.e(TAG, "fetchImage() Exc: "+e.getMessage(),e);
 		}
 		return fName;
 	}
 
 	private Boolean isCachedImage(String fName) {
 		// does the file exist? - true/false
-		
 		String filePath = context.getFilesDir().getPath()+"/"+fName;
 		File file = new File(filePath);
 		if(file.exists()) {
@@ -55,17 +54,16 @@ public class ImageBismarck {
 			mBitmap = getBitmapFromUrl(sURL);
 			if (mBitmap == null) {
 				Log.d(TAG, "GETImage null");
+				return false;
 			}
 			else {
 				Log.i(TAG, "GETImage YES: "+fName);
 			}
-			
-		} catch (IOException ioe) {
-			Log.e(TAG, "GETImage() IOException.", ioe);
+		} catch (IOException e) {
+			Log.e(TAG, "GETImage() IOException: "+ e.getMessage(), e);
 			return false;
-		}
-		catch (Exception e) {
-			Log.e(TAG, "GETImage() Exc:"+e.getMessage(),e);
+		} catch (Exception e) {
+			Log.e(TAG, "GETImage() Exc: " +e.getMessage(), e);
 			return false;
 		}
 		// #2 - save to cache (file)... yes must be space
@@ -75,7 +73,7 @@ public class ImageBismarck {
 		return true;
 	}
 	public Bitmap getBitmapFromUrl (String urlSpec) throws IOException {
-	    try {
+		try {
 	        URL url = new URL(urlSpec);
 	        HttpURLConnection connection = (HttpURLConnection) url
 	                .openConnection();
@@ -87,9 +85,14 @@ public class ImageBismarck {
 	        return myBitmap;
 
 	    } catch (IOException e) {
-	        Log.e("getBmpFromUrl error: ", e.getMessage().toString());
-	        return null;
+	        Log.e(TAG, "getBmpFromUrl() IOException: "+e.getMessage(), e);
+	    } catch (OutOfMemoryError e) {
+	        Log.e(TAG, "getBmpFromUrl() OutOfMemory: "+e.getMessage(), e);
+	    } catch (Exception e) {
+	        Log.e(TAG, "getBmpFromUrl() Exc: "+e.getMessage(), e);
 	    }
+        Log.e("getBmpFromUrl url: ", urlSpec);
+        return null;
 	}
 	public Boolean cacheImage (String fName, Bitmap photo){
 		FileOutputStream cFile;
@@ -99,7 +102,10 @@ public class ImageBismarck {
    			cFile.flush();
 	    	cFile.close();
 	    } catch (IOException e) {
-	        Log.e("cacheImage: ", e.getMessage().toString());
+	        Log.e(TAG, "cacheImage() IOException: "+e.getMessage(), e);
+	        return null;
+	    } catch (Exception e) {
+	        Log.e(TAG, "cacheImage() Exc: "+e.getMessage(), e);
 	        return null;
 	    }
 		Log.i(TAG, "cacheImage():" +context.getFileStreamPath(fName));

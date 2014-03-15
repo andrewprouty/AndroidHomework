@@ -19,18 +19,10 @@ public class PhotoListActivity extends FragmentActivity {
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
 		//mPhotoItem = photoItem;
-		/* TODO remove Toast.makeText(this,mPhotoItem.getUserId() + "-"
-						  + mPhotoItem.getUserName() + "; "
-						  + mPhotoItem.getPhotoId() + "-"
-						  + mPhotoItem.getPhotoName()
-				,Toast.LENGTH_SHORT).show();*/
 		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
 		i.putExtra("UserId",   photo.getUserId().toString());
 		i.putExtra("UserName", photo.getUserName().toString());
-		//i.putExtra("PhotoId",  photo.getPhotoId().toString());
-		//i.putExtra("PhotoName",photo.getPhotoName().toString());
 		i.putExtra("position", position);
-		//i.putExtra("PhotosCount",mPhotoItems.size());
 		Log.d(TAG, "launchPhotoDisplayActivity() photo ["+position+"]: "
 				+ photo.getUserId() + "-"
 				+ photo.getUserName() + "; "
@@ -94,7 +86,6 @@ public class PhotoListActivity extends FragmentActivity {
 		PhotoItem item;
 		Log.d(TAG, "insertPhotoItems() user:"+user.getUserId()+"-"+user.getUserName());
 		mHelper.deletePhotosforUserId(user.getUserId());
-		// TODO try fetching - see what is remaining
 		for (int i=0; i<items.size(); i++) {
 			item=items.get(i);
 			Log.d(TAG, "insertPhotoItems() user: "
