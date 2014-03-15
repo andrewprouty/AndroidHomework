@@ -54,10 +54,13 @@ public class UploadFileActivity extends Activity {
 				if (fname == null || fname.length() == 0) {
 					fname = mPictureName;
 				}
+				if (fname.contains(" ")) {
+					fname = fname.trim().replace(" ","-");
+					mFileNameEditText.setText(fname);
+				}
 				startFileUpload(fname);
 			}
 		});
-
 		mButtonUploadFile.setEnabled(false);
 	}
 
