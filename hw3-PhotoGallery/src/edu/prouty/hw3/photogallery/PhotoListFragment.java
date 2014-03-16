@@ -20,11 +20,12 @@ public class PhotoListFragment extends Fragment{
 	private ArrayList<PhotoItem> mPhotoItems;
 	private UserItem mUserItem;
 	private PhotoItem mPhotoItem;
-	
+    
 	View view;
 	TextView mUserTextView;
 	TextView mPhotoTextView;
 	ListView mListView;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +52,7 @@ public class PhotoListFragment extends Fragment{
 				TextView textViewItem = ((TextView) view.findViewById(R.id.row_photo_name_textView));
 				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
-				Log.d(TAG, "().onItemClick() Photo ["+position+"]= "+listItemText);
+				Log.d(TAG, "onCreatView()setOnItemClickListener.onItemClick() Photo ["+position+"]= "+listItemText);
 				returnSelection(position);
 			}
 		});

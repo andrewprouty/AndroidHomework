@@ -11,12 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 
-public class ImagePagerActivity extends FragmentActivity {
+public class ImagePagerActivity extends FragmentActivity 
+	implements ImageFragment.Callbacks {
 	private static final String TAG = "ImagePagerActivity";
 	private static ArrayList<PhotoItem> mQueryPhotos;
 	private static PhotoItem mQueryPhoto = new PhotoItem();
 	private UserItem mUserItem = new UserItem();
-	private ViewPager mViewPager;
 
 	private GalleryDatabaseHelper mHelper;
 
@@ -25,19 +25,14 @@ public class ImagePagerActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
 
-		mViewPager = new ViewPager(this);
-		mViewPager.setId(R.id.viewPager);
-		setContentView(mViewPager);
-
 		String uId   = getIntent().getStringExtra("UserId");
 		String uName = getIntent().getStringExtra("UserName");
 		int position = getIntent().getIntExtra ("position",0);
 		Log.d(TAG, "onCreate().position: "+position);
-
 		initUserItem(uId, uName);
+
 		mHelper = new GalleryDatabaseHelper(getApplicationContext());
 		mQueryPhotos=queryPhotoItemsforUserId(mUserItem);
-  
 		mQueryPhoto=mQueryPhotos.get(position);
 		Log.d(TAG, "onCreate() mQueryPhoto: "
 				+ mQueryPhoto.getUserId() + "-"
@@ -45,6 +40,9 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mQueryPhoto.getPhotoId() + "-"
 				+ mQueryPhoto.getPhotoName());
 
+		ViewPager mViewPager = new ViewPager(this);
+		mViewPager.setId(R.id.viewPager);
+		setContentView(mViewPager);
 		FragmentManager fm = getSupportFragmentManager();
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
@@ -71,12 +69,11 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mUserItem.getUserName());
 	}
 
-	protected PhotoItem getPhotoItem(int pos) {
+	public PhotoItem getPhotoItem(int pos) {
 		Log.d(TAG, "getPhotoItem() ["+pos+"] size:"+mQueryPhotos.size());
 		PhotoItem item = mQueryPhotos.get(pos);
 		return item;
 	}
-
 
 	protected ArrayList<PhotoItem> queryPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;

@@ -1,5 +1,6 @@
 package edu.prouty.hw3.photogallery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ public class ImageFragment extends Fragment{
 	private static final String TAG = "ImageFragment";
 	private String mImageFileName;
 	private PhotoItem mPhotoItem;
+	private Callbacks mCallbacks;
 
 	FetchImageTask mFetchImageTask;
 
@@ -34,14 +36,33 @@ public class ImageFragment extends Fragment{
 		return frag;
 	}
 
+	public interface Callbacks {
+		PhotoItem getPhotoItem(int pos);
+	}
+
+	@Override
+    public void onAttach(Activity activity) {
+		Log.d(TAG, "onAttach()");
+        super.onAttach(activity);
+		Log.d(TAG, "onAttach() 0");
+        mCallbacks = (Callbacks)activity;
+		Log.d(TAG, "onAttach() 1");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
 		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
 		Log.d(TAG, "onCreate() ["+fragPosition+"].");
-		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem(fragPosition);
-		//mPhotoItem=((Object) getActivity()).getPhotoItem(fragPosition); //TODO
+		//mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem(fragPosition); //TODO remove
+		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
 		
 		Log.d(TAG, "onCreate() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
 		mFetchImageTask = new FetchImageTask(mPhotoItem);

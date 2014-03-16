@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import edu.prouty.hw3.photogallery.GalleryDatabaseHelper.PhotoCursor;
 
-public class PhotoListActivity extends FragmentActivity {
+public class PhotoListActivity extends FragmentActivity
+	implements ImageFragment.Callbacks {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
 	private static ArrayList<PhotoItem> mPhotoItems;
@@ -19,16 +21,33 @@ public class PhotoListActivity extends FragmentActivity {
 	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
-		Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
-		i.putExtra("UserId",   photo.getUserId().toString());
-		i.putExtra("UserName", photo.getUserName().toString());
-		i.putExtra("position", position);
-		Log.d(TAG, "launchPhotoDisplayActivity() photo ["+position+"]: "
-				+ photo.getUserId() + "-"
-				+ photo.getUserName() + "; "
-				+ photo.getPhotoId() + "-"
-				+ photo.getPhotoName());
-		startActivity(i);
+		if (findViewById(R.id.imageFragmentContainer) == null) {
+			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Activity (phone)");
+			Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
+			i.putExtra("UserId",   photo.getUserId().toString());
+			i.putExtra("UserName", photo.getUserName().toString());
+			i.putExtra("position", position);
+			Log.d(TAG, "launchPhotoDisplayActivity(): "
+					+ photo.getUserId() + "-"
+					+ photo.getUserName() + "; "
+					+ photo.getPhotoId() + "-"
+					+ photo.getPhotoName());
+			startActivity(i);
+		}
+		else {
+			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Fragment (tablet)");
+    		FragmentManager fm = getSupportFragmentManager();
+    			Log.d(TAG, "launchPhotoDisplayActivity() 3");
+    		FragmentTransaction ft = fm.beginTransaction();
+    			Log.d(TAG, "launchPhotoDisplayActivity() 4");
+            //Fragment fragment = fm.findFragmentById(R.id.fragmentImage);
+    		Fragment fragment = new ImageFragment().init(position);
+				Log.d(TAG, "launchPhotoDisplayActivity() about to...");
+            ft.add(R.id.imageFragmentContainer, fragment);
+				Log.d(TAG, "launchPhotoDisplayActivity() added");
+            ft.commit();
+				Log.d(TAG, "launchPhotoDisplayActivity() committed");
+		}
 	}
 
 	@Override
