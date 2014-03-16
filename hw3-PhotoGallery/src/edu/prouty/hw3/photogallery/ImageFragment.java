@@ -38,15 +38,13 @@ public class ImageFragment extends Fragment{
 
 	public interface Callbacks {
 		PhotoItem getPhotoItem(int pos);
+		Boolean isTwoPane();
 	}
 
 	@Override
     public void onAttach(Activity activity) {
-		Log.d(TAG, "onAttach()");
         super.onAttach(activity);
-		Log.d(TAG, "onAttach() 0");
         mCallbacks = (Callbacks)activity;
-		Log.d(TAG, "onAttach() 1");
     }
 
     @Override
@@ -61,7 +59,6 @@ public class ImageFragment extends Fragment{
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
 		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
 		Log.d(TAG, "onCreate() ["+fragPosition+"].");
-		//mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem(fragPosition); //TODO remove
 		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
 		
 		Log.d(TAG, "onCreate() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
@@ -74,12 +71,15 @@ public class ImageFragment extends Fragment{
 		Log.d(TAG, "onCreateView()");
 		view = inflater.inflate(R.layout.fragment_image, container,false);
 
-		mUserTextView = (TextView)view.findViewById(R.id.image_user_name);
-		mPhotoTextView = (TextView)view.findViewById(R.id.image_photo_name);
+		if (mCallbacks.isTwoPane() == false) {
+			mUserTextView = (TextView)view.findViewById(R.id.image_user_name);
+			mPhotoTextView = (TextView)view.findViewById(R.id.image_photo_name);
+
+			mUserTextView.setText(mPhotoItem.getUserName());
+			mPhotoTextView.setText(mPhotoItem.getPhotoName());
+		}
 		mImageView = (ImageView)view.findViewById(R.id.image_imageView);
 
-		mUserTextView.setText(mPhotoItem.getUserName());
-		mPhotoTextView.setText(mPhotoItem.getPhotoName());
 		mImageView.setImageResource(R.drawable.image_pending);
 
 		return view;

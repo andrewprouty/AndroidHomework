@@ -16,39 +16,38 @@ public class PhotoListActivity extends FragmentActivity
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
 	private static ArrayList<PhotoItem> mPhotoItems;
-	//private boolean mTwoPane;
 
 	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
-		if (findViewById(R.id.imageFragmentContainer) == null) {
+		if (isTwoPane() == false) {
 			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Activity (phone)");
 			Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
 			i.putExtra("UserId",   photo.getUserId().toString());
 			i.putExtra("UserName", photo.getUserName().toString());
 			i.putExtra("position", position);
-			Log.d(TAG, "launchPhotoDisplayActivity(): "
-					+ photo.getUserId() + "-"
-					+ photo.getUserName() + "; "
-					+ photo.getPhotoId() + "-"
-					+ photo.getPhotoName());
 			startActivity(i);
 		}
 		else {
 			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Fragment (tablet)");
     		FragmentManager fm = getSupportFragmentManager();
-    			Log.d(TAG, "launchPhotoDisplayActivity() 3");
     		FragmentTransaction ft = fm.beginTransaction();
-    			Log.d(TAG, "launchPhotoDisplayActivity() 4");
-            //Fragment fragment = fm.findFragmentById(R.id.fragmentImage);
-    		Fragment fragment = new ImageFragment().init(position);
-				Log.d(TAG, "launchPhotoDisplayActivity() about to...");
-            ft.add(R.id.imageFragmentContainer, fragment);
-				Log.d(TAG, "launchPhotoDisplayActivity() added");
+            Fragment oldFrag = fm.findFragmentById(R.id.imageFragmentContainer);
+    		Fragment newFrag = new ImageFragment().init(position);
+    		
+    		if (oldFrag != null) {
+    			ft.remove(oldFrag);
+    		}
+            ft.add(R.id.imageFragmentContainer, newFrag);
             ft.commit();
-				Log.d(TAG, "launchPhotoDisplayActivity() committed");
 		}
+		Log.d(TAG, "launchPhotoDisplayActivity(): "
+				+ photo.getUserId() + "-"
+				+ photo.getUserName() + "; "
+				+ photo.getPhotoId() + "-"
+				+ photo.getPhotoName());
 	}
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,15 @@ public class PhotoListActivity extends FragmentActivity
 		return mUserItem;
 	}
 	
-	public PhotoItem getPhotoItem(int pos) {
+	public Boolean isTwoPane() { //Callback
+		Log.d(TAG, "isTwoPane()");
+		if (findViewById(R.id.imageFragmentContainer) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	public PhotoItem getPhotoItem(int pos) { //Callback
 		Log.d(TAG, "getDisplayItem() ["+pos+"] size:"+mPhotoItems.size());
 		PhotoItem item = mPhotoItems.get(pos);
 		return item;

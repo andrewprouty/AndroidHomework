@@ -69,7 +69,11 @@ public class ImagePagerActivity extends FragmentActivity
 				+ mUserItem.getUserName());
 	}
 
-	public PhotoItem getPhotoItem(int pos) {
+	public Boolean isTwoPane() { //Callback
+		Log.d(TAG, "isTwoPane()");
+		return false;
+	}
+	public PhotoItem getPhotoItem(int pos) { //Callback
 		Log.d(TAG, "getPhotoItem() ["+pos+"] size:"+mQueryPhotos.size());
 		PhotoItem item = mQueryPhotos.get(pos);
 		return item;
