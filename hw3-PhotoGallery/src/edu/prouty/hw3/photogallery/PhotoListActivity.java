@@ -83,7 +83,7 @@ public class PhotoListActivity extends FragmentActivity
 	}
 	
 	public Boolean isTwoPane() { //Callback
-		Log.d(TAG, "isTwoPane()");
+		//Log.d(TAG, "isTwoPane()");
 		if (findViewById(R.id.imageFragmentContainer) == null) {
 			return false;
 		} else {

@@ -57,18 +57,16 @@ public class ImageFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
-		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
-		Log.d(TAG, "onCreate() ["+fragPosition+"].");
-		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
-		
-		Log.d(TAG, "onCreate() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
-		mFetchImageTask = new FetchImageTask(mPhotoItem);
-		mFetchImageTask.execute();
 	}
 
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
-		Log.d(TAG, "onCreateView()");
+		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
+		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
+		Log.d(TAG, "onCreateView() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
+		mFetchImageTask = new FetchImageTask(mPhotoItem);
+		mFetchImageTask.execute();
+
 		view = inflater.inflate(R.layout.fragment_image, container,false);
 
 		if (mCallbacks.isTwoPane() == false) {

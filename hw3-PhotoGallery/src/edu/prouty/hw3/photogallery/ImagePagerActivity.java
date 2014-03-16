@@ -70,7 +70,6 @@ public class ImagePagerActivity extends FragmentActivity
 	}
 
 	public Boolean isTwoPane() { //Callback
-		Log.d(TAG, "isTwoPane()");
 		return false;
 	}
 	public PhotoItem getPhotoItem(int pos) { //Callback
