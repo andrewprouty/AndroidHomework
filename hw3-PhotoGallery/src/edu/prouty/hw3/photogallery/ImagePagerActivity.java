@@ -17,6 +17,8 @@ public class ImagePagerActivity extends FragmentActivity
 	private static ArrayList<PhotoItem> mQueryPhotos;
 	private static PhotoItem mQueryPhoto = new PhotoItem();
 	private UserItem mUserItem = new UserItem();
+	private int mImageWidth = 0;
+	private int mImageHeight = 0;
 
 	private GalleryDatabaseHelper mHelper;
 
@@ -97,5 +99,25 @@ public class ImagePagerActivity extends FragmentActivity
 		cursor.close();
         mHelper.close();
 		return items;
+	}
+
+	// Scenario used: two-pane, view image, exit to user list then see image again. 
+	public int handleFieldWidth(int width) { //Callback
+		if (width > 0 ) {
+			mImageWidth = width;
+			Log.d(TAG, "handleFieldWidth() set width: "+width); // TODO remove
+		} else {
+			Log.d(TAG, "handleFieldWidth(): used global");
+		}
+		return mImageWidth;
+	}
+	public int handleFieldHeight(int height) { //Callback
+		if (height> 0 ) {
+			mImageHeight = height;
+			Log.d(TAG, "handleFieldWidth() set height: "+height); // TODO remove
+		} else {
+			Log.d(TAG, "handleFieldHeight(): used global");
+		}
+		return mImageHeight;
 	}
 }

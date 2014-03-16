@@ -90,8 +90,6 @@ public class PhotoListFragment extends Fragment{
 		mPhotoItem = mPhotoItems.get(position);
 		Log.i(TAG, "returnSelection()=["+position+"] "+mPhotoItem.getPhotoId()+": "+mPhotoItem.getPhotoName());
 		mPhotoTextView.setText(mPhotoItem.getPhotoName());
-		//((PhotoListActivity) getActivity()).setPhotoItem(mPhotoItem);
-		//((PhotoListActivity) getActivity()).setPhotoItems(mPhotoItems);
 		((PhotoListActivity) getActivity()).launchPhotoDisplayActivity(mPhotoItem, position);
 	}
 	private class FetchPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {

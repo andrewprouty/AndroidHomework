@@ -81,9 +81,7 @@ public class MainUserListActivity extends FragmentActivity {
 		mHelper.deleteUsers();
         for (int i=0; i<items.size(); i++) {
     		item=items.get(i);
-    		Log.d(TAG, "insertUserItems() user: "
-    				+ item.getUserId() + "-"
-    				+ item.getUserName());
+    		// Log.d(TAG, "insertUserItems() user: "+ item.getUserId() + "-"+ item.getUserName());
             mHelper.insertUser(item);
             mHelper.close();
         }

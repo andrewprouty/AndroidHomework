@@ -16,10 +16,15 @@ public class PhotoListActivity extends FragmentActivity
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
 	private static ArrayList<PhotoItem> mPhotoItems;
+	private int mImageWidth = 0;
+	private int mImageHeight = 0;
 
 	private GalleryDatabaseHelper mHelper;
 
 	protected void launchPhotoDisplayActivity(PhotoItem photo, int position) {
+		Log.d(TAG, "launchPhotoDisplayActivity(): "
+				+ photo.getUserId()  + "-"+ photo.getUserName() + "; "
+				+ photo.getPhotoId() + "-"+ photo.getPhotoName());
 		if (isTwoPane() == false) {
 			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Activity (phone)");
 			Intent i = new Intent (PhotoListActivity.this, ImagePagerActivity.class);
@@ -30,24 +35,26 @@ public class PhotoListActivity extends FragmentActivity
 		}
 		else {
 			Log.d(TAG, "launchPhotoDisplayActivity() ["+position+"] via Fragment (tablet)");
-    		FragmentManager fm = getSupportFragmentManager();
-    		FragmentTransaction ft = fm.beginTransaction();
-            Fragment oldFrag = fm.findFragmentById(R.id.imageFragmentContainer);
-    		Fragment newFrag = new ImageFragment().init(position);
-    		
-    		if (oldFrag != null) {
-    			ft.remove(oldFrag);
-    		}
-            ft.add(R.id.imageFragmentContainer, newFrag);
-            ft.commit();
+			createDisplayFrag(position);
 		}
-		Log.d(TAG, "launchPhotoDisplayActivity(): "
-				+ photo.getUserId() + "-"
-				+ photo.getUserName() + "; "
-				+ photo.getPhotoId() + "-"
-				+ photo.getPhotoName());
 	}
 	
+	private void createDisplayFrag(int position) {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+        Fragment oldFrag = fm.findFragmentById(R.id.imageFragmentContainer);
+		Fragment newFrag = new ImageFragment().init(position);
+		
+		if (oldFrag != null) {
+			Log.i(TAG, "launchPhotoDisplayActivity(): REMOVING OLD FRAG");
+			ft.remove(oldFrag);
+		}
+		else {
+			Log.i(TAG, "launchPhotoDisplayActivity(): did not remove"); //TODO remove
+		}
+        ft.add(R.id.imageFragmentContainer, newFrag);
+        ft.commit();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,11 @@ public class PhotoListActivity extends FragmentActivity
 			.commit();
 		}
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
+        
+		if (isTwoPane()) {
+			createDisplayFrag(-1); // TODO could set theme based background
+		}
+
 	}
 
 	private void initUserItem (String id, String name) {
@@ -95,7 +107,26 @@ public class PhotoListActivity extends FragmentActivity
 		PhotoItem item = mPhotoItems.get(pos);
 		return item;
 	}
-	
+	// Scenario used: two-pane, view image, exit to user list then see image again. 
+	public int handleFieldWidth(int width) { //Callback
+		if (width > 0 ) {
+			mImageWidth = width;
+			Log.d(TAG, "handleFieldWidth() set width: "+width); // TODO remove
+		} else {
+			Log.i(TAG, "handleFieldWidth(): used global");
+		}
+		return mImageWidth;
+	}
+	public int handleFieldHeight(int height) { //Callback
+		if (height> 0 ) {
+			mImageHeight = height;
+			Log.d(TAG, "handleFieldHeight() set height: "+height); // TODO remove
+		} else {
+			Log.i(TAG, "handleFieldHeight(): used global");
+		}
+		return mImageHeight;
+	}
+
 	public void setPhotoItems(ArrayList<PhotoItem> items) {
 		mPhotoItems = items;
 		Log.d(TAG, "setPhotoItems() in:"+items.size()+" set:"+mPhotoItems.size());
@@ -108,11 +139,11 @@ public class PhotoListActivity extends FragmentActivity
 		mHelper.deletePhotosforUserId(user.getUserId());
 		for (int i=0; i<items.size(); i++) {
 			item=items.get(i);
-			Log.d(TAG, "insertPhotoItems() user: "
+			/*Log.d(TAG, "insertPhotoItems() user: "
 					+ item.getUserId() + "-"
 					+ item.getUserName() + "; "
 					+ item.getPhotoId() + "-"
-					+ item.getPhotoName());
+					+ item.getPhotoName()); */
 			mHelper.insertPhoto(item);
 		}
 		mHelper.close();

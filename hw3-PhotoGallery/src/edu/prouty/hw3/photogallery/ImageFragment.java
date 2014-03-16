@@ -39,6 +39,8 @@ public class ImageFragment extends Fragment{
 	public interface Callbacks {
 		PhotoItem getPhotoItem(int pos);
 		Boolean isTwoPane();
+		int handleFieldWidth(int value);
+		int handleFieldHeight(int value);
 	}
 
 	@Override
@@ -62,10 +64,10 @@ public class ImageFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
 		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
-		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
-		Log.d(TAG, "onCreateView() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
-		mFetchImageTask = new FetchImageTask(mPhotoItem);
-		mFetchImageTask.execute();
+		if (fragPosition >= 0) {
+			mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
+			Log.d(TAG, "onCreateView() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
+		}
 
 		view = inflater.inflate(R.layout.fragment_image, container,false);
 
@@ -76,9 +78,27 @@ public class ImageFragment extends Fragment{
 			mUserTextView.setText(mPhotoItem.getUserName());
 			mPhotoTextView.setText(mPhotoItem.getPhotoName());
 		}
+		
 		mImageView = (ImageView)view.findViewById(R.id.image_imageView);
+		if (fragPosition >= 0) {
+			mImageView.setImageResource(R.drawable.image_pending);
+			mFetchImageTask = new FetchImageTask(mPhotoItem);
+			mFetchImageTask.execute();
+		}
+		
+		view.post(new Runnable() {
+		    @Override
+		    public void run() {
+		      // code you want to run when view is visible for the first time
+		    	Log.d(TAG,"onCreateView() post run field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
+		        mCallbacks.handleFieldWidth(mImageView.getWidth());
+		        mCallbacks.handleFieldHeight(mImageView.getHeight());
 
-		mImageView.setImageResource(R.drawable.image_pending);
+		    }
+		});
+		//view.measure(0,0); //TODO remove
+        //Log.d(TAG,"onCreateView()_mea="+mImageView.getMeasuredWidth()+" x h="+mImageView.getMeasuredHeight());
+        //Log.d(TAG,"onCreateView()_field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
 
 		return view;
 	}
@@ -96,21 +116,75 @@ public class ImageFragment extends Fragment{
 		}
 		else {
 			Log.d(TAG, "setupImage():"+mImageFileName);
-			BitmapFactory.Options options=new BitmapFactory.Options();
-			options.inSampleSize = 3;
-			Bitmap bmImage=BitmapFactory.decodeFile(mImageFileName, options);
+			Bitmap bmImage=decodeBitmapFromFilename(mImageFileName, mImageView);
 			mImageView.setImageBitmap(bmImage);
 		}
+	}
+	
+	private Bitmap decodeBitmapFromFilename(String filename, ImageView imageView) {
+		// Based upon http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+		// First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filename, options); // To set options width & height
+        
+        // Calculate inSampleSize
+        // Raw height and width of image
+        final int width = options.outWidth;
+        final int height = options.outHeight;
+        final int reqWidth = mCallbacks.handleFieldWidth(imageView.getWidth());
+        final int reqHeight = mCallbacks.handleFieldHeight(imageView.getHeight());
+        Log.i(TAG,"decodeBitmapFromFilename() field w="+reqWidth+" x h="+reqHeight);
+
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+
+            // This offers some additional logic in case the image has a strange
+            // aspect ratio. For example, a panorama may have a much larger
+            // width than height. In these cases the total pixels might still
+            // end up being too large to fit comfortably in memory, so we should
+            // be more aggressive with sample down the image (=larger inSampleSize).
+
+            long totalPixels = width * height / inSampleSize;
+
+            // Anything more than 2x the requested pixels we'll sample down further
+            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+            while (totalPixels > totalReqPixelsCap) {
+                inSampleSize *= 2;
+                totalPixels /= 2;
+            }
+        }
+        options.inSampleSize = inSampleSize;
+        
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Log.i(TAG,"decodeBitmapFromFilename() pixels w="+width+" x h="+height+"=> sample: < "+inSampleSize+" >");
+        return BitmapFactory.decodeFile(filename, options);
 	}
 
 	private class FetchImageTask extends AsyncTask<PhotoItem,Void,String> {
 		//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
 		private Context c;
 		private PhotoItem photoItem;
+		private int width;
+		private int height;
 		//Constructor
 		public FetchImageTask (PhotoItem photoItem) {
 			this.c = getActivity().getApplicationContext();
 			this.photoItem = photoItem;
+			width = mCallbacks.handleFieldWidth(0);
+			height= mCallbacks.handleFieldHeight(0);
 		}
 		@Override
 		protected void onPreExecute() {
@@ -121,7 +195,7 @@ public class ImageFragment extends Fragment{
 			Log.d(TAG, "FetchImageTask doInBackground()");
 			String fname = null;
 			try {
-				fname = new ImageBismarck().fetchImage(photoItem, c);
+				fname = new ImageBismarck().fetchImage(photoItem, c, width, height);
 
 			} catch (Exception e) {
 				Log.e(TAG, "doInBackground() Exception.", e);
