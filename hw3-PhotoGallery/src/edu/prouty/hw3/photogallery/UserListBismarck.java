@@ -53,16 +53,6 @@ public class UserListBismarck {
 			if (jsonString == null || jsonString.length() == 0) {
 				//Not online - will show an empty list if not in DB
 				Log.i(TAG, "fetchItems() Failed to fetch items");
-			/*  TODO remove when ready
-				jsonString = readUserList(appContext); // exists in cache?
-			}
-			else {
-				cacheUserList(appContext, jsonString);
-			}
-
-			if (jsonString == null || jsonString.length() == 0) {
-				Log.i(TAG, "fetchItems() Failed to fetch items");
-			*/
 			}
 			else {
 				parseUserList(items, jsonString);
@@ -87,43 +77,10 @@ public class UserListBismarck {
 		}
 		return jsonString;
 	}
-
-	/* TODO remove User file cache
-	private void cacheUserList(Context appContext, String jsonString) {
-		String fName = "UserList";
-		FileOutputStream outFile;
-		try {
-			outFile = appContext.openFileOutput(fName, Context.MODE_PRIVATE);
-			outFile.write(jsonString.getBytes());
-			outFile.close();
-		} catch (Exception e) {
-			Log.e(TAG, "cacheUserList() Exc:"+e.getMessage(),e);
-		}
-		Log.d(TAG, "cacheUserList():" +appContext.getFileStreamPath(fName));
-	}
-
-	private String readUserList(Context appContext) {
-		String fName = "UserList";
-		String fileContents;
-		FileInputStream inFile;
-		try {
-			inFile = appContext.openFileInput(fName);
-			byte[] data = new byte[inFile.available()];
-			inFile.read(data, 0, inFile.available());
-			fileContents = new String (data);
-			inFile.close();
-		} catch (Exception e) {
-			Log.e(TAG, "readUserList() Exc:"+e.getMessage(),e);
-			fileContents = "";
-		}
-		Log.i(TAG, "readUserList() from: " +appContext.getFileStreamPath(fName));
-		return fileContents;
-	}*/
 	private void parseUserList(ArrayList<UserItem> items, String stringUserList) {
 		try {
 			JSONArray jsonUserList = new JSONArray (stringUserList);  
 			// {"name":"Roger Whitney","id":"1"},...
-			
 			for (int i = 0; i < jsonUserList.length(); i++) {
 				JSONObject jsonNode = jsonUserList.getJSONObject(i);
 				String user_name   = jsonNode.optString("name").toString();

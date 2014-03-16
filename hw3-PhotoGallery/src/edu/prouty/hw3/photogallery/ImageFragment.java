@@ -39,7 +39,10 @@ public class ImageFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true); // survive across Activity re-create (i.e. orientation)
 		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
+		Log.d(TAG, "onCreate() ["+fragPosition+"].");
 		mPhotoItem=((ImagePagerActivity) getActivity()).getPhotoItem(fragPosition);
+		//mPhotoItem=((Object) getActivity()).getPhotoItem(fragPosition); //TODO
+		
 		Log.d(TAG, "onCreate() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
 		mFetchImageTask = new FetchImageTask(mPhotoItem);
 		mFetchImageTask.execute();

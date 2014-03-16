@@ -63,18 +63,7 @@ public class ImagePagerActivity extends FragmentActivity {
 		mViewPager.setCurrentItem(position);
 	}
 
-	public void initPhotoItem (String uId, String uName, String pId, String pName) {
-		mQueryPhoto.setUserId(uId);
-		mQueryPhoto.setUserName(uName);
-		mQueryPhoto.setPhotoId(pId);
-		mQueryPhoto.setPhotoName(pName);
-		Log.d(TAG, "initPhotoItem(): "
-				+ mQueryPhoto.getUserId() + "-"
-				+ mQueryPhoto.getUserName() + "; "
-				+ mQueryPhoto.getPhotoId() + "-"
-				+ mQueryPhoto.getPhotoName());
-	}
-	public void initUserItem (String uId, String uName) {
+	private void initUserItem (String uId, String uName) {
 		mUserItem.setUserId(uId);
 		mUserItem.setUserName(uName);
 		Log.d(TAG, "initUserItem(): "
@@ -82,11 +71,12 @@ public class ImagePagerActivity extends FragmentActivity {
 				+ mUserItem.getUserName());
 	}
 
-	public PhotoItem getPhotoItem(int pos) {
-		Log.d(TAG, "getDisplayItem() ["+pos+"] size:"+mQueryPhotos.size());
+	protected PhotoItem getPhotoItem(int pos) {
+		Log.d(TAG, "getPhotoItem() ["+pos+"] size:"+mQueryPhotos.size());
 		PhotoItem item = mQueryPhotos.get(pos);
 		return item;
 	}
+
 
 	protected ArrayList<PhotoItem> queryPhotoItemsforUserId(UserItem user) {
 		PhotoCursor cursor;

@@ -57,16 +57,6 @@ public class PhotoListBismarck {
 			if (jsonString == null || jsonString.length() == 0) {
 				//Not online - will show an empty list if not in DB
 				Log.i(TAG, "fetchItems() Failed to fetch items");
-			/* TODO remove when ready
-				jsonString = readPhotoList(appContext); // exists in cache?
-			}
-			else {
-				cachePhotoList(appContext, jsonString);
-			}
-
-			if (jsonString == null || jsonString.length() == 0) {
-				//Will return empty list
-			 */
 			}
 			else {
 				parsePhotoList(items, jsonString);
@@ -93,37 +83,6 @@ public class PhotoListBismarck {
 		return jsonString;
 	}
 
-	/* TODO remove Photo List file cache
-	private void cachePhotoList(Context appContext, String jsonString) {
-		String fName = "UserPhotos-"+mUserItem.getUserId();
-		FileOutputStream outFile;
-		try {
-			outFile = appContext.openFileOutput(fName, Context.MODE_PRIVATE);
-			outFile.write(jsonString.getBytes());
-			outFile.close();
-		} catch (Exception e) {
-			Log.e(TAG, "cachePhotoList() Exc:"+e.getMessage(),e);
-		}
-		Log.d(TAG, "cachePhotoList():" +appContext.getFileStreamPath(fName));
-	}
-
-	private String readPhotoList(Context appContext) {
-		String fName = "UserPhotos-"+mUserItem.getUserId();
-		String fileContents;
-		FileInputStream inFile;
-		try {
-			inFile = appContext.openFileInput(fName);
-			byte[] data = new byte[inFile.available()];
-			inFile.read(data, 0, inFile.available());
-			fileContents = new String (data);
-			inFile.close();
-		} catch (Exception e) {
-			Log.e(TAG, "readPhotoList() Exc:"+e.getMessage(),e);
-			fileContents = "";
-		}
-		Log.d(TAG, "readPhotoList() " +appContext.getFileStreamPath(fName));
-		return fileContents;
-	}*/
 	private void parsePhotoList(ArrayList<PhotoItem> items, String stringPhotoList) {
 		try {
 			JSONArray jsonPhotoList = new JSONArray (stringPhotoList);  

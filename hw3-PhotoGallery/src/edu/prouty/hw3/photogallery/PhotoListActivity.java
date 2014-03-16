@@ -14,6 +14,7 @@ public class PhotoListActivity extends FragmentActivity {
 	private static final String TAG = "PhotoListActivity";
 	private UserItem mUserItem = new UserItem();
 	private static ArrayList<PhotoItem> mPhotoItems;
+	//private boolean mTwoPane;
 
 	private GalleryDatabaseHelper mHelper;
 
@@ -33,26 +34,26 @@ public class PhotoListActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_fragment);
+		setContentView(R.layout.activity_masterdetail);
 		Log.d(TAG, "onCreate()");
 
 		String id = getIntent().getStringExtra("UserId");
 		String name = getIntent().getStringExtra("UserName");
 		initUserItem(id, name);
 
-		FragmentManager manager = getSupportFragmentManager();
-		Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
+		FragmentManager fm = getSupportFragmentManager();
+		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
 		if (fragment == null) {
 			fragment = new PhotoListFragment();
-			manager.beginTransaction()
+			fm.beginTransaction()
 			.add(R.id.fragmentContainer, fragment)
 			.commit();
 		}
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
 	}
 
-	public void initUserItem (String id, String name) {
+	private void initUserItem (String id, String name) {
 		mUserItem.setUserId(id);
 		mUserItem.setUserName(name);
 		Log.d(TAG, "initUserItem() user: "

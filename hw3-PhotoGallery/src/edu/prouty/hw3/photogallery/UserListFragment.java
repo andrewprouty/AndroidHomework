@@ -76,16 +76,6 @@ public class UserListFragment extends Fragment{
 		}
     }
 
-    /*  TODO remove later
-    private void insertIntoDB() {
-     
-    	((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
-    }
-    private void fetchFromDB() {
-    	mUserItems=((MainUserListActivity) getActivity()).fetchUserItems();
-    }
-    */
-	
     private void returnSelection(int position) {
 		mFetchUserItemsTask.cancel(true);
     	mUserItem = mUserItems.get(position);
