@@ -82,25 +82,67 @@ public class UploadFileActivity extends Activity {
 
 			ImageView imageView = (ImageView) findViewById(R.id.upload_imageView);
 
-			Bitmap bmImage;
-			BitmapFactory.Options options=new BitmapFactory.Options();
-			options.inSampleSize = 3;
-			bmImage=BitmapFactory.decodeFile(mPicturePath, options);
-			imageView.setImageBitmap(bmImage);
+			final BitmapFactory.Options options=new BitmapFactory.Options();
+	        options.inJustDecodeBounds = true;
+
+	        // Calculate inSampleSize
+	        BitmapFactory.decodeFile(mPicturePath, options); // sets options width & height
+			final int reqWidth = imageView.getWidth();
+			final int reqHeight = imageView.getHeight();
+	        Log.d(TAG,"onActivityResult() field w="+reqWidth+" x h="+reqHeight);
+			options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+	        // Decode bitmap with inSampleSize set
+	        options.inJustDecodeBounds = false;
+			Bitmap bm=BitmapFactory.decodeFile(mPicturePath, options);
+			
+			imageView.setImageBitmap(bm);
 
 			String plus = mPicturePath.substring(mPicturePath.lastIndexOf('/')+1, mPicturePath.length() );
 			mPictureName = plus.substring(0, plus.lastIndexOf('.')); // no extension
-
-			Log.d(TAG,"onActivityResult() name.ext: "+plus);
 			Log.d(TAG,"onActivityResult() name: "+mPictureName);
 
 			mButtonUploadFile.setEnabled(true);
 			mFileNameEditText.setEnabled(true);
 			mFileNameEditText.setText(mPictureName);
+			
 		}
 	}
-	private void resultToast(Boolean success, String msg) {
+	
+	private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int inSampleSize = 1;
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
 
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+            // This offers some additional logic in case the image has a strange
+            // aspect ratio. For example, a panorama may have a much larger
+            // width than height. In these cases the total pixels might still
+            // end up being too large to fit comfortably in memory, so we should
+            // be more aggressive with sample down the image (=larger inSampleSize).
+            long totalPixels = width * height / inSampleSize;
+            // Anything more than 2x the requested pixels we'll sample down further
+            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
+            while (totalPixels > totalReqPixelsCap) {
+                inSampleSize *= 2;
+                totalPixels /= 2;
+            }
+        }
+        Log.d(TAG,"calculateInSampleSize() pixels w="+width+" x h="+height+" =>inSampleSize: < "+inSampleSize+" >");
+        return inSampleSize;
+	}
+
+	private void resultToast(Boolean success, String msg) {
 		int messageResId = 0;
 		if (success) {
 			messageResId = R.string.upload_success;
@@ -119,7 +161,6 @@ public class UploadFileActivity extends Activity {
 		mFileUploadTask.execute(); //arg for doInBackground()
 		Log.d(TAG,"startFileUpload() Task launched");
 	}
-
 	private class FileUploadTask extends AsyncTask<String,Void,String> {
 		//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
 		private String fileWithPath;

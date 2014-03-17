@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 public class PhotoListFragment extends Fragment{
 	private static final String TAG = "PhotoListFragment";
+	private static final int GET = 0;
+	private static final int QUERY = 1;
 	private ArrayList<PhotoItem> mPhotoItems;
 	private UserItem mUserItem;
 	private PhotoItem mPhotoItem;
@@ -45,7 +47,7 @@ public class PhotoListFragment extends Fragment{
 
 		mUserTextView.setText(mUserItem.getUserName());
 
-		setupAdapter();
+		//setupAdapter(GET); // DB "only" for offline usage.  Pre-fetch :~)
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -59,21 +61,19 @@ public class PhotoListFragment extends Fragment{
 		return view;
 	}
 
-	private void setupAdapter() {
+	private void setupAdapter(int choice) {
 		if (getActivity() == null || mListView == null) {
 			return;
 		}
-    	Log.d(TAG, "setupAdapter(): "
-    			+ mUserItem.getUserId() + "-"
-    			+ mUserItem.getUserName() + ";");
+    	Log.d(TAG, "setupAdapter("+choice+"): "+mUserItem.getUserId()+"-"+mUserItem.getUserName()+";");
 
-		if (mPhotoItems != null && mPhotoItems.size()>0) {
-			// Async to save the fetched list to DB
-	        new InsertPhotoItemsTask().execute();
-		}
-		else {
-			// none... If in DB - populate from there
-			mPhotoItems=((PhotoListActivity) getActivity()).queryPhotoItemsforUserId(mUserItem);
+    	if (choice == GET) {
+    		if (mPhotoItems != null && mPhotoItems.size()>0) { // save the fetched to DB
+    			new InsertPhotoItemsTask().execute();
+    		}
+    		else { // got none. If in DB - populate from there
+    			new QueryPhotoItemsTask().execute(mUserItem);
+    		}
 		}
     	
     	if (mPhotoItems != null) {
@@ -97,8 +97,7 @@ public class PhotoListFragment extends Fragment{
 		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
         	Log.d(TAG, "FetchPhotoTask doInBackground()");
     		ArrayList<PhotoItem> items = null;
-    		try {
-    			// pass context for app dir to cache file
+    		try { // pass context for app dir to cache file
         		items = new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
     		} catch (Exception e) {
     			Log.e(TAG, "doInBackground() Exception.", e);
@@ -108,8 +107,7 @@ public class PhotoListFragment extends Fragment{
 		@Override
 		protected void onPostExecute(ArrayList<PhotoItem> photoItems) {
 			mPhotoItems = photoItems;
-			//mUserTextView.setText("I'm back");
-			setupAdapter();
+			setupAdapter(GET);
             cancel(true); // done !
         	Log.d(TAG, "FetchPhotoTask onPostExecute()");
 		}
@@ -140,7 +138,6 @@ public class PhotoListFragment extends Fragment{
     		Log.d(TAG, "InsertPhotoItemsTask.doInBackground()");
     		try {
     			((PhotoListActivity) getActivity()).insertPhotoItems(mPhotoItems, mUserItem);
-//        		 ((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
     		} catch (Exception e) {
     			Log.e(TAG, "InsertPhotoItemsTask.doInBackground() Exception.", e);
     		}
@@ -152,5 +149,25 @@ public class PhotoListFragment extends Fragment{
     		cancel(true); // done !
     	}
     }
-
+	private class QueryPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {
+		@Override
+		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
+        	Log.d(TAG, "QueryPhotoTask.doInBackground()");
+    		ArrayList<PhotoItem> items = null;
+    		try {
+    			items = ((PhotoListActivity) getActivity()).queryPhotoItemsforUserId(mUserItem);
+    			//items = new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
+    		} catch (Exception e) {
+    			Log.e(TAG, "QueryPhotoTask.doInBackground() Exception.", e);
+    		}
+        	return items;
+		}
+		@Override
+		protected void onPostExecute(ArrayList<PhotoItem> photoItems) {
+			mPhotoItems = photoItems;
+			setupAdapter(QUERY);
+            cancel(true); // done !
+        	Log.d(TAG, "QueryPhotoTask.onPostExecute()");
+		}
+	}
 }

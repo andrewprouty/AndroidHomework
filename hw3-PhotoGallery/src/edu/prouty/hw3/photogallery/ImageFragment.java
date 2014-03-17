@@ -130,7 +130,6 @@ public class ImageFragment extends Fragment{
 
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
-
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
 
@@ -140,7 +139,6 @@ public class ImageFragment extends Fragment{
                     && (halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
             }
-
             // This offers some additional logic in case the image has a strange
             // aspect ratio. For example, a panorama may have a much larger
             // width than height. In these cases the total pixels might still

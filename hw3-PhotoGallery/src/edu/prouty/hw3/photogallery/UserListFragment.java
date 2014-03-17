@@ -39,7 +39,8 @@ public class UserListFragment extends Fragment{
 		view = inflater.inflate(R.layout.fragment_user_list, container,false);
         mUserTextView = (TextView)view.findViewById(R.id.user_list_textView);
 		mListView = (ListView)view.findViewById(R.id.user_list_view);
-		setupAdapter();
+		setupAdapter(); // Allow Users to pre-fetch from DB
+						// faster plus new network records integrate nicely
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
