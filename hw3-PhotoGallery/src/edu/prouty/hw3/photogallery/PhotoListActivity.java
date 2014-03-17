@@ -124,11 +124,9 @@ public class PhotoListActivity extends FragmentActivity
 		mHelper.deletePhotosforUserId(user.getUserId());
 		for (int i=0; i<items.size(); i++) {
 			item=items.get(i);
-			/*Log.d(TAG, "insertPhotoItems() user: "
-					+ item.getUserId() + "-"
-					+ item.getUserName() + "; "
-					+ item.getPhotoId() + "-"
-					+ item.getPhotoName()); */
+			Log.v(TAG, "insertPhotoItems() user: "
+					+ item.getUserId() + "-"  + item.getUserName() + "; "
+					+ item.getPhotoId() + "-" + item.getPhotoName());
 			mHelper.insertPhoto(item);
 		}
 		mHelper.close();

@@ -68,8 +68,8 @@ public class PhotoListFragment extends Fragment{
     			+ mUserItem.getUserName() + ";");
 
 		if (mPhotoItems != null && mPhotoItems.size()>0) {
-			// GET list into DB
-			((PhotoListActivity) getActivity()).insertPhotoItems(mPhotoItems, mUserItem);
+			// Async to save the fetched list to DB
+	        new InsertPhotoItemsTask().execute();
 		}
 		else {
 			// none... If in DB - populate from there
@@ -127,10 +127,30 @@ public class PhotoListFragment extends Fragment{
 
 			PhotoItem item = getItem(position);
 			TextView photoTextView = (TextView)convertView.findViewById(R.id.row_photo_name_textView);
-			//Log.d(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
+			Log.v(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
 			photoTextView.setText(item.getPhotoName());
 
 			return convertView;
 		}
 	}
+    private class InsertPhotoItemsTask extends AsyncTask<Void,Void,Void> {
+    	//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
+    	@Override
+    	protected Void doInBackground(Void... nada) {
+    		Log.d(TAG, "InsertPhotoItemsTask.doInBackground()");
+    		try {
+    			((PhotoListActivity) getActivity()).insertPhotoItems(mPhotoItems, mUserItem);
+//        		 ((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
+    		} catch (Exception e) {
+    			Log.e(TAG, "InsertPhotoItemsTask.doInBackground() Exception.", e);
+    		}
+    		return null;
+    	}
+    	@Override
+    	protected void onPostExecute(Void nada) {
+    		Log.d(TAG, "InsertPhotoItemsTask.onPostExecute()");
+    		cancel(true); // done !
+    	}
+    }
+
 }

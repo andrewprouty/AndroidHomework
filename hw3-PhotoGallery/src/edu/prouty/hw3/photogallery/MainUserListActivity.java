@@ -78,10 +78,10 @@ public class MainUserListActivity extends FragmentActivity {
     protected void insertUserItems(ArrayList<UserItem> items) {
         UserItem item;
         Log.d(TAG, "insertUserItems()");
-		mHelper.deleteUsers();
+		mHelper.deleteUsers(); // By default parent key is not "RESTRICT" from delete (http://www.sqlite.org/foreignkeys.html)
         for (int i=0; i<items.size(); i++) {
     		item=items.get(i);
-    		// Log.d(TAG, "insertUserItems() user: "+ item.getUserId() + "-"+ item.getUserName());
+    		Log.v(TAG, "insertUserItems() user: "+ item.getUserId() + "-"+ item.getUserName());
             mHelper.insertUser(item);
             mHelper.close();
         }

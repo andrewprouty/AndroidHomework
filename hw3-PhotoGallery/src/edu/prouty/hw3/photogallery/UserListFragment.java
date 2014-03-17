@@ -121,7 +121,7 @@ public class UserListFragment extends Fragment{
             
             UserItem item = getItem(position);
             TextView userTextView = (TextView)convertView.findViewById(R.id.row_user_name_textView);
-			//Log.d(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
+			Log.v(TAG, "adapter.getView() item.getUserName(): "+item.getUserName());
             userTextView.setText(item.getUserName());
             
             return convertView;

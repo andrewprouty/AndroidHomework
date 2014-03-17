@@ -126,7 +126,7 @@ public class ImageFragment extends Fragment{
         final int height = options.outHeight;
         final int reqWidth = mCallbacks.handleFieldWidth(imageView.getWidth());
         final int reqHeight = mCallbacks.handleFieldHeight(imageView.getHeight());
-        Log.i(TAG,"decodeBitmapFromFilename() field w="+reqWidth+" x h="+reqHeight);
+        Log.d(TAG,"decodeBitmapFromFilename() field w="+reqWidth+" x h="+reqHeight);
 
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
@@ -161,7 +161,7 @@ public class ImageFragment extends Fragment{
         
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        Log.i(TAG,"decodeBitmapFromFilename() pixels w="+width+" x h="+height+"=> sample: < "+inSampleSize+" >");
+        Log.d(TAG,"decodeBitmapFromFilename() pixels w="+width+" x h="+height+"=> sample: < "+inSampleSize+" >");
         return BitmapFactory.decodeFile(filename, options);
 	}
 
