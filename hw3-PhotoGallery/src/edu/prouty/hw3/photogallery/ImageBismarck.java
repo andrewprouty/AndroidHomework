@@ -3,8 +3,6 @@ package edu.prouty.hw3.photogallery;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.content.Context;
@@ -12,26 +10,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
 
 public class ImageBismarck {
 	private static final String TAG = "ImageBismarck";
 	// http://bismarck.sdsu.edu/photoserver/userphotos/2
 	private static final String ENDPOINT = "http://bismarck.sdsu.edu/photoserver/photo/";
 	private Context context;
-	private int width;
-	private int height;
 
 	public String fetchImage(PhotoItem photoItem, Context appContext, int width, int height) {
 		Log.d(TAG, "fetchImage()");
 		context = appContext; // Sets class variable
 		String fName = "Image-"+photoItem.getPhotoId()+".jpg";
 		String sURL = Uri.parse(ENDPOINT).toString() + photoItem.getPhotoId();
-		this.width = width;
-		this.height = height;
 		try {
 			if (!isCachedImage(fName)) {
-				if(!GETImage(sURL, fName)) {
+				if(!GETImage(sURL, fName, width, height)) {
 					fName = null;
 				}
 			}
@@ -53,10 +46,10 @@ public class ImageBismarck {
 			return false;
 		}
 	}
-	private Boolean GETImage(String sURL, String fName) {
+	private Boolean GETImage(String sURL, String fName, int width, int height) {
 		Bitmap mBitmap;
 		try { // #1- download
-			mBitmap = getBitmapFromUrl(sURL);
+			mBitmap = getScaledBitmapFromUrl(sURL, width, height);
 			if (mBitmap == null) {
 				Log.d(TAG, "GETImage null");
 				return false;
@@ -77,7 +70,7 @@ public class ImageBismarck {
 		}
 		return true;
 	}
-	public Boolean cacheImage (String fName, Bitmap photo){
+	private Boolean cacheImage (String fName, Bitmap photo){
 		FileOutputStream cFile;
 	    try {
 	    	cFile =context.openFileOutput(fName, Context.MODE_PRIVATE);
@@ -94,83 +87,45 @@ public class ImageBismarck {
 		Log.i(TAG, "cacheImage():" +context.getFileStreamPath(fName));
     	return true;
 	}
-	public Bitmap getBitmapFromUrl (String urlSpec) throws IOException {
-		try {
-	        URL url = new URL(urlSpec);
-	        HttpURLConnection connection = (HttpURLConnection) url
-	                .openConnection();
-	        connection.setDoInput(true);
-	        connection.connect();
-	        InputStream input = connection.getInputStream();
-			//Log.d(TAG, "getBitmapFromUrl before");
-	        //BitmapFactory.decodeStream(input); //TODO scale this too
-			//Log.d(TAG, "getBitmapFromUrl still alive");
-	        Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			//Log.d(TAG, "getBitmapFromUrl now?");
+	private static Bitmap getScaledBitmapFromUrl(String imageUrl, int requiredWidth, int requiredHeight) throws IOException{
+		try { // http://blog.vandzi.com/2013/01/get-scaled-image-from-url-in-android.html
+			URL url = new URL(imageUrl);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options);
+			options.inSampleSize = calculateInSampleSize(options, requiredWidth, requiredHeight);
+			options.inJustDecodeBounds = false;
+			//don't use same inputstream object as in decodestream above. It will not work because 
+			//decode stream edit input stream. So if you create 
+			//InputStream is =url.openConnection().getInputStream(); and you use this in  decodeStream
+			//above and bellow it will not work!
+			Bitmap bm = BitmapFactory.decodeStream(url.openConnection().getInputStream(),null, options);
+			Log.i(TAG, "getScaledBitmapFromUrl(): w="+requiredWidth+" x h="+requiredHeight+"=> sample: < "+options.inSampleSize+" >");
+			return bm;
 
-	        return myBitmap;
-
-	    } catch (IOException e) {
-	        Log.e(TAG, "getBmpFromUrl() IOException: "+e.getMessage(), e);
-	    } catch (OutOfMemoryError e) {
-	        Log.e(TAG, "getBmpFromUrl() OutOfMemory: "+e.getMessage(), e);
-	    } catch (Exception e) {
-	        Log.e(TAG, "getBmpFromUrl() Exc: "+e.getMessage(), e);
-	    }
-        Log.e("getBmpFromUrl url: ", urlSpec);
-        return null;
+		} catch (IOException e) {
+			Log.e(TAG, "getScaledBitmapFromUrl() IOException: "+e.getMessage(), e);
+		} catch (OutOfMemoryError e) {
+			Log.e(TAG, "getScaledBitmapFromUrl() OutOfMemory: "+e.getMessage(), e);
+		} catch (Exception e) {
+			Log.e(TAG, "getScaledBitmapFromUrl() Exc: "+e.getMessage(), e);
+		}
+		Log.e("getScaledBitmapFromUrl() url: ", imageUrl);
+		return null;
 	}
-	/*
-	private Bitmap decodeBitmapFromStream(String fullURL, ImageView imageView) {
-		// Based upon http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-		// First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(fullURL, options); // To set options width & height
-        
-        // Calculate inSampleSize
-        // Raw height and width of image
-        final int width = options.outWidth;
-        final int height = options.outHeight;
-        final int reqWidth = this.width;
-        final int reqHeight = this.height;
-        Log.i(TAG,"decodeBitmapFromFilename() field w="+reqWidth+" x h="+reqHeight);
+	private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
 
-        int inSampleSize = 1;
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-
-            // This offers some additional logic in case the image has a strange
-            // aspect ratio. For example, a panorama may have a much larger
-            // width than height. In these cases the total pixels might still
-            // end up being too large to fit comfortably in memory, so we should
-            // be more aggressive with sample down the image (=larger inSampleSize).
-
-            long totalPixels = width * height / inSampleSize;
-
-            // Anything more than 2x the requested pixels we'll sample down further
-            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-            while (totalPixels > totalReqPixelsCap) {
-                inSampleSize *= 2;
-                totalPixels /= 2;
-            }
-        }
-        options.inSampleSize = inSampleSize;
-        
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Log.i(TAG,"decodeBitmapFromFilename() pixels w="+width+" x h="+height+"=> sample: < "+inSampleSize+" >");
-        return BitmapFactory.decodeFile(fullURL, options);
-	} */
-
+	    if (height > reqHeight || width > reqWidth) {
+	        if (width > height) {
+	        inSampleSize = Math.round((float) height / (float) reqHeight);
+	        } else {
+	        inSampleSize = Math.round((float) width / (float) reqWidth);
+	        }
+	    }
+	    return inSampleSize;
+	}
 }

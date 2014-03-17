@@ -46,11 +46,7 @@ public class PhotoListActivity extends FragmentActivity
 		Fragment newFrag = new ImageFragment().init(position);
 		
 		if (oldFrag != null) {
-			Log.i(TAG, "launchPhotoDisplayActivity(): REMOVING OLD FRAG");
 			ft.remove(oldFrag);
-		}
-		else {
-			Log.i(TAG, "launchPhotoDisplayActivity(): did not remove"); //TODO remove
 		}
         ft.add(R.id.imageFragmentContainer, newFrag);
         ft.commit();
@@ -76,11 +72,6 @@ public class PhotoListActivity extends FragmentActivity
 			.commit();
 		}
         mHelper = new GalleryDatabaseHelper(getApplicationContext());
-        
-		if (isTwoPane()) {
-			createDisplayFrag(-1); // TODO could set theme based background
-		}
-
 	}
 
 	private void initUserItem (String id, String name) {

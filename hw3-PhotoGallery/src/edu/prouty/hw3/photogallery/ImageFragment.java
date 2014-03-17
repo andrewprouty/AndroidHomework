@@ -64,14 +64,12 @@ public class ImageFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 	{       
 		int fragPosition = getArguments() != null ? getArguments().getInt("position") : -1;
-		if (fragPosition >= 0) {
-			mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
-			Log.d(TAG, "onCreateView() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
-		}
+		mPhotoItem=mCallbacks.getPhotoItem(fragPosition);
+		Log.d(TAG, "onCreateView() ["+fragPosition+"] "+mPhotoItem.getPhotoId());
 
 		view = inflater.inflate(R.layout.fragment_image, container,false);
 
-		if (mCallbacks.isTwoPane() == false) {
+		if (mCallbacks.isTwoPane() == false) { // two-pane displays these elsewhere - NOT this view
 			mUserTextView = (TextView)view.findViewById(R.id.image_user_name);
 			mPhotoTextView = (TextView)view.findViewById(R.id.image_photo_name);
 
@@ -80,26 +78,20 @@ public class ImageFragment extends Fragment{
 		}
 		
 		mImageView = (ImageView)view.findViewById(R.id.image_imageView);
-		if (fragPosition >= 0) {
-			mImageView.setImageResource(R.drawable.image_pending);
-			mFetchImageTask = new FetchImageTask(mPhotoItem);
-			mFetchImageTask.execute();
-		}
+		mImageView.setImageResource(R.drawable.image_pending);
 		
 		view.post(new Runnable() {
 		    @Override
 		    public void run() {
-		      // code you want to run when view is visible for the first time
-		    	Log.d(TAG,"onCreateView() post run field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
+		    	// code you want to run when view is visible for the first time
+		    	// waiting - to enable faster download by scaling images as part of downloading 
+		    	Log.w(TAG,"onCreateView() post run field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
 		        mCallbacks.handleFieldWidth(mImageView.getWidth());
 		        mCallbacks.handleFieldHeight(mImageView.getHeight());
-
+				mFetchImageTask = new FetchImageTask(mPhotoItem);
+				mFetchImageTask.execute();
 		    }
 		});
-		//view.measure(0,0); //TODO remove
-        //Log.d(TAG,"onCreateView()_mea="+mImageView.getMeasuredWidth()+" x h="+mImageView.getMeasuredHeight());
-        //Log.d(TAG,"onCreateView()_field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
-
 		return view;
 	}
 
@@ -185,6 +177,7 @@ public class ImageFragment extends Fragment{
 			this.photoItem = photoItem;
 			width = mCallbacks.handleFieldWidth(0);
 			height= mCallbacks.handleFieldHeight(0);
+			Log.d(TAG, "constructor w="+width+" x h="+height);
 		}
 		@Override
 		protected void onPreExecute() {
@@ -193,6 +186,7 @@ public class ImageFragment extends Fragment{
 		@Override
 		protected String doInBackground(PhotoItem... params) {
 			Log.d(TAG, "FetchImageTask doInBackground()");
+			Log.d(TAG, "w="+width+" x h="+height);
 			String fname = null;
 			try {
 				fname = new ImageBismarck().fetchImage(photoItem, c, width, height);
