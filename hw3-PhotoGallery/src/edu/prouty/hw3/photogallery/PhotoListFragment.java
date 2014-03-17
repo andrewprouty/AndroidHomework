@@ -111,12 +111,8 @@ public class PhotoListFragment extends Fragment{
 			//mUserTextView.setText("I'm back");
 			setupAdapter();
             cancel(true); // done !
-        	Log.d(TAG, "FetchPhotoTask onPostExecute()-cancel");
+        	Log.d(TAG, "FetchPhotoTask onPostExecute()");
 		}
-        @Override
-        protected void onCancelled() {
-        	Log.d(TAG, "FetchPhotoTask onCancelled()");
-        }
 	}
 	private class PhotoListAdapter extends ArrayAdapter<PhotoItem> {
 		public PhotoListAdapter(ArrayList<PhotoItem> photoItems) {

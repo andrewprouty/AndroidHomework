@@ -53,18 +53,18 @@ public class UserListFragment extends Fragment{
 		return view;
 	}
 	
-    private void setupAdapter() {
+	private void setupAdapter() {
     	if (getActivity() == null || mListView == null) {
     		return;
     	}
     	Log.d(TAG, "setupAdapter()");
 
 		if (mUserItems != null && mUserItems.size()>0) {
-			// GET list into DB
-			((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
+			// Async to save the fetched list to DB
+	        new InsertUserItemsTask().execute();
 		}
 		else {
-			// none. If in DB - populate from there
+			// none. If in DB can populate from there
 			mUserItems=((MainUserListActivity) getActivity()).queryUserItems();
 		}
 		if (mUserItems != null) {
@@ -81,35 +81,31 @@ public class UserListFragment extends Fragment{
     	mUserItem = mUserItems.get(position);
     	Log.i(TAG, "returnSelection()=["+position+"] "+mUserItem.getUserId()+": "+mUserItem.getUserName());
 		mUserTextView.setText(mUserItem.getUserName());
-		//((MainUserListActivity) getActivity()).setUserItem(mUserItem);
 		((MainUserListActivity) getActivity()).launchPhotoListActivity(mUserItem);
     }
     private class FetchUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
         @Override
         protected ArrayList<UserItem> doInBackground(Void... params) {
-        	Log.d(TAG, "FetchUserTask doInBackground()");
+        	Log.d(TAG, "FetchUserItemsTask.doInBackground()");
     		ArrayList<UserItem> items = null;
     		try {
     			// pass context for app dir to cache file
         		items = new UserListBismarck().fetchItems(getActivity().getApplicationContext());
     		} catch (Exception e) {
-    			Log.e(TAG, "doInBackground() Exception.", e);
+    			Log.e(TAG, "FetchUserItemsTask.doInBackground() Exception.", e);
     		}
         	return items;
-        	//return new UserListBismarck().fetchItems(getActivity().getApplicationContext());
         }
         @Override
         protected void onPostExecute(ArrayList<UserItem> userItems) {
-            mUserItems = userItems;
-        	Log.d(TAG, "FetchUserTask onPostExecute");
-            //mUserTextView.setText("I'm back");
-            setupAdapter();
-            cancel(true); // done !
-        	Log.d(TAG, "FetchUserTask onPostExecute()-cancel");
-        }
-        @Override
-        protected void onCancelled() {
-        	Log.d(TAG, "FetchUserTask onCancelled()");
+        	try {
+        		mUserItems = userItems;
+        		Log.d(TAG, "FetchUserItemsTask.onPostExecute()");
+        		setupAdapter(); // show listing
+        		cancel(true); // done !
+        	} catch (Exception e) {
+        		Log.e(TAG, "FetchUserItemsTask.doInBackground() Exception.", e);
+        	}
         }
     }
     private class UserListAdapter extends ArrayAdapter<UserItem> {
@@ -130,5 +126,23 @@ public class UserListFragment extends Fragment{
             
             return convertView;
         }
+    }
+    private class InsertUserItemsTask extends AsyncTask<Void,Void,Void> {
+    	//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
+    	@Override
+    	protected Void doInBackground(Void... nada) {
+    		Log.d(TAG, "InsertUserItemsTask.doInBackground()");
+    		try {
+        		 ((MainUserListActivity) getActivity()).insertUserItems(mUserItems);
+    		} catch (Exception e) {
+    			Log.e(TAG, "InsertUserItemsTask.doInBackground() Exception.", e);
+    		}
+    		return null;
+    	}
+    	@Override
+    	protected void onPostExecute(Void nada) {
+    		Log.d(TAG, "InsertUserItemsTask.onPostExecute()");
+    		cancel(true); // done !
+    	}
     }
 }

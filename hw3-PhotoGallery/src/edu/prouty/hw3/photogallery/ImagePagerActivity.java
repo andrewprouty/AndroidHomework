@@ -105,18 +105,12 @@ public class ImagePagerActivity extends FragmentActivity
 	public int handleFieldWidth(int width) { //Callback
 		if (width > 0 ) {
 			mImageWidth = width;
-			Log.d(TAG, "handleFieldWidth() set width: "+width); // TODO remove
-		} else {
-			Log.d(TAG, "handleFieldWidth(): used global");
 		}
 		return mImageWidth;
 	}
 	public int handleFieldHeight(int height) { //Callback
 		if (height> 0 ) {
 			mImageHeight = height;
-			Log.d(TAG, "handleFieldWidth() set height: "+height); // TODO remove
-		} else {
-			Log.d(TAG, "handleFieldHeight(): used global");
 		}
 		return mImageHeight;
 	}

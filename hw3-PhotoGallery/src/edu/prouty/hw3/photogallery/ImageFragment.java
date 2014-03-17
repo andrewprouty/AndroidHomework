@@ -85,7 +85,7 @@ public class ImageFragment extends Fragment{
 		    public void run() {
 		    	// code you want to run when view is visible for the first time
 		    	// waiting - to enable faster download by scaling images as part of downloading 
-		    	Log.w(TAG,"onCreateView() post run field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
+		    	Log.d(TAG,"onCreateView() post run field="+mImageView.getWidth()+" x h="+mImageView.getHeight());
 		        mCallbacks.handleFieldWidth(mImageView.getWidth());
 		        mCallbacks.handleFieldHeight(mImageView.getHeight());
 				mFetchImageTask = new FetchImageTask(mPhotoItem);

@@ -102,18 +102,12 @@ public class PhotoListActivity extends FragmentActivity
 	public int handleFieldWidth(int width) { //Callback
 		if (width > 0 ) {
 			mImageWidth = width;
-			Log.d(TAG, "handleFieldWidth() set width: "+width); // TODO remove
-		} else {
-			Log.i(TAG, "handleFieldWidth(): used global");
 		}
 		return mImageWidth;
 	}
 	public int handleFieldHeight(int height) { //Callback
 		if (height> 0 ) {
 			mImageHeight = height;
-			Log.d(TAG, "handleFieldHeight() set height: "+height); // TODO remove
-		} else {
-			Log.i(TAG, "handleFieldHeight(): used global");
 		}
 		return mImageHeight;
 	}
