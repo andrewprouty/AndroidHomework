@@ -47,12 +47,10 @@ public class PhotoListFragment extends Fragment{
 
 		mUserTextView.setText(mUserItem.getUserName());
 
-		//setupAdapter(GET); // DB "only" for offline usage.  Pre-fetch :~)
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				TextView textViewItem = ((TextView) view.findViewById(R.id.row_photo_name_textView));
-				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
 				Log.d(TAG, "onCreatView()setOnItemClickListener.onItemClick() Photo ["+position+"]= "+listItemText);
 				returnSelection(position);
@@ -68,8 +66,8 @@ public class PhotoListFragment extends Fragment{
     	Log.d(TAG, "setupAdapter("+choice+"): "+mUserItem.getUserId()+"-"+mUserItem.getUserName()+";");
 
     	if (choice == GET) {
-    		if (mPhotoItems != null && mPhotoItems.size()>0) { // save the fetched to DB
-    			new InsertPhotoItemsTask().execute();
+    		if (mPhotoItems != null && mPhotoItems.size()>0) {
+    			new InsertPhotoItemsTask().execute(); //save fetched to DB
     		}
     		else { // got none. If in DB - populate from there
     			new QueryPhotoItemsTask().execute(mUserItem);
@@ -152,13 +150,12 @@ public class PhotoListFragment extends Fragment{
 	private class QueryPhotoItemsTask extends AsyncTask<UserItem,Void,ArrayList<PhotoItem>> {
 		@Override
 		protected ArrayList<PhotoItem> doInBackground(UserItem... params) {
-        	Log.d(TAG, "QueryPhotoTask.doInBackground()");
+        	Log.d(TAG, "QueryPhotoItemsTask.doInBackground()");
     		ArrayList<PhotoItem> items = null;
     		try {
     			items = ((PhotoListActivity) getActivity()).queryPhotoItemsforUserId(mUserItem);
-    			//items = new PhotoListBismarck().fetchItems(mUserItem, getActivity().getApplicationContext());
     		} catch (Exception e) {
-    			Log.e(TAG, "QueryPhotoTask.doInBackground() Exception.", e);
+    			Log.e(TAG, "QueryPhotoItemsTask.doInBackground() Exception.", e);
     		}
         	return items;
 		}
@@ -167,7 +164,7 @@ public class PhotoListFragment extends Fragment{
 			mPhotoItems = photoItems;
 			setupAdapter(QUERY);
             cancel(true); // done !
-        	Log.d(TAG, "QueryPhotoTask.onPostExecute()");
+        	Log.d(TAG, "QueryPhotoItemsTask.onPostExecute()");
 		}
 	}
 }

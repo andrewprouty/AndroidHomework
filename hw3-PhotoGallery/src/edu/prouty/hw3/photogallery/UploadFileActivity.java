@@ -1,5 +1,14 @@
 package edu.prouty.hw3.photogallery;
 
+import java.io.File;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -152,37 +161,46 @@ public class UploadFileActivity extends Activity {
 		Log.d(TAG,"resultToast() messageResId "+messageResId);
 		Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
 	}
-	private void startFileUpload(String fname) {
+	private void startFileUpload(String desiredFname) {
 		mButtonUploadFile.setEnabled(false);
 		mFileNameEditText.setEnabled(false);
 
 		Log.d(TAG,"startFileUpload() Tasking...");
-		mFileUploadTask = new FileUploadTask(mPicturePath, fname);
-		mFileUploadTask.execute(); //arg for doInBackground()
+		mFileUploadTask = new FileUploadTask();
+		mFileUploadTask.execute(mPicturePath, desiredFname); //arg for doInBackground()
 		Log.d(TAG,"startFileUpload() Task launched");
 	}
 	private class FileUploadTask extends AsyncTask<String,Void,String> {
 		//<x,y,z> params: 1-doInBackground(x); 2-onProgressUpdate(y); 3-onPostExecute(z) 
-		private String fileWithPath;
-		private String fname;
-		//Constructor
-		public FileUploadTask (String path, String fname) {
-			this.fileWithPath = path;
-			this.fname = fname;
-		}
 		@Override
 		protected String doInBackground(String... params) {
-			Log.d(TAG, "FileUploadTask doInBackground(): "+fileWithPath);
-			String msg = null;
+			String pictureWithPath = params[0];
+			String fname = params[1];
+			Log.d(TAG, "FileUploadTask().doInBackground");
+			Log.d(TAG, "FileUploadTask().doInBackground from: "+pictureWithPath);
+			Log.d(TAG, "FileUploadTask().doInBackground to: "+fname);
+			File file= new File (pictureWithPath);
+			
+			String urlServer = "http://bismarck.sdsu.edu/photoserver/postphoto/Andrew/1161/"+fname;
+			Log.d(TAG, "FileUploadTask().doInBackground -"+ urlServer);
+			String msg = "";
 			try {
-				msg = FileUpload.upload(fileWithPath, fname); 
+				ResponseHandler<String> responseHandler = new BasicResponseHandler();
+				HttpPost getMethod = new HttpPost(urlServer);
+				HttpClient httpclient = new DefaultHttpClient();
+				FileEntity photo = new FileEntity(file, "image/jpeg");
+				getMethod.setEntity(photo);
+				String responseBody = httpclient.execute(getMethod, responseHandler);
+				msg = responseBody;
 			} catch (Exception e) {
-				Log.e(TAG, "FileUploadTask() Exception.", e);
+				Log.e(TAG, "FileUploadTask().doInBackground() Exc: "+e.getMessage(),e);
+				msg = "Exception: " + e.getMessage();
 			}
 			return msg;
 		}
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d(TAG, "FileUploadTask().onPostExecute result: "+result);
 			resultToast(!result.startsWith("Exception"), result);
 			cancel(true);
 			Log.d(TAG, "FileUploadTask onPostExecute()");

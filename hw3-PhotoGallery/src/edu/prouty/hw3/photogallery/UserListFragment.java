@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 public class UserListFragment extends Fragment{
 	private static final String TAG = "UserListFragment";
+	private static final int GET = 0;
+	private static final int QUERY = 1;
 	private ArrayList<UserItem> mUserItems;
 	private UserItem mUserItem;
 	FetchUserItemsTask mFetchUserItemsTask = new FetchUserItemsTask();
@@ -39,13 +41,10 @@ public class UserListFragment extends Fragment{
 		view = inflater.inflate(R.layout.fragment_user_list, container,false);
         mUserTextView = (TextView)view.findViewById(R.id.user_list_textView);
 		mListView = (ListView)view.findViewById(R.id.user_list_view);
-		setupAdapter(); // Allow Users to pre-fetch from DB
-						// faster plus new network records integrate nicely
 		mListView.setOnItemClickListener(new OnItemClickListener () {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				TextView textViewItem = ((TextView) view.findViewById(R.id.row_user_name_textView));
-				// get the clicked item name
 				String listItemText = textViewItem.getText().toString();
 				Log.d(TAG, "().onItemClick() User ["+position+"]= "+listItemText);
 				returnSelection(position);
@@ -54,20 +53,22 @@ public class UserListFragment extends Fragment{
 		return view;
 	}
 	
-	private void setupAdapter() {
+	private void setupAdapter(int choice) {
     	if (getActivity() == null || mListView == null) {
     		return;
     	}
-    	Log.d(TAG, "setupAdapter()");
+    	Log.d(TAG, "setupAdapter("+choice+")");
 
-		if (mUserItems != null && mUserItems.size()>0) {
-			// Async to save the fetched list to DB
-	        new InsertUserItemsTask().execute();
-		}
-		else {
-			// none. If in DB can populate from there
-			mUserItems=((MainUserListActivity) getActivity()).queryUserItems();
-		}
+    	if (choice == GET) {
+    		if (mUserItems != null && mUserItems.size()>0) {
+    			// Async to save the fetched list to DB
+    			new InsertUserItemsTask().execute(); // save fetched to DB
+    		}
+    		else {
+    			// none. If in DB can populate from there
+    			new QueryUserItemsTask().execute();
+    		}
+    	}
 		if (mUserItems != null) {
 			UserListAdapter adapter = new UserListAdapter(mUserItems);
 			mListView.setAdapter(adapter);
@@ -102,7 +103,7 @@ public class UserListFragment extends Fragment{
         	try {
         		mUserItems = userItems;
         		Log.d(TAG, "FetchUserItemsTask.onPostExecute()");
-        		setupAdapter(); // show listing
+        		setupAdapter(GET); // show listing
         		cancel(true); // done !
         	} catch (Exception e) {
         		Log.e(TAG, "FetchUserItemsTask.doInBackground() Exception.", e);
@@ -146,4 +147,24 @@ public class UserListFragment extends Fragment{
     		cancel(true); // done !
     	}
     }
+	private class QueryUserItemsTask extends AsyncTask<Void,Void,ArrayList<UserItem>> {
+		@Override
+		protected ArrayList<UserItem> doInBackground(Void... nada) {
+        	Log.d(TAG, "QueryUserItemsTask.doInBackground()");
+    		ArrayList<UserItem> items = null;
+    		try {
+    			items = ((MainUserListActivity) getActivity()).queryUserItems();
+    		} catch (Exception e) {
+    			Log.e(TAG, "QueryUserItemsTask.doInBackground() Exception.", e);
+    		}
+        	return items;
+		}
+		@Override
+		protected void onPostExecute(ArrayList<UserItem> userItems) {
+			mUserItems = userItems;
+			setupAdapter(QUERY);
+            cancel(true); // done !
+        	Log.d(TAG, "QueryUserItemsTask.onPostExecute()");
+		}
+	}
 }
