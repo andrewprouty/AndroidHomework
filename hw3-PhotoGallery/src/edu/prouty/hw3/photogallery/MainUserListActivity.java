@@ -36,7 +36,7 @@ public class MainUserListActivity extends FragmentActivity {
         setContentView(R.layout.activity_fragment);
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
-
+ 
         if (fragment == null) {
             fragment = createFragment();
             manager.beginTransaction()
