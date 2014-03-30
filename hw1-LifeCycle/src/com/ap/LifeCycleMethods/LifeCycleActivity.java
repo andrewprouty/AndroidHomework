@@ -42,7 +42,7 @@ public class LifeCycleActivity extends Activity {
 		countPauseOutput.setText(String.valueOf(countPause));
 	}
 	public void refreshScreen() {
-		Log.i(TAG, "refreshScreen()");
+		Log.d(TAG, "refreshScreen()");
 		countCreateOutput = (TextView) this.findViewById(R.id.onCreateCount);
 		countCreateOutput.setText(String.valueOf(countCreate));
 		countRestartOutput = (TextView) this.findViewById(R.id.onRestartCount);
@@ -59,7 +59,6 @@ public class LifeCycleActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate(Bundle) called");
 		setContentView(R.layout.activity_main);
 		countCreate++;
 		Log.d(TAG, "onCreate count: "+countCreate);
