@@ -1,8 +1,6 @@
 package com.ap.LifeCycleMethods.test;
 
-import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.pm.ActivityInfo;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 import android.util.Log;
@@ -51,7 +49,7 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		assertResume  = Integer.parseInt(mResumeCount.getText().toString());
 		assertPause   = Integer.parseInt(mPauseCount.getText().toString());
 	}
-	
+
 	private void getActivityFields() { // Each time reset activity
 		mResetButton = (Button) mActivity.findViewById(com.ap.LifeCycleMethods.R.id.resetButton);
 
@@ -64,41 +62,47 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 	protected void setUp() throws Exception {
 		super.setUp();
 		Log.i(TAG, "setUp()");
-		//setActivityInitialTouchMode(false); //per http://developer.android.com/tools/testing/activity_test.html
+		setActivityInitialTouchMode(false); //per http://developer.android.com/tools/testing/activity_test.html
 		mInstrumentation = getInstrumentation();
 		mActivity = this.getActivity();
 		getActivityFields();
 	}
-	public void xtest1Launch() {
-		Log.i(TAG, "===test1Launch()===");
+
+	public void test1Launch_CreateStartResume() {
+		Log.i(TAG, "===test1Launch_CreateStartResume()===");
 		assertNotNull(mResetButton);
 		assertNotNull(mCreateCount);
 		setCounts();
-		// At launch assert values are expected (not calculated)
-		Log.i(TAG, "---test1Launch() asserts 1,0,1,1,0");
+		// At launch assert values can be expected (not calculated)
+		Log.i(TAG, "---test1Launch_CreateStartResume() asserts 1,0,1,1,0");
 		assertEquals(countCreate, 1);
 		assertEquals(countRestart, 0);
 		assertEquals(countStart, 1);
 		assertEquals(countResume, 1);
 		assertEquals(countPause, 0);
 	}
-	public void test2Pause() {
-		Log.i(TAG, "===test2Pause()===");
+	public void test2PauseToResume() {
+		Log.i(TAG, "===test2PauseToResume()===");
 		setCounts();
 		mActivity.runOnUiThread(new Runnable() {
 			public void run() {
 				mInstrumentation.callActivityOnPause(mActivity);
-				Log.d(TAG, "test2Pause().run() mPauseCount: "+mPauseCount.getText());
+				mInstrumentation.callActivityOnResume(mActivity);
+				Log.d(TAG, "test2PauseToResume().run() mPauseCount: "+mPauseCount.getText());
 			}
 		});
 		mInstrumentation.waitForIdleSync();
 		initAsserts(); // set & log assertPause to actual
-		Log.i(TAG, "---test2Pause() assert Pause++.");
+		Log.i(TAG, "---test2PauseToResume() assert +(Pause,Resume), same(others)");
+		assertEquals(countCreate, assertCreate);
 		assertEquals(countPause+1, assertPause);
+		assertEquals(countStart, assertStart);
+		assertEquals(countResume+1, assertResume);
+		assertEquals(countRestart, assertRestart);
 	}
-	
+
 	@UiThreadTest
-	public void test3DestroyResume() {
+	public void test3DestroyToResume() {
 		Log.i(TAG, "===test3DestroyResume()===");
 		setCounts();
 		mInstrumentation.callActivityOnPause(mActivity);
@@ -117,14 +121,50 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		assertEquals(countRestart, assertRestart);
 	}
 	@UiThreadTest
-	public void Xtest4OrientLandscape() {
-		Log.i(TAG, "===test4OrientLandscape()===");
-		setCounts(); // set & log counts
-		Log.d(TAG, "test4OrientLandscape() re-orient...");
-		mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		mActivity = this.getActivity();
+	public void test4Integration_ResetButton() {
+		Log.i(TAG, "===test4Integration_ResetButton()===");
+
+		Log.i(TAG, "---test4Integration() ONE: 1,0,1,1,0");
+		setCounts(); // At launch assert values can be expected (vs calculated)
+		assertEquals(countCreate, 1);
+		assertEquals(countRestart, 0);
+		assertEquals(countStart, 1);
+		assertEquals(countResume, 1);
+		assertEquals(countPause, 0);
+
+		Log.i(TAG, "---test4Integration() TWO: +(Pause,Resume), same(others)");
 		mInstrumentation.callActivityOnPause(mActivity);
+		mInstrumentation.callActivityOnResume(mActivity);
+		initAsserts(); // set & log assertPause to actual
+		assertEquals(countCreate, assertCreate);
+		assertEquals(countPause+1, assertPause);
+		assertEquals(countStart, assertStart);
+		assertEquals(countResume+1, assertResume);
+		assertEquals(countRestart, assertRestart);
+
+		Log.i(TAG, "---test4Integration 333: +1(Pause,Create,Start,Resume), same(Restart)");
+		setCounts();
+		mInstrumentation.callActivityOnPause(mActivity);
+		mActivity.finish();
+		mActivity = this.getActivity();
+		mInstrumentation.callActivityOnCreate(mActivity, null);
+		mInstrumentation.callActivityOnStart(mActivity);
+		mInstrumentation.callActivityOnResume(mActivity);
+		getActivityFields(); // new activity means new fields/re-fetch
 		initAsserts();
-		Log.i(TAG, "---test4OrientLandscape() assert +1(Create,Start,Resume), same(Restart,Pause)");
+		assertEquals(countPause+1, assertPause);
+		assertEquals(countCreate+1, assertCreate);
+		assertEquals(countStart+1, assertStart);
+		assertEquals(countResume+1, assertResume);
+		assertEquals(countRestart, assertRestart);
+
+		Log.i(TAG, "---test4Integration 000: Reset should be zeros");
+		mResetButton.performClick();
+		initAsserts();
+		assertEquals(0,assertCreate);
+		assertEquals(0,assertRestart);
+		assertEquals(0,assertStart);
+		assertEquals(0,assertResume);
+		assertEquals(0,assertPause);
 	}
 }
