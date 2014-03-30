@@ -2,6 +2,6 @@
 
     <string name="app_name">FlappyBird</string>
     <string name="bird_description">Flappy Bird</string>
-    <string name="play_text">Touch screen to begin</string>
-    <string name="replay_text">Touch button to reset</string>
+    <string name="play_text">Touch screen</string>
+    <string name="replay_text">Reset</string>
 </resources>

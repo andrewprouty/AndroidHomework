@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
 	private AnimationDrawable mBirdAnimation;
 	private Button mButton;
 
+	boolean mIsDead=false;
 	boolean mIsInMotion=false;
 	boolean mIsRising=false;
 	ImageView bird;
@@ -38,6 +39,8 @@ public class MainActivity extends Activity {
 
 		view.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				if (mIsDead)
+					return false;
 				if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
 					touchDown();
 				} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
@@ -59,6 +62,7 @@ public class MainActivity extends Activity {
 				mButton.setText(R.string.play_text);
 				mButton.setEnabled(false);
 				bird.setY(initialHeight);
+				mIsDead=false;
 			}
 		});
 		mButton.setEnabled(false);
@@ -79,14 +83,15 @@ public class MainActivity extends Activity {
 	public void touchDown() {
 		Log.d(TAG, "touchDown()");
 		mIsRising=true;
-		mIsInMotion=true;
-		birdStartFlapping();
-		birdUpDown();
+		if (!mIsInMotion) {
+			birdStartFlapping();
+			mIsInMotion=true;
+			move();
+		}
 	}
 	public void touchUp() {
 		Log.d(TAG, "touchUp()");
 		mIsRising=false;
-		birdUpDown();
 	}
 	private boolean isCollision() {
 		float y = bird.getY();
@@ -97,7 +102,7 @@ public class MainActivity extends Activity {
 			return false;
 		}
 	}
-	private void birdUpDown() {
+	private void move() {
 		if (mIsRising) {
 			Log.d(TAG, "birdUpDown() rising y="+bird.getY());
 			bird.setY(bird.getY()-10);
@@ -108,6 +113,7 @@ public class MainActivity extends Activity {
 		}
 		if (isCollision()){
 			Log.d(TAG, "birdUpDown() died y="+bird.getY() + " Y height="+screenHeight);
+			mIsDead=true;
 			mIsInMotion=false;	// stop moving - dead
 			birdStopFlapping();	// stop flapping - dead
 			mButton.setText(R.string.replay_text);
@@ -115,12 +121,12 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "birdUpDown() RIP y="+bird.getY());
 		}
 		if (mIsInMotion) {
-			bird.postDelayed(new Mover(), 100);
+			bird.postDelayed(new Mover(), 80);
 		}
 	}
 	private class Mover implements Runnable {
 		@Override
 		public void run() {
-			birdUpDown();
+			move();
 		}
 	}}
