@@ -73,8 +73,8 @@ public class MainActivity extends Activity {
 		screenWidth = screenSize.x;
 		screenHeight = screenSize.y;
 		Log.d(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
-		//mBackDrop.setScreenWidth(720);//screenWidth); //TODO enable
-		//mBackDrop.setScreenHeight(1184);//screenHeight);//TODO enable
+		mBackDrop.setScreenWidth(screenWidth);
+		mBackDrop.setScreenHeight(screenHeight);
 		
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
 		}
 		if (mIsInMotion) {
 			bird.postDelayed(new Mover(), 70);
-			//mBackDrop.invalidate();  TODO runtime nullpointerexception from this
+			mBackDrop.invalidate();
 		}
 	}
 	private class Mover implements Runnable {
