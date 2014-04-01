@@ -1,41 +1,59 @@
 package edu.prouty.hw4.flappybird;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private AnimationDrawable mBirdAnimation;
+	private View view;
 	private Button mButton;
-
+	private TextView mScore;
+	
+	private BackDrop mBackDrop;
+	
 	boolean mIsDead=false;
 	boolean mIsInMotion=false;
 	boolean mIsRising=false;
 	ImageView bird;
 	
 	float initialHeight = -1;
+	int screenWidth;
 	int screenHeight;
-	int deltaX = 10;
-	int deltaY = 10;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
-		View view = findViewById(R.id.container);
+		view = findViewById(R.id.container);
 
+		mScore = (TextView) findViewById(R.id.score);
 		bird = (ImageView) findViewById(R.id.bird_square);
+		mButton = (Button) findViewById(R.id.button);
+
 		bird.setBackgroundResource(R.anim.bird_motion);
 		mBirdAnimation = (AnimationDrawable) bird.getBackground();
+		Resources resources = getResources();
+		XmlPullParser parser = resources.getXml(R.layout.activity_main);
+		AttributeSet attributes = Xml.asAttributeSet(parser);
+		mBackDrop = new BackDrop(this, attributes);
+		mBackDrop = (BackDrop)findViewById(R.id.rect_back_drop);
 
 		view.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
@@ -52,10 +70,12 @@ public class MainActivity extends Activity {
 		Display display = getWindowManager().getDefaultDisplay();
 		Point screenSize = new Point();
 		display.getSize(screenSize);
+		screenWidth = screenSize.x;
 		screenHeight = screenSize.y;
-		Log.d(TAG, "noCreate() ready");
+		Log.d(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
+		//mBackDrop.setScreenWidth(720);//screenWidth); //TODO enable
+		//mBackDrop.setScreenHeight(1184);//screenHeight);//TODO enable
 		
-		mButton = (Button) findViewById(R.id.button);
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -66,8 +86,9 @@ public class MainActivity extends Activity {
 			}
 		});
 		mButton.setEnabled(false);
-
+		Log.i(TAG, "onCreate() Still there?");
 	}
+	
 	public void birdStartFlapping() {
 		Log.d(TAG, "birdStartFlapping()");
 		mBirdAnimation.start();
@@ -86,6 +107,7 @@ public class MainActivity extends Activity {
 		if (!mIsInMotion) {
 			birdStartFlapping();
 			mIsInMotion=true;
+			mScore.setText("0");
 			move();
 		}
 	}
@@ -121,7 +143,8 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "birdUpDown() RIP y="+bird.getY());
 		}
 		if (mIsInMotion) {
-			bird.postDelayed(new Mover(), 80);
+			bird.postDelayed(new Mover(), 70);
+			//mBackDrop.invalidate();  TODO runtime nullpointerexception from this
 		}
 	}
 	private class Mover implements Runnable {

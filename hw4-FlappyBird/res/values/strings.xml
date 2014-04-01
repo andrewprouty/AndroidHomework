@@ -4,4 +4,5 @@
     <string name="bird_description">Flappy Bird</string>
     <string name="play_text">Touch screen</string>
     <string name="replay_text">Reset</string>
+    <string name="score_text">Score</string>
 </resources>
