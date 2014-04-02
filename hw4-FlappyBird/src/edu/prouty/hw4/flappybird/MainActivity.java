@@ -83,6 +83,8 @@ public class MainActivity extends Activity {
 				mButton.setEnabled(false);
 				bird.setY(initialHeight);
 				mIsDead=false;
+				mBackDrop.reset(); // reset rectangle
+				mBackDrop.invalidate();
 			}
 		});
 		mButton.setEnabled(false);
@@ -123,6 +125,20 @@ public class MainActivity extends Activity {
 		else {
 			return false;
 		}
+	}
+	protected void setScore() {
+		String s = mScore.getText().toString();
+		int tmp;
+		try {
+			Integer.parseInt (s);
+			tmp=Integer.parseInt(s) + 1;
+		}
+		catch (Exception e) {
+			tmp=0;
+		}
+		Log.d(TAG, "nextRect() new score: "+tmp);
+		s = String.valueOf(tmp);
+		mScore.setText(s);
 	}
 	private void move() {
 		if (mIsRising) {
