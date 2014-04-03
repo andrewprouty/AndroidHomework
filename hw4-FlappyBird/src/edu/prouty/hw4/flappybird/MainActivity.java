@@ -116,15 +116,6 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "touchUp()");
 		mIsRising=false;
 	}
-	private boolean isCollision() {
-		float y = bird.getY();
-		if ((y < 0) || y + bird.getHeight() + 125> screenHeight) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	protected void setScore() {
 		String s = mScore.getText().toString();
 		int tmp;
@@ -139,6 +130,19 @@ public class MainActivity extends Activity {
 		s = String.valueOf(tmp);
 		mScore.setText(s);
 	}
+	protected float[] getBirdLocation() {
+		float[] f = {bird.getX(), bird.getY(), bird.getHeight(), bird.getWidth()}; 
+		return f;
+	}
+	// BackDrop knows about rectangle & top/bottom - it knows obstacle hazard... collision
+	protected void killBird() {
+		Log.d(TAG, "killBird() y="+bird.getY() + " Y height="+screenHeight);
+		mIsDead=true;
+		mIsInMotion=false;	// stop moving - dead
+		birdStopFlapping();	// stop flapping - dead
+		mButton.setText(R.string.replay_text);
+		mButton.setEnabled(true);
+	}
 	private void move() {
 		if (mIsRising) {
 			Log.d(TAG, "birdUpDown() rising y="+bird.getY());
@@ -148,17 +152,8 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "birdUpDown() falling y="+bird.getY());
 			bird.setY(bird.getY()+10);
 		}
-		if (isCollision()){
-			Log.d(TAG, "birdUpDown() died y="+bird.getY() + " Y height="+screenHeight);
-			mIsDead=true;
-			mIsInMotion=false;	// stop moving - dead
-			birdStopFlapping();	// stop flapping - dead
-			mButton.setText(R.string.replay_text);
-			mButton.setEnabled(true);
-			Log.d(TAG, "birdUpDown() RIP y="+bird.getY());
-		}
 		if (mIsInMotion) {
-			bird.postDelayed(new Mover(), 70);
+			bird.postDelayed(new Mover(), 50);
 			mBackDrop.invalidate();
 		}
 	}

@@ -17,8 +17,13 @@ public class BackDrop extends View {
 	private int mScreenWidth;
 	private int mScreenHeight;
 	private float mShift;
-	private float mAdjust = 40; //TODO 10;
+	private float mAdjust = 10;
 	private float mRandom = 0;
+	private final float birdOffset = 125;
+	private float birdX;
+	private float birdY;
+	private float birdHeight;
+	private float birdWidth;
 
 	public BackDrop(Context context, AttributeSet attr) {
 		super(context, attr);
@@ -30,13 +35,12 @@ public class BackDrop extends View {
 	public void setScreenHeight (int y) {
 		this.mScreenHeight = y;
 	}
-
 	public void reset() {
 		mShift = mScreenWidth; //reset bar to RHS
 	}
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		int gap = 200;				// bird space to fly through
+		int gap = 250;				// bird space to fly through
 		if (mShift >= mScreenWidth) { // draw new
 			mShift = 0;
 			((MainActivity)getContext()).setScore();
@@ -53,10 +57,10 @@ public class BackDrop extends View {
 
 		float width = 50;						// always the same
 
-		float x = mScreenWidth-width-mShift;	// upper left corner
+		float x = mScreenWidth-width-mShift;	// upper left corner x coordinate
 
 		float r1y = 0;							// top
-		float r1height = mRandom;				// height of top rectangle
+		float r1height = mRandom;				// height of rectangle #1 (top)
 
 		float r2y = mRandom+gap;
 		float r2height = mScreenHeight-r1height-gap;
@@ -64,7 +68,39 @@ public class BackDrop extends View {
 		paint.setColor(Color.BLUE);
 		canvas.drawRect(x, r1y, x+width, r1y+r1height, paint);
 		canvas.drawRect(x, r2y, x+width, r2y+r2height, paint);
-		Log.i(TAG, "onDraw() rect2 y="+r2y+" height "+r2height);
+		Log.d(TAG, "onDraw() rect2 y="+r2y+" height "+r2height);
 		//top-left-x, top-left-y, x+width, y+height, paint
+		
+		float[] f = ((MainActivity)getContext()).getBirdLocation();
+		birdX = f[0];
+		birdY = f[1];
+		birdHeight = f[2];
+		birdWidth = f[3];
+		Log.i(TAG, "onDraw() bird x= "+birdX+", y="+birdY+" w="+birdHeight+" h="+birdWidth);
+		if (tooHighLow()) {
+			((MainActivity)getContext()).killBird();
+		}
+		if ((birdX+birdWidth > x      ) &&
+			(birdX           < x+width)) {
+			// Danger bird IS IN the rectangle's X dimension space
+			if ((birdY            < r1height) ||
+				(birdY+birdHeight > r1height+gap)) {
+				// and NOT in the gap's space...
+				((MainActivity)getContext()).killBird();
+			}
+		}
+	}
+	private boolean tooHighLow() {
+		if (birdY < 0) { // remember top corner
+			Log.i(TAG, "too HIGH Low() height="+birdY);
+			return true;
+		}
+		if (birdY + birdHeight + birdOffset > mScreenHeight) {
+			Log.i(TAG, "tooHigh LOW() y:"+birdY+"+birdHeight:" +birdHeight+ "+buffer:"+birdOffset+ " > screenHeight:"+mScreenHeight);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
