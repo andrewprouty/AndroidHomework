@@ -17,7 +17,7 @@ public class BackDrop extends View {
 	private int mScreenWidth;
 	private int mScreenHeight;
 	private float mShift;
-	private float mAdjust = 10;
+	private float mAdjust = 40; //TODO 10;
 	private float mRandom = 0;
 
 	public BackDrop(Context context, AttributeSet attr) {
@@ -36,36 +36,35 @@ public class BackDrop extends View {
 	}
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		int gap = 200;				// bird space to fly through
 		if (mShift >= mScreenWidth) { // draw new
 			mShift = 0;
 			((MainActivity)getContext()).setScore();
+			int max = mScreenHeight-gap*3/2;
+			int min = gap/2;
 			Random r = new Random();
-			mRandom = r.nextInt((mScreenHeight-300) - 300 + 1) + 300;
-			// f(x) = r.nextInt(max - min + 1) + min;
-			// max = (mScreenHeight-x) & min = (x)
-			Log.d(TAG, "onDraw() redraw random: "+mRandom);
+			mRandom = r.nextInt(max - min + 1) + min;
+			Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
 		}
 		else {
 			mShift=mShift+mAdjust;
 		}
 		Log.d(TAG, "onDraw() shift: "+mShift);
 
-		float width = 40;				// always the same
+		float width = 50;						// always the same
 
 		float x = mScreenWidth-width-mShift;	// upper left corner
 
-		float gap = 225;				// bird space to fly through
-		
-		float r1y = 0;					// top
-		float r1height = mRandom;		// height of top rectangle
+		float r1y = 0;							// top
+		float r1height = mRandom;				// height of top rectangle
 
-		float r2y = mRandom+gap;					//
+		float r2y = mRandom+gap;
 		float r2height = mScreenHeight-r1height-gap;
 
 		paint.setColor(Color.BLUE);
-
 		canvas.drawRect(x, r1y, x+width, r1y+r1height, paint);
 		canvas.drawRect(x, r2y, x+width, r2y+r2height, paint);
-		//left, top, right, bottom, paint
+		Log.i(TAG, "onDraw() rect2 y="+r2y+" height "+r2height);
+		//top-left-x, top-left-y, x+width, y+height, paint
 	}
 }

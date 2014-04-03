@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 		display.getSize(screenSize);
 		screenWidth = screenSize.x;
 		screenHeight = screenSize.y;
-		Log.d(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
+		Log.i(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
 		mBackDrop.setScreenWidth(screenWidth);
 		mBackDrop.setScreenHeight(screenHeight);
 		
@@ -88,7 +88,6 @@ public class MainActivity extends Activity {
 			}
 		});
 		mButton.setEnabled(false);
-		Log.i(TAG, "onCreate() Still there?");
 	}
 	
 	public void birdStartFlapping() {
@@ -119,7 +118,7 @@ public class MainActivity extends Activity {
 	}
 	private boolean isCollision() {
 		float y = bird.getY();
-		if ((y < 0) || y + bird.getHeight() + 150> screenHeight) {
+		if ((y < 0) || y + bird.getHeight() + 125> screenHeight) {
 			return true;
 		}
 		else {
