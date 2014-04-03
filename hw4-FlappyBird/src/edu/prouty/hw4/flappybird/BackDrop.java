@@ -76,7 +76,7 @@ public class BackDrop extends View {
 		birdY = f[1];
 		birdHeight = f[2];
 		birdWidth = f[3];
-		Log.i(TAG, "onDraw() bird x= "+birdX+", y="+birdY+" w="+birdHeight+" h="+birdWidth);
+		Log.d(TAG, "onDraw() bird x= "+birdX+", y="+birdY+" w="+birdHeight+" h="+birdWidth);
 		if (tooHighLow()) {
 			((MainActivity)getContext()).killBird();
 		}
