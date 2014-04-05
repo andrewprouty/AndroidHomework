@@ -102,11 +102,16 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "birdStopFlapping()");
 		mBirdAnimation.stop();
 	}
+	private void phoenixBird() {
+		bird.setBackgroundResource(R.anim.bird_motion);
+		mBirdAnimation = (AnimationDrawable) bird.getBackground();
+		birdStartFlapping();
+	}
 	public void touchDown() {
 		Log.d(TAG, "touchDown()");
 		mIsRising=true;
 		if (!mIsInMotion) {
-			birdStartFlapping();
+			phoenixBird();
 			mIsInMotion=true;
 			mScore.setText("0");
 			move();
@@ -142,6 +147,7 @@ public class MainActivity extends Activity {
 		birdStopFlapping();	// stop flapping - dead
 		mButton.setText(R.string.replay_text);
 		mButton.setEnabled(true);
+		bird.setBackgroundResource(R.drawable.red_bird);
 	}
 	private void move() {
 		if (mIsRising) {
