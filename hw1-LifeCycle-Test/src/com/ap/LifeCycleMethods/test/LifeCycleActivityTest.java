@@ -23,7 +23,7 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 	public LifeCycleActivityTest() {
 		super(LifeCycleActivity.class);
 	}
-
+	// Helpers
 	private void logValues() {
 		Log.d(TAG, "logValues() Create: "+mCreateCount.getText());
 		Log.d(TAG, "logValues() Restart: "+mRestartCount.getText());
@@ -59,6 +59,7 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		mResumeCount= (TextView) mActivity.findViewById(com.ap.LifeCycleMethods.R.id.onResumeCount);
 		mPauseCount= (TextView) mActivity.findViewById(com.ap.LifeCycleMethods.R.id.onPauseCount);
 	}
+	// setUp and Tests
 	protected void setUp() throws Exception {
 		super.setUp();
 		Log.i(TAG, "setUp()");
@@ -67,7 +68,6 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		mActivity = this.getActivity();
 		getActivityFields();
 	}
-
 	public void test1Launch_CreateStartResume() {
 		Log.i(TAG, "===test1Launch_CreateStartResume()===");
 		assertNotNull(mResetButton);
@@ -81,17 +81,21 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		assertEquals(countResume, 1);
 		assertEquals(countPause, 0);
 	}
+	@UiThreadTest
+	// Switching to UI thread don't need runnable or waitForIdleSync
 	public void test2PauseToResume() {
 		Log.i(TAG, "===test2PauseToResume()===");
 		setCounts();
-		mActivity.runOnUiThread(new Runnable() {
+		mInstrumentation.callActivityOnPause(mActivity);
+		mInstrumentation.callActivityOnResume(mActivity);
+		/* mActivity.runOnUiThread(new Runnable() {
 			public void run() {
 				mInstrumentation.callActivityOnPause(mActivity);
 				mInstrumentation.callActivityOnResume(mActivity);
 				Log.d(TAG, "test2PauseToResume().run() mPauseCount: "+mPauseCount.getText());
 			}
 		});
-		mInstrumentation.waitForIdleSync();
+		mInstrumentation.waitForIdleSync(); */
 		initAsserts(); // set & log assertPause to actual
 		Log.i(TAG, "---test2PauseToResume() assert +(Pause,Resume), same(others)");
 		assertEquals(countCreate, assertCreate);
@@ -100,7 +104,6 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 		assertEquals(countResume+1, assertResume);
 		assertEquals(countRestart, assertRestart);
 	}
-
 	@UiThreadTest
 	public void test3DestroyToResume() {
 		Log.i(TAG, "===test3DestroyResume()===");
@@ -124,41 +127,16 @@ ActivityInstrumentationTestCase2<LifeCycleActivity> {
 	public void test4Integration_ResetButton() {
 		Log.i(TAG, "===test4Integration_ResetButton()===");
 
-		Log.i(TAG, "---test4Integration() ONE: 1,0,1,1,0");
-		setCounts(); // At launch assert values can be expected (vs calculated)
-		assertEquals(countCreate, 1);
-		assertEquals(countRestart, 0);
-		assertEquals(countStart, 1);
-		assertEquals(countResume, 1);
-		assertEquals(countPause, 0);
+		Log.d(TAG, "---test4Integration() ONE: 1,0,1,1,0");
+		test1Launch_CreateStartResume();
 
-		Log.i(TAG, "---test4Integration() TWO: +(Pause,Resume), same(others)");
-		mInstrumentation.callActivityOnPause(mActivity);
-		mInstrumentation.callActivityOnResume(mActivity);
-		initAsserts(); // set & log assertPause to actual
-		assertEquals(countCreate, assertCreate);
-		assertEquals(countPause+1, assertPause);
-		assertEquals(countStart, assertStart);
-		assertEquals(countResume+1, assertResume);
-		assertEquals(countRestart, assertRestart);
+		Log.d(TAG, "---test4Integration() TWO: +(Pause,Resume), same(others)");
+		test2PauseToResume();
 
-		Log.i(TAG, "---test4Integration 333: +1(Pause,Create,Start,Resume), same(Restart)");
-		setCounts();
-		mInstrumentation.callActivityOnPause(mActivity);
-		mActivity.finish();
-		mActivity = this.getActivity();
-		mInstrumentation.callActivityOnCreate(mActivity, null);
-		mInstrumentation.callActivityOnStart(mActivity);
-		mInstrumentation.callActivityOnResume(mActivity);
-		getActivityFields(); // new activity means new fields/re-fetch
-		initAsserts();
-		assertEquals(countPause+1, assertPause);
-		assertEquals(countCreate+1, assertCreate);
-		assertEquals(countStart+1, assertStart);
-		assertEquals(countResume+1, assertResume);
-		assertEquals(countRestart, assertRestart);
+		Log.d(TAG, "---test4Integration() 333: +1(Pause,Create,Start,Resume), same(Restart)");
+		test3DestroyToResume();
 
-		Log.i(TAG, "---test4Integration 000: Reset should be zeros");
+		Log.i(TAG, "---test4Integration() 000: Reset should be zeros");
 		mResetButton.performClick();
 		initAsserts();
 		assertEquals(0,assertCreate);
