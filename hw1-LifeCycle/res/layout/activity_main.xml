@@ -98,6 +98,7 @@
                 android:ems="10"
                 android:text="@string/labelStart"
                 android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/onStartCount"
                 android:layout_width="0dp"
@@ -105,7 +106,7 @@
                 android:layout_weight=".6"
                 android:text="@string/initialCount"
                 android:textSize="18sp" />
-            </TableRow>
+        </TableRow>
 
         <TableRow
             android:id="@+id/onResumeRow"
@@ -121,6 +122,7 @@
                 android:ems="10"
                 android:text="@string/labelResume"
                 android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/onResumeCount"
                 android:layout_width="0dp"
@@ -128,7 +130,7 @@
                 android:layout_weight=".6"
                 android:text="@string/initialCount"
                 android:textSize="18sp" />
-            </TableRow>
+        </TableRow>
 
         <TableRow
             android:id="@+id/onPauseRow"
@@ -152,8 +154,55 @@
                 android:layout_weight=".6"
                 android:text="@string/initialCount"
                 android:textSize="18sp" />
+        </TableRow>
 
-            </TableRow>
+        <TableRow
+            android:id="@+id/onStopRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onStopLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:ems="10"
+                android:text="@string/labelStop"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/onStopCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/onDestroyRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:id="@+id/onDestroyLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:ems="10"
+                android:text="@string/labelDestroy"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/onDestroyCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="@string/initialCount"
+                android:textSize="18sp" />
+        </TableRow>
     </TableLayout>
 
     <Button

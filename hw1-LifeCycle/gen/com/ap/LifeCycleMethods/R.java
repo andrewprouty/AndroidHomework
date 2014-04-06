@@ -24,12 +24,15 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080013;
+        public static final int action_settings=0x7f080019;
         public static final int headerRow=0x7f080000;
         public static final int methodText=0x7f080001;
         public static final int onCreateCount=0x7f080005;
         public static final int onCreateLabel=0x7f080004;
         public static final int onCreateRow=0x7f080003;
+        public static final int onDestroyCount=0x7f080017;
+        public static final int onDestroyLabel=0x7f080016;
+        public static final int onDestroyRow=0x7f080015;
         public static final int onPauseCount=0x7f080011;
         public static final int onPauseLabel=0x7f080010;
         public static final int onPauseRow=0x7f08000f;
@@ -42,7 +45,10 @@ public final class R {
         public static final int onStartCount=0x7f08000b;
         public static final int onStartLabel=0x7f08000a;
         public static final int onStartRow=0x7f080009;
-        public static final int resetButton=0x7f080012;
+        public static final int onStopCount=0x7f080014;
+        public static final int onStopLabel=0x7f080013;
+        public static final int onStopRow=0x7f080012;
+        public static final int resetButton=0x7f080018;
         public static final int timesCalledText=0x7f080002;
     }
     public static final class layout {
@@ -58,10 +64,12 @@ public final class R {
         public static final int columnHeaderTimesCalled=0x7f050005;
         public static final int initialCount=0x7f050002;
         public static final int labelCreate=0x7f050006;
+        public static final int labelDestroy=0x7f05000c;
         public static final int labelPause=0x7f05000a;
         public static final int labelRestart=0x7f050007;
         public static final int labelResume=0x7f050009;
         public static final int labelStart=0x7f050008;
+        public static final int labelStop=0x7f05000b;
         public static final int resetButtonLabel=0x7f050001;
     }
     public static final class style {
