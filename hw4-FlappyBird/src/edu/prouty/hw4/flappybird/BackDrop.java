@@ -39,7 +39,10 @@ public class BackDrop extends View {
 	}
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		int gap = 250;				// bird space to fly through
+		int gap = mScreenHeight/4;	// bird space to fly through
+		if (gap < 250) {			// relative to screen size... with a minimum
+			gap = 250;
+		}
 		if (mShift >= mScreenWidth) { // draw new
 			mShift = 0;
 			((MainActivity)getContext()).setScore(); //TODO
@@ -47,7 +50,7 @@ public class BackDrop extends View {
 			int min = gap/2;
 			Random r = new Random();
 			mRandom = r.nextInt(Math.abs(max - min + 1)) + min;
-			//Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
+			Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
 		}
 		else {
 			mShift=mShift+mAdjust;

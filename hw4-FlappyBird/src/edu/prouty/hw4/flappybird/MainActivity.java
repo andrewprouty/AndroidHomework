@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	private View view;
 	private TextView mScore;
 	private TextView mHigh;
+	private int score=-1, high=0;
 	
 	private BackDrop mBackDrop;
 	
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
 
 		mScore = (TextView) findViewById(R.id.score);
 		mHigh = (TextView) findViewById(R.id.high);
-		mHigh.setText("0");
+		mHigh.setText(String.valueOf(high));
 
 		bird = (ImageView) findViewById(R.id.bird_square);
 		bird.setBackgroundResource(R.anim.bird_motion);
@@ -78,6 +79,19 @@ public class MainActivity extends Activity {
 		mBackDrop.setScreenWidth(screenWidth);
 		mBackDrop.setScreenHeight(screenHeight);
 	}
+	@Override
+	public void onSaveInstanceState(Bundle setState) {
+		super.onSaveInstanceState(setState);
+		Log.i(TAG, "onSaveInstanceState() high score: "+high);
+		setState.putInt("high", high);
+	}
+	@Override
+	public void onRestoreInstanceState(Bundle getState) {
+		super.onRestoreInstanceState(getState);
+		high = getState.getInt("high");
+		Log.i(TAG, "onRestoreInstanceState() high score: "+high);
+		mHigh.setText(String.valueOf(high));
+	}
 	
 	public void birdStartFlapping() {
 		Log.d(TAG, "birdStartFlapping()");
@@ -95,7 +109,8 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "phoenixBird() set initial height "+initialHeight);
 		}
 		else { // true rebirth
-			mScore.setText("");
+			score=-1;
+			mHigh.setText(String.valueOf(high)); // saved on death; display on continuation
 			mBackDrop.reset(); // reset rectangle
 			mBackDrop.invalidate();
 			bird.setBackgroundResource(R.anim.bird_motion);
@@ -118,25 +133,9 @@ public class MainActivity extends Activity {
 		mIsRising=false;
 	}
 	protected void setScore() {
-		String s = mScore.getText().toString();
-		String h = mHigh.getText().toString();
-		int tmp, high;
-		try {
-			tmp=Integer.parseInt(s) + 1;
-			high=Integer.parseInt(h);
-		}
-		catch (Exception e) {
-			tmp=0;
-			high=0;
-		}
-		Log.d(TAG, "nextRect() new score: "+tmp);
-
-		s = String.valueOf(tmp);
-		mScore.setText(s);
-		if (tmp > high) {
-			high = tmp;
-			mHigh.setText(s);
-		}
+		score++;
+		Log.d(TAG, "setScore() new score: "+score);
+		mScore.setText(String.valueOf(score));
 	}
 	protected float[] getBirdLocation() {
 		float[] f = {bird.getX(), bird.getY(), bird.getHeight(), bird.getWidth()}; 
@@ -146,19 +145,22 @@ public class MainActivity extends Activity {
 	protected void killBird() {
 		Log.d(TAG, "killBird() y="+bird.getY() + " Y height="+screenHeight);
 		mIsDead=true;
-		//mIsInMotion=false;	// stop moving - dead
 		birdStopFlapping();	// stop flapping - dead
 		bird.setBackgroundResource(R.drawable.red_bird);
 		howToImage.setBackgroundResource(R.drawable.touch_to_start);
+		if (score > high) {
+			high = score; // save in case of orientation change NOW
+		}
+
 	}
 	private void move() {
 		if (mIsRising) {
 			Log.d(TAG, "birdUpDown() rising y="+bird.getY());
-			bird.setY(bird.getY()-10);
+			bird.setY(bird.getY()-15);
 		}
 		else {
 			Log.d(TAG, "birdUpDown() falling y="+bird.getY());
-			bird.setY(bird.getY()+10);
+			bird.setY(bird.getY()+15);
 		}
 		if (!mIsDead) {
 			bird.postDelayed(new Mover(), 50);
