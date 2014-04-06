@@ -14,23 +14,14 @@
         android:layout_marginRight="200dp"
         android:contentDescription="@string/bird_description" />
 
-    <Button
-        android:id="@+id/button"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="@string/play_text" />
-
     <TextView
-        android:id="@+id/score"
+        android:id="@+id/score_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/score_text" />
-
+        
     <edu.prouty.hw4.flappybird.BackDrop
         android:id="@+id/rect_back_drop"
         android:layout_width="wrap_content"
@@ -38,4 +29,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/score_label"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/score_label" />
+
+    <ImageView
+        android:id="@+id/instruction_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/instruction_description" />
+    
 </RelativeLayout>

@@ -43,11 +43,11 @@ public class BackDrop extends View {
 		int gap = 250;				// bird space to fly through
 		if (mShift >= mScreenWidth) { // draw new
 			mShift = 0;
-			((MainActivity)getContext()).setScore();
+			((MainActivity)getContext()).setScore(); //TODO
 			int max = mScreenHeight-gap*3/2;
 			int min = gap/2;
 			Random r = new Random();
-			mRandom = r.nextInt(max - min + 1) + min;
+			mRandom = r.nextInt(Math.abs(max - min + 1)) + min;
 			Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
 		}
 		else {
@@ -71,14 +71,15 @@ public class BackDrop extends View {
 		Log.d(TAG, "onDraw() rect2 y="+r2y+" height "+r2height);
 		//top-left-x, top-left-y, x+width, y+height, paint
 		
-		float[] f = ((MainActivity)getContext()).getBirdLocation();
+		//float[] f = {1,2,3,4};
+		float[] f = ((MainActivity)getContext()).getBirdLocation(); // TODO
 		birdX = f[0];
 		birdY = f[1];
 		birdHeight = f[2];
 		birdWidth = f[3];
 		Log.d(TAG, "onDraw() bird x= "+birdX+", y="+birdY+" w="+birdHeight+" h="+birdWidth);
 		if (tooHighLow()) {
-			((MainActivity)getContext()).killBird();
+			((MainActivity)getContext()).killBird(); //TODO
 		}
 		if ((birdX+birdWidth > x      ) &&
 			(birdX           < x+width)) {

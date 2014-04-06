@@ -2,7 +2,7 @@
 
     <string name="app_name">FlappyBird</string>
     <string name="bird_description">Flappy Bird</string>
-    <string name="play_text">Touch screen</string>
-    <string name="replay_text">Reset</string>
-    <string name="score_text">Score</string>
+    <string name="instruction_description">Touch to Start</string>
+    <string name="score_text">Current: </string>
+    <string name="high_text">High: </string>
 </resources>

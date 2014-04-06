@@ -14,7 +14,6 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +21,15 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private AnimationDrawable mBirdAnimation;
 	private View view;
-	private Button mButton;
 	private TextView mScore;
+	//private TextView mHigh;
 	
 	private BackDrop mBackDrop;
 	
-	boolean mIsDead=false;
+	boolean mIsDead=true;
 	boolean mIsInMotion=false;
 	boolean mIsRising=false;
-	ImageView bird;
+	ImageView bird, howToImage;
 	
 	float initialHeight = -1;
 	int screenWidth;
@@ -44,11 +43,16 @@ public class MainActivity extends Activity {
 		view = findViewById(R.id.container);
 
 		mScore = (TextView) findViewById(R.id.score);
-		bird = (ImageView) findViewById(R.id.bird_square);
-		mButton = (Button) findViewById(R.id.button);
+		//mHigh = (TextView) findViewById(R.id.high);
+		//mHigh.setText("0");
 
+		bird = (ImageView) findViewById(R.id.bird_square);
 		bird.setBackgroundResource(R.anim.bird_motion);
 		mBirdAnimation = (AnimationDrawable) bird.getBackground();
+
+		howToImage = (ImageView) findViewById(R.id.instruction_image);
+		howToImage.setBackgroundResource(R.drawable.touch_to_start);
+
 		Resources resources = getResources();
 		XmlPullParser parser = resources.getXml(R.layout.activity_main);
 		AttributeSet attributes = Xml.asAttributeSet(parser);
@@ -57,8 +61,6 @@ public class MainActivity extends Activity {
 
 		view.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if (mIsDead)
-					return false;
 				if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
 					touchDown();
 				} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
@@ -75,45 +77,39 @@ public class MainActivity extends Activity {
 		Log.i(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
 		mBackDrop.setScreenWidth(screenWidth);
 		mBackDrop.setScreenHeight(screenHeight);
-		
-		mButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				mButton.setText(R.string.play_text);
-				mButton.setEnabled(false);
-				bird.setY(initialHeight);
-				mIsDead=false;
-				mBackDrop.reset(); // reset rectangle
-				mBackDrop.invalidate();
-			}
-		});
-		mButton.setEnabled(false);
 	}
 	
 	public void birdStartFlapping() {
 		Log.d(TAG, "birdStartFlapping()");
 		mBirdAnimation.start();
-		if (initialHeight < 0) {
-			initialHeight = bird.getY();
-			Log.d(TAG, "birdStartFlapping() initial height "+initialHeight);
-		}
 	}
 	public void birdStopFlapping() {
 		Log.d(TAG, "birdStopFlapping()");
 		mBirdAnimation.stop();
 	}
 	private void phoenixBird() {
-		bird.setBackgroundResource(R.anim.bird_motion);
-		mBirdAnimation = (AnimationDrawable) bird.getBackground();
+		Log.d(TAG, "phoenixBird()");
+		howToImage.setBackgroundResource(0);
+		if (initialHeight < 0) { // first instance
+			initialHeight = bird.getY();
+			Log.d(TAG, "phoenixBird() set initial height "+initialHeight);
+		}
+		else { // true rebirth
+			mScore.setText("");
+			mBackDrop.reset(); // reset rectangle
+			mBackDrop.invalidate();
+			bird.setBackgroundResource(R.anim.bird_motion);
+			mBirdAnimation = (AnimationDrawable) bird.getBackground();
+		}
+		bird.setY(initialHeight);
 		birdStartFlapping();
 	}
 	public void touchDown() {
 		Log.d(TAG, "touchDown()");
 		mIsRising=true;
-		if (!mIsInMotion) {
+		if (mIsDead) {
+			mIsDead=false;
 			phoenixBird();
-			mIsInMotion=true;
-			mScore.setText("0");
 			move();
 		}
 	}
@@ -123,17 +119,24 @@ public class MainActivity extends Activity {
 	}
 	protected void setScore() {
 		String s = mScore.getText().toString();
-		int tmp;
+		//String h = mHigh.getText().toString();
+		int tmp, high;
 		try {
-			Integer.parseInt (s);
 			tmp=Integer.parseInt(s) + 1;
+			//high=Integer.parseInt(h);
 		}
 		catch (Exception e) {
 			tmp=0;
+			//high=0;
 		}
 		Log.d(TAG, "nextRect() new score: "+tmp);
+
 		s = String.valueOf(tmp);
 		mScore.setText(s);
+		/*if (tmp > high) {
+			high = tmp;
+			mHigh.setText(s);
+		}*/
 	}
 	protected float[] getBirdLocation() {
 		float[] f = {bird.getX(), bird.getY(), bird.getHeight(), bird.getWidth()}; 
@@ -143,11 +146,10 @@ public class MainActivity extends Activity {
 	protected void killBird() {
 		Log.d(TAG, "killBird() y="+bird.getY() + " Y height="+screenHeight);
 		mIsDead=true;
-		mIsInMotion=false;	// stop moving - dead
+		//mIsInMotion=false;	// stop moving - dead
 		birdStopFlapping();	// stop flapping - dead
-		mButton.setText(R.string.replay_text);
-		mButton.setEnabled(true);
 		bird.setBackgroundResource(R.drawable.red_bird);
+		howToImage.setBackgroundResource(R.drawable.touch_to_start);
 	}
 	private void move() {
 		if (mIsRising) {
@@ -158,7 +160,7 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "birdUpDown() falling y="+bird.getY());
 			bird.setY(bird.getY()+10);
 		}
-		if (mIsInMotion) {
+		if (!mIsDead) {
 			bird.postDelayed(new Mover(), 50);
 			mBackDrop.invalidate();
 		}
