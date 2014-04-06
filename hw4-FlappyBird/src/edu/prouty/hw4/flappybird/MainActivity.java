@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
 	private AnimationDrawable mBirdAnimation;
 	private View view;
 	private TextView mScore;
-	//private TextView mHigh;
+	private TextView mHigh;
 	
 	private BackDrop mBackDrop;
 	
@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
 		view = findViewById(R.id.container);
 
 		mScore = (TextView) findViewById(R.id.score);
-		//mHigh = (TextView) findViewById(R.id.high);
-		//mHigh.setText("0");
+		mHigh = (TextView) findViewById(R.id.high);
+		mHigh.setText("0");
 
 		bird = (ImageView) findViewById(R.id.bird_square);
 		bird.setBackgroundResource(R.anim.bird_motion);
@@ -119,24 +119,24 @@ public class MainActivity extends Activity {
 	}
 	protected void setScore() {
 		String s = mScore.getText().toString();
-		//String h = mHigh.getText().toString();
+		String h = mHigh.getText().toString();
 		int tmp, high;
 		try {
 			tmp=Integer.parseInt(s) + 1;
-			//high=Integer.parseInt(h);
+			high=Integer.parseInt(h);
 		}
 		catch (Exception e) {
 			tmp=0;
-			//high=0;
+			high=0;
 		}
 		Log.d(TAG, "nextRect() new score: "+tmp);
 
 		s = String.valueOf(tmp);
 		mScore.setText(s);
-		/*if (tmp > high) {
+		if (tmp > high) {
 			high = tmp;
 			mHigh.setText(s);
-		}*/
+		}
 	}
 	protected float[] getBirdLocation() {
 		float[] f = {bird.getX(), bird.getY(), bird.getHeight(), bird.getWidth()}; 

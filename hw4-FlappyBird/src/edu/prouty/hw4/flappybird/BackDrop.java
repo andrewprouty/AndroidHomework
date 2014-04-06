@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-
 public class BackDrop extends View {
 	private static final String TAG = "BackDrop";
 	private Paint paint = new Paint();
@@ -48,7 +47,7 @@ public class BackDrop extends View {
 			int min = gap/2;
 			Random r = new Random();
 			mRandom = r.nextInt(Math.abs(max - min + 1)) + min;
-			Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
+			//Log.i(TAG, "onDraw() redraw max & min; random: "+max+"&"+min+"; "+mRandom);
 		}
 		else {
 			mShift=mShift+mAdjust;
