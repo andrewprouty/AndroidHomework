@@ -14,5 +14,7 @@
     <string name="labelPause">onPause()</string>
     <string name="labelStop">onStop()</string>
     <string name="labelDestroy">onDestroy()</string>
+    <string name="cannot">Can\'t touch this</string>
+    <string name="editFoo_hint">Only a flesh wound</string>
     
 </resources>

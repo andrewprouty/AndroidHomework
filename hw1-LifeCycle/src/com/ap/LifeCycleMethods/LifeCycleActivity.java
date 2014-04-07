@@ -1,6 +1,7 @@
 package com.ap.LifeCycleMethods;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,11 @@ public class LifeCycleActivity extends Activity {
 		countDestroy = 0;
 		countDestroyOutput = (TextView) this.findViewById(R.id.onDestroyCount);
 		countDestroyOutput.setText(String.valueOf(countDestroy));
+		/*Log.i(TAG, "resetCount() calling FooActivity");
+		Intent i = new Intent (LifeCycleActivity.this, FooActivity.class);
+		Log.d(TAG, "resetCount() calling 1");
+		startActivity(i);
+		Log.i(TAG, "resetCount() Call complete");*/
 	}
 	public void refreshScreen() {
 		Log.d(TAG, "refreshScreen()");

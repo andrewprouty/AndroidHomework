@@ -41,7 +41,6 @@ public class UploadFileActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_file);
 
-
 		mFileNameEditText = (EditText)findViewById(R.id.upload_file_name_editText);
 		mFileNameEditText.setEnabled(false);
 
@@ -206,5 +205,4 @@ public class UploadFileActivity extends Activity {
 			Log.d(TAG, "FileUploadTask onPostExecute()");
 		}
 	}
-
 }
