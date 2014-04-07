@@ -3,6 +3,7 @@ package edu.prouty.hw4.flappybird;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
@@ -19,11 +20,12 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
+	private static final String PREFS_NAME = "MyPrefsFile";
 	private AnimationDrawable mBirdAnimation;
 	private View view;
 	private TextView mScore;
 	private TextView mHigh;
-	private int score=-1, high=0;
+	private int score, high;
 	
 	private BackDrop mBackDrop;
 	
@@ -42,6 +44,14 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		view = findViewById(R.id.container);
+
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		Log.d(TAG, "onCreate() restore preferences");
+		score=settings.getInt("score",-1);
+		score=-1; //TODO create a real pause mechanism, this would be a cheat :)
+		high =settings.getInt("high",0);
+		Log.d(TAG, "score: " +score);
+		Log.d(TAG, "high:  " +high);
 
 		mScore = (TextView) findViewById(R.id.score);
 		mHigh = (TextView) findViewById(R.id.high);
@@ -78,6 +88,18 @@ public class MainActivity extends Activity {
 		Log.i(TAG, "Screen width(x)="+screenWidth+" height(y)="+screenHeight);
 		mBackDrop.setScreenWidth(screenWidth);
 		mBackDrop.setScreenHeight(screenHeight);
+	}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.i(TAG, "onStop()");
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		Log.d(TAG, "score: " +score);
+		Log.d(TAG, "high:  " +high);
+		editor.putInt("score", score);
+		editor.putInt("high", high);
+		editor.commit();
 	}
 	@Override
 	public void onSaveInstanceState(Bundle setState) {
