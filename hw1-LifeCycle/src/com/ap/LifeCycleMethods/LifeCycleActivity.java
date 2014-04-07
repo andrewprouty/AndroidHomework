@@ -1,7 +1,6 @@
 package com.ap.LifeCycleMethods;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +53,7 @@ public class LifeCycleActivity extends Activity {
 		countDestroy = 0;
 		countDestroyOutput = (TextView) this.findViewById(R.id.onDestroyCount);
 		countDestroyOutput.setText(String.valueOf(countDestroy));
+		save_Stop_Destroy(); // save those ZEROs
 		/*Log.i(TAG, "resetCount() calling FooActivity");
 		Intent i = new Intent (LifeCycleActivity.this, FooActivity.class);
 		Log.d(TAG, "resetCount() calling 1");
@@ -77,7 +77,18 @@ public class LifeCycleActivity extends Activity {
 		countDestroyOutput = (TextView) this.findViewById(R.id.onDestroyCount);
 		countDestroyOutput.setText(String.valueOf(countDestroy));
 	}
-	
+	private void save_Stop_Destroy() {
+		// onStop/onDestroy come after onSaveInstanceState
+		// ADDED counters for JUnit but alternate approach
+		Log.d(TAG, "save_Stop_Destroy()");
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		Log.d(TAG, "stop: "    +countStop);
+		Log.d(TAG, "destroy: " +countDestroy);
+		editor.putInt("stop", countStop);
+		editor.putInt("destroy", countDestroy);
+		editor.commit();
+	}
 	/*************** Activity Events ******************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +100,8 @@ public class LifeCycleActivity extends Activity {
 		countCreateOutput.setText(String.valueOf(countCreate));
 
 		// Restore preferences (stop/destroy cannot use ...InstanceState())
-	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		Log.d(TAG, "onCreate() restore preferences");
 		countStop   +=settings.getInt("stop",0);
 		countDestroy+=settings.getInt("destroy",0);
 		Log.d(TAG, "stop: "   +countStop);
@@ -143,16 +155,9 @@ public class LifeCycleActivity extends Activity {
 		super.onDestroy();
 		countDestroy++;
 		Log.i(TAG, "onDestroy count: "+countDestroy);
+		save_Stop_Destroy();
 		countDestroyOutput = (TextView) this.findViewById(R.id.onDestroyCount);
 		countDestroyOutput.setText(String.valueOf(countDestroy));
-		// onStop/onDestroy come after onSaveInstanceState - thus alternate
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		Log.d(TAG, "stop: "    +countStop);
-		Log.d(TAG, "destroy: " +countDestroy);
-		editor.putInt("stop", countStop);
-		editor.putInt("destroy", countDestroy);
-		editor.commit();
 	}
 	/*************** Other Built-in Methods ******************/
 	@Override
