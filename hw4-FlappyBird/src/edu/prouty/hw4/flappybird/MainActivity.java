@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		Log.d(TAG, "onCreate() restore preferences");
 		score=settings.getInt("score",-1);
-		score=-1; //TODO create a real pause mechanism, this would be a cheat :)
+		score=-1; //TODO If I create an actual pause, could restore in-progress score also
 		high =settings.getInt("high",0);
 		Log.d(TAG, "score: " +score);
 		Log.d(TAG, "high:  " +high);
@@ -173,15 +173,14 @@ public class MainActivity extends Activity {
 		if (score > high) {
 			high = score; // save in case of orientation change NOW
 		}
-
 	}
 	private void move() {
 		if (mIsRising) {
-			Log.d(TAG, "birdUpDown() rising y="+bird.getY());
+			Log.d(TAG, "move() rising y="+bird.getY());
 			bird.setY(bird.getY()-15);
 		}
 		else {
-			Log.d(TAG, "birdUpDown() falling y="+bird.getY());
+			Log.d(TAG, "move() falling y="+bird.getY());
 			bird.setY(bird.getY()+15);
 		}
 		if (!mIsDead) {
@@ -194,4 +193,5 @@ public class MainActivity extends Activity {
 		public void run() {
 			move();
 		}
-	}}
+	}
+}
